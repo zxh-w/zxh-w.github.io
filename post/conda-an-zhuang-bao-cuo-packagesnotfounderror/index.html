@@ -1,0 +1,192 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Conda安装报错：PackagesNotFoundError | Gridea</title>
+<link rel="shortcut icon" href="https://zxh-w.github.io/favicon.ico?v=1688256095979">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://zxh-w.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Conda安装报错：PackagesNotFoundError | Gridea - Atom Feed" href="https://zxh-w.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="
+PackagesNotFoundError: The following packages are not available from current channels:
+otxv2==1.5.12
+
+
+
+当出现PackagesNotF..." />
+    <meta name="keywords" content="conda" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://zxh-w.github.io">
+  <img class="avatar" src="https://zxh-w.github.io/images/avatar.png?v=1688256095979" alt="">
+  </a>
+  <h1 class="site-title">
+    Gridea
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Conda安装报错：PackagesNotFoundError
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-04-25
+              </span>
+              <span>
+                1 min read
+              </span>
+              
+                <a href="https://zxh-w.github.io/tag/kaSbVJHnC/" class="post-tag">
+                  # conda
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <blockquote>
+<p>PackagesNotFoundError: The following packages are not available from current channels:</p>
+<p>otxv2==1.5.12</p>
+</blockquote>
+<ul>
+<li>
+<p>当出现<code>PackagesNotFoundError</code>时，它不一定就是你的<code>conda</code>源出问题了，你可以先在<a href="https://anaconda.org/search">Anaconda</a>的官网搜一下到底<code>conda</code>中有没有这个包，<code>otxv2</code>没有在 <code>conda</code>提供的包里。</p>
+</li>
+<li>
+<p>这时候就要使用 <code>pip</code>工具来下载这个包了，<code>pip install otvx2==1.5.2</code>，虽然找到了包，但是又有了报错：</p>
+<figure data-type="image" tabindex="1"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230425093856141.png" alt="image-20230425093856141" loading="lazy"></figure>
+</li>
+<li>
+<p>这个时候在网上查了一下，输入 <code>pip install OTXv2==1.5.12  -i http://pypi.douban.com/simple --trusted-host pypi.douban.com</code>，安装成功</p>
+<p><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230425094131694.png" alt="image-20230425094131694" loading="lazy"><br>
+参考来源：http://www.cnblogs.com/zengming/</p>
+</li>
+</ul>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://zxh-w.github.io/post/wang-luo-pa-chong-jie-shao/">
+              <h3 class="post-title">
+                网络爬虫介绍
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://zxh-w.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

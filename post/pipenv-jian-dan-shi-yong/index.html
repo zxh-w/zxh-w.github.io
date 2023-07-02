@@ -1,0 +1,264 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>pipenv简单使用 | Gridea</title>
+<link rel="shortcut icon" href="https://zxh-w.github.io/favicon.ico?v=1688256095979">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://zxh-w.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="pipenv简单使用 | Gridea - Atom Feed" href="https://zxh-w.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="
+pipenv就是把pip和virtualenv包装起来的一个便捷工具，它会自动为您的项目创建和管理virtualenv,以及在安装/卸载软件包时添加/删除Pipfile中的软件包。
+
+
+Pipfile：简明地显示项目环境依赖包
+Pipfi..." />
+    <meta name="keywords" content="pipenv" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://zxh-w.github.io">
+  <img class="avatar" src="https://zxh-w.github.io/images/avatar.png?v=1688256095979" alt="">
+  </a>
+  <h1 class="site-title">
+    Gridea
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              pipenv简单使用
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-05-14
+              </span>
+              <span>
+                2 min read
+              </span>
+              
+                <a href="https://zxh-w.github.io/tag/NhRwCbJfX/" class="post-tag">
+                  # pipenv
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <blockquote>
+<p><code>pipenv</code>就是把<code>pip</code>和<code>virtualenv</code>包装起来的一个便捷工具，它会自动为您的项目创建和管理<code>virtualenv</code>,以及在安装/卸载软件包时添加/删除<code>Pipfile</code>中的软件包。</p>
+</blockquote>
+<ul>
+<li><code>Pipfile</code>：简明地显示项目环境依赖包</li>
+<li><code>Pipfile.lock</code>：详细记录环境依赖，并且使用Hash算法保证了它完整的对应关系</li>
+</ul>
+<h3 id="使用方法">使用方法</h3>
+<ol>
+<li>正确安装<code>pipenv</code>：<code>pip3 install pipenv</code></li>
+<li>创建项目所在的文件夹：<code>mkdir myproject</code></li>
+<li>进入文件夹：<code>cd myproject</code></li>
+<li>初始化虚拟环境：<code>pipenv  --python 3.7</code></li>
+<li>安装某一个包：<code>pipenv install django==2.2</code></li>
+</ol>
+<h3 id="常用命令">常用命令</h3>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pipenv --where</code></td>
+<td>列出本地工程路径</td>
+</tr>
+<tr>
+<td><code>pipenv --venv</code></td>
+<td>列出虚拟环境路径</td>
+</tr>
+<tr>
+<td><code>pipenv --py</code></td>
+<td>列出虚拟环境的Python可执行文件</td>
+</tr>
+<tr>
+<td><code>pipenv install</code></td>
+<td>（创建虚拟环境）</td>
+</tr>
+<tr>
+<td><code>pipenv install moduel --dev</code></td>
+<td>在开发环境安装包</td>
+</tr>
+<tr>
+<td><code>pipenv graph</code></td>
+<td>查看包依赖</td>
+</tr>
+<tr>
+<td><code>pipenv lock</code></td>
+<td>生成lockfile</td>
+</tr>
+<tr>
+<td><code>pipenv install --dev</code></td>
+<td>安装所有开发环境包</td>
+</tr>
+<tr>
+<td><code>pipenv uninstall --all</code></td>
+<td>卸载所有包</td>
+</tr>
+<tr>
+<td><code>pipenv --rm</code></td>
+<td>删除虚拟环境</td>
+</tr>
+<tr>
+<td><code>pipenv run python xxx.py</code></td>
+<td>虚拟环境运行python</td>
+</tr>
+<tr>
+<td><code>pipenv --rm</code></td>
+<td>删除虚拟环境</td>
+</tr>
+<tr>
+<td><code>pipenv uninstall 包名</code></td>
+<td>删除部分包</td>
+</tr>
+</tbody>
+</table>
+<p>参考链接：https://zhuanlan.zhihu.com/p/104935266</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95">使用方法</a></li>
+<li><a href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4">常用命令</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://zxh-w.github.io/post/web-yu-dajngo/">
+              <h3 class="post-title">
+                Web与Dajngo
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://zxh-w.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

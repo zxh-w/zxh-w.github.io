@@ -1,0 +1,701 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Redis数据结构 | Gridea</title>
+<link rel="shortcut icon" href="https://zxh-w.github.io/favicon.ico?v=1688256095979">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://zxh-w.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Redis数据结构 | Gridea - Atom Feed" href="https://zxh-w.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="通用命令
+
+
+
+命令
+说明
+时间复杂度
+
+
+
+
+keys [pattern]
+遍历出所有符合通配符的key
+O(n)
+
+
+dbsize
+计算出key的总数
+O(1)
+
+
+exists key
+检查key是否存在
+O(1)
+
+
+del key..." />
+    <meta name="keywords" content="Redis" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://zxh-w.github.io">
+  <img class="avatar" src="https://zxh-w.github.io/images/avatar.png?v=1688256095979" alt="">
+  </a>
+  <h1 class="site-title">
+    Gridea
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Redis数据结构
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-05-11
+              </span>
+              <span>
+                6 min read
+              </span>
+              
+                <a href="https://zxh-w.github.io/tag/hN52zo6rv/" class="post-tag">
+                  # Redis
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="通用命令">通用命令</h2>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>说明</th>
+<th>时间复杂度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>keys [pattern]</code></td>
+<td>遍历出所有符合通配符的key</td>
+<td><code>O(n)</code></td>
+</tr>
+<tr>
+<td><code>dbsize</code></td>
+<td>计算出key的总数</td>
+<td><code>O(1)</code></td>
+</tr>
+<tr>
+<td><code>exists key</code></td>
+<td>检查key是否存在</td>
+<td><code>O(1)</code></td>
+</tr>
+<tr>
+<td><code>del key [key...]</code></td>
+<td>删除指定的key-value</td>
+<td><code>O(1)</code></td>
+</tr>
+<tr>
+<td><code>expire key seconds</code></td>
+<td>key在seconds秒后过期</td>
+<td><code>O(1)</code></td>
+</tr>
+<tr>
+<td><code>ttl key</code></td>
+<td>查看key剩余的时间</td>
+<td><code>O(1)</code></td>
+</tr>
+<tr>
+<td><code>persist key</code></td>
+<td>去掉key的过期时间</td>
+<td><code>O(1)</code></td>
+</tr>
+<tr>
+<td><code>type key</code></td>
+<td>返回key的类型</td>
+<td><code>O(1)</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="数据结构和内部编码">数据结构和内部编码</h2>
+<figure data-type="image" tabindex="1"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230506162651804.png" alt="image-20230506162651804" loading="lazy"></figure>
+<p><strong>Redis Object</strong></p>
+<figure data-type="image" tabindex="2"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230506162846389.png" alt="image-20230506162846389" loading="lazy"></figure>
+<h2 id="单线程">单线程</h2>
+<figure data-type="image" tabindex="3"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230506213636451.png" alt="image-20230506213636451" loading="lazy"></figure>
+<ul>
+<li>
+<p>纯内存</p>
+</li>
+<li>
+<p>非阻塞IO</p>
+<figure data-type="image" tabindex="4"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230506213815610.png" alt="image-20230506213815610" loading="lazy"></figure>
+</li>
+</ul>
+<p><strong>注意：</strong></p>
+<ol>
+<li>一次只执行一条命令</li>
+<li>拒绝长(慢)命令</li>
+<li>其实不是单线程（<code>fysnc file descriptor</code> <code>close file descriptor</code>）</li>
+</ol>
+<h2 id="字符串">字符串</h2>
+<h3 id="键值结构">键值结构</h3>
+<figure data-type="image" tabindex="5"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230506221446097.png" alt="image-20230506221446097" loading="lazy"></figure>
+<h3 id="api">API</h3>
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>说明</th>
+<th>复杂度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>get key</code></td>
+<td>获取key对应的value</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>set key value</code></td>
+<td>设置key-value</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>del key</code></td>
+<td>删除key-value</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>incr key</code></td>
+<td>key自增1，如果key不存在，自增后get(key)=1</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>decr key</code></td>
+<td>key自减1，如果key不存在，自减后get(key)=-1</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>incrby key k</code></td>
+<td>key自增k，如果key不存在，自增后get(key)=k</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>decrby key k</code></td>
+<td>key自减k，如果key不存在，自减后get(key)=-k</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>set key value</code></td>
+<td>不管key是否存在，都设置</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>setnx key value</code></td>
+<td>key不存在，才设置（插入操作）</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>set key value xx</code></td>
+<td>key存在，才设置(更新操作)</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>mget key1 key2 key3 ...</code></td>
+<td>批量获取key，原子操作</td>
+<td>O(n)</td>
+</tr>
+<tr>
+<td><code>mset key1 value1 key2 value2...</code></td>
+<td>批量设置key-value</td>
+<td>O(n)</td>
+</tr>
+<tr>
+<td><code>getset key newvalue</code></td>
+<td>set key new value并返回旧的value</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>append key value</code></td>
+<td>将value追加到旧的value</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>strlen key</code></td>
+<td>返回字符串长度（注意中文）</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>incrbyfloat key 3.5</code></td>
+<td>增加key对应的值3.5</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>getrange key start end</code></td>
+<td>获取字符串指定下标所有的值</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>setrange key index value</code></td>
+<td>设置指定下标所有对应的值</td>
+<td>O(1)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="hash">HASH</h2>
+<h3 id="键值结构-2">键值结构</h3>
+<blockquote>
+<p>key : filed value</p>
+<p><strong>filed不能相同</strong></p>
+</blockquote>
+<figure data-type="image" tabindex="6"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230507124345404.png" alt="image-20230507124345404" loading="lazy"></figure>
+<h3 id="api-2">API</h3>
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>说明</th>
+<th>复杂度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hget key field</code></td>
+<td>获取hash key对应的field的value</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>hset key filed value</code></td>
+<td>设置hash key对应field的value</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>hdel key field</code></td>
+<td>删除hash key对应的field</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>hexists key field</code></td>
+<td>判断hash key是否有field</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>hlen key</code></td>
+<td>获取hash key field的数量</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>hmget key field1 field2 ...fieldN</code></td>
+<td>获取hash key的一批field对应的值</td>
+<td>O(n)</td>
+</tr>
+<tr>
+<td><code>hmset key field1 value1 field2 value2...fieldN valueN</code></td>
+<td>批量设置hash key的一批field value</td>
+<td>O(n)</td>
+</tr>
+<tr>
+<td><code>hgetall key</code></td>
+<td>返回hash key对应所有field和value</td>
+<td>O(n)</td>
+</tr>
+<tr>
+<td><code>hvals key</code></td>
+<td>返回hashkey对应所有field的value</td>
+<td>O(n)</td>
+</tr>
+<tr>
+<td><code>hkeys key</code></td>
+<td>返回hash key对应所有的field</td>
+<td>O(n)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="列表">列表</h2>
+<h3 id="列表结构">列表结构</h3>
+<figure data-type="image" tabindex="7"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230511163526518.png" alt="image-20230511163526518" loading="lazy"></figure>
+<h3 id="列表特点">列表特点</h3>
+<ul>
+<li>有序</li>
+<li>可以重复</li>
+<li>左右两边都可以弹出</li>
+</ul>
+<h3 id="api-3">API</h3>
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>说明</th>
+<th>复杂度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rpush key value1 value2 ... valueN</code></td>
+<td>列表右端插入N个值</td>
+<td>O(N)</td>
+</tr>
+<tr>
+<td><code>lpush key value1 value2 ... valueN</code></td>
+<td>列表左端插入N个值</td>
+<td>O(N)</td>
+</tr>
+<tr>
+<td>`linsert key before</td>
+<td>after value newValue`</td>
+<td>在list指定的值前|后插入newValue</td>
+</tr>
+<tr>
+<td><code>lpop key</code></td>
+<td></td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>rpop kkey</code></td>
+<td></td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>lrem key count value</code></td>
+<td>根据count,从列表中删除所有value相等的项</td>
+<td>O(N)</td>
+</tr>
+<tr>
+<td><code>ltrim key start end</code></td>
+<td>按照索引范围修剪列表</td>
+<td>O(N)</td>
+</tr>
+<tr>
+<td><code>lrange key start end</code></td>
+<td>获取列表指定索引范围欸内所有item</td>
+<td>O(N)</td>
+</tr>
+<tr>
+<td><code>llen key</code></td>
+<td>获取key所对应的长度</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>lset key index newValue</code></td>
+<td>设置列表指定索引值为newValue</td>
+<td>O(N)</td>
+</tr>
+<tr>
+<td>`blpop</td>
+<td>brpop key timeout`</td>
+<td>`lpop</td>
+</tr>
+</tbody>
+</table>
+<h2 id="集合">集合</h2>
+<h3 id="集合结构">集合结构</h3>
+<figure data-type="image" tabindex="8"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230511165603288.png" alt="image-20230511165603288" loading="lazy"></figure>
+<h3 id="集合特点">集合特点</h3>
+<ul>
+<li>无需</li>
+<li>无重复</li>
+<li>支持集合间操作</li>
+</ul>
+<h3 id="api-4">API</h3>
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>说明</th>
+<th>复杂度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sadd key element</code></td>
+<td>向集合key中添加element</td>
+<td></td>
+</tr>
+<tr>
+<td><code>srem key element</code></td>
+<td>将集合key中的element移出掉</td>
+<td></td>
+</tr>
+<tr>
+<td><code>scard key</code></td>
+<td>计算集合大小</td>
+<td></td>
+</tr>
+<tr>
+<td><code>sismember key val</code></td>
+<td>判断val是否存在集合之中</td>
+<td></td>
+</tr>
+<tr>
+<td><code>srandmember key count=num</code></td>
+<td>从集合中随机选出num个元素,不会破环集合</td>
+<td></td>
+</tr>
+<tr>
+<td><code>smembers key</code></td>
+<td>获取集合所有元素</td>
+<td>O(N)</td>
+</tr>
+<tr>
+<td><code>spop key</code></td>
+<td>从集合中弹出一个元素</td>
+<td></td>
+</tr>
+<tr>
+<td><code>sdiff key1 key2</code></td>
+<td>差集</td>
+<td></td>
+</tr>
+<tr>
+<td><code>sinter key1 key2</code></td>
+<td>交集</td>
+<td></td>
+</tr>
+<tr>
+<td><code>sunion key1 key2</code></td>
+<td>并集</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="有序集合">有序集合</h2>
+<h3 id="有序集合结构">有序集合结构</h3>
+<figure data-type="image" tabindex="9"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230511171201803.png" alt="image-20230511171201803" loading="lazy"></figure>
+<h3 id="有序集合特点">有序集合特点</h3>
+<ul>
+<li>无重复元素</li>
+<li>有序</li>
+<li><code>element + score</code></li>
+</ul>
+<h3 id="api-5">API</h3>
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>说明</th>
+<th>复杂度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>zadd key score element</code></td>
+<td>向集合key中添加element和score</td>
+<td>O(logN)</td>
+</tr>
+<tr>
+<td><code>zrem key element</code></td>
+<td>将集合key中的element移出掉</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>zscore key element</code></td>
+<td>返回元素的分数</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>zincrby key increScore element</code></td>
+<td>增加或者减少元素的分数</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>zcard key</code></td>
+<td>计算有序集合元素个数</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>zrange key start end [WITHSCORES]</code></td>
+<td>返回指定索引范围内的升序元素[分值]</td>
+<td>O(logN + m)</td>
+</tr>
+<tr>
+<td><code>zrangebyscore key minScore maxScore [WITHSCORES]</code></td>
+<td>返回指定分数范围内的升序元素[分值]</td>
+<td>O(logN + m)</td>
+</tr>
+<tr>
+<td><code>zcount key minScore maxScore</code></td>
+<td>返回有序集合内在指定分数范围的个数</td>
+<td>O(logN + m)</td>
+</tr>
+<tr>
+<td><code>zremrangebyrank key start end</code></td>
+<td>删除指定排名内的升序元素</td>
+<td>O(logN + m)</td>
+</tr>
+<tr>
+<td><code>zremrangebyscore key minScore maxScore</code></td>
+<td>删除指定分数内的升序元素</td>
+<td>O(logN + m)</td>
+</tr>
+</tbody>
+</table>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E9%80%9A%E7%94%A8%E5%91%BD%E4%BB%A4">通用命令</a></li>
+<li><a href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E5%86%85%E9%83%A8%E7%BC%96%E7%A0%81">数据结构和内部编码</a></li>
+<li><a href="#%E5%8D%95%E7%BA%BF%E7%A8%8B">单线程</a></li>
+<li><a href="#%E5%AD%97%E7%AC%A6%E4%B8%B2">字符串</a>
+<ul>
+<li><a href="#%E9%94%AE%E5%80%BC%E7%BB%93%E6%9E%84">键值结构</a></li>
+<li><a href="#api">API</a></li>
+</ul>
+</li>
+<li><a href="#hash">HASH</a>
+<ul>
+<li><a href="#%E9%94%AE%E5%80%BC%E7%BB%93%E6%9E%84-2">键值结构</a></li>
+<li><a href="#api-2">API</a></li>
+</ul>
+</li>
+<li><a href="#%E5%88%97%E8%A1%A8">列表</a>
+<ul>
+<li><a href="#%E5%88%97%E8%A1%A8%E7%BB%93%E6%9E%84">列表结构</a></li>
+<li><a href="#%E5%88%97%E8%A1%A8%E7%89%B9%E7%82%B9">列表特点</a></li>
+<li><a href="#api-3">API</a></li>
+</ul>
+</li>
+<li><a href="#%E9%9B%86%E5%90%88">集合</a>
+<ul>
+<li><a href="#%E9%9B%86%E5%90%88%E7%BB%93%E6%9E%84">集合结构</a></li>
+<li><a href="#%E9%9B%86%E5%90%88%E7%89%B9%E7%82%B9">集合特点</a></li>
+<li><a href="#api-4">API</a></li>
+</ul>
+</li>
+<li><a href="#%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88">有序集合</a>
+<ul>
+<li><a href="#%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88%E7%BB%93%E6%9E%84">有序集合结构</a></li>
+<li><a href="#%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88%E7%89%B9%E7%82%B9">有序集合特点</a></li>
+<li><a href="#api-5">API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://zxh-w.github.io/post/redis-chu-shi/">
+              <h3 class="post-title">
+                Redis初识
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://zxh-w.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

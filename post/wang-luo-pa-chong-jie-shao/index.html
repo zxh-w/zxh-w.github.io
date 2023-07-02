@@ -1,0 +1,446 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>网络爬虫介绍 | Gridea</title>
+<link rel="shortcut icon" href="https://zxh-w.github.io/favicon.ico?v=1688256095979">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://zxh-w.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="网络爬虫介绍 | Gridea - Atom Feed" href="https://zxh-w.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="网络爬虫概念
+​	网络爬虫是一种互联网信息的自动化采集程序，主要作用是代替人工对互联网中的数据进行自动采集与整理，以快速地、批量地获取目标数据。
+​	从技术手段来说，网络爬虫有很多实现方案，如PHP、Python(Urllib、reques..." />
+    <meta name="keywords" content="爬虫" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://zxh-w.github.io">
+  <img class="avatar" src="https://zxh-w.github.io/images/avatar.png?v=1688256095979" alt="">
+  </a>
+  <h1 class="site-title">
+    Gridea
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              网络爬虫介绍
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-04-24
+              </span>
+              <span>
+                4 min read
+              </span>
+              
+                <a href="https://zxh-w.github.io/tag/NkrBkczvo/" class="post-tag">
+                  # 爬虫
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="网络爬虫概念">网络爬虫概念</h2>
+<p>​	网络爬虫是一种互联网信息的自动化采集程序，主要作用是代替人工对互联网中的数据进行自动采集与整理，以快速地、批量地获取目标数据。</p>
+<p>​	从技术手段来说，网络爬虫有很多实现方案，如PHP、Python(Urllib、request、scrapy、selenium……)等。</p>
+<p>​	网络爬虫的难点并不在于网络爬虫本身，而在于<strong>网页的分析与爬虫的反爬</strong>的攻克问题。</p>
+<h2 id="网络爬虫工作原理详解">网络爬虫工作原理详解</h2>
+<figure data-type="image" tabindex="1"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/python-3269952982323.jpg" alt="未命名文件" loading="lazy"></figure>
+<h2 id="网络爬虫常见类型与应用领域">网络爬虫常见类型与应用领域</h2>
+<ul>
+<li>
+<p>聚焦网络爬虫</p>
+<p>一般是目标明确、有目的的爬虫，比如采集目标客户数据，以进行后续营销</p>
+</li>
+<li>
+<p>通用网络爬虫</p>
+<p>比如搜索引擎</p>
+</li>
+<li>
+<p>深层网络爬虫</p>
+<p>例如开发一款火车篇抢票程序（爬取深层页面，必须验证）</p>
+</li>
+</ul>
+<h2 id="数据提取基础">数据提取基础</h2>
+<h3 id="正则表达式">正则表达式</h3>
+<blockquote>
+<p>全局匹配函数的使用格式：<code>re.comppile(regex).find(source string)</code></p>
+<p>注意：正则表达式默认是<strong>贪婪</strong>模式</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>字符</th>
+<th>匹配</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>普通字符</code></td>
+<td>正常匹配</td>
+</tr>
+<tr>
+<td><code>\n</code></td>
+<td>匹配换行符</td>
+</tr>
+<tr>
+<td><code>\t</code></td>
+<td>匹配制表符</td>
+</tr>
+<tr>
+<td><code>\w</code></td>
+<td>匹配字母、数字、下划线 ,等价于 <code>[0-9a-zA-Z_]</code></td>
+</tr>
+<tr>
+<td><code>\W</code></td>
+<td>匹配除字母、数字、下划线</td>
+</tr>
+<tr>
+<td><code>\d</code></td>
+<td>匹配十进制数字</td>
+</tr>
+<tr>
+<td><code>\D</code></td>
+<td>匹配除十进制数字</td>
+</tr>
+<tr>
+<td><code>\s</code></td>
+<td>匹配空白字符</td>
+</tr>
+<tr>
+<td><code>\S</code></td>
+<td>匹配除空白字符</td>
+</tr>
+<tr>
+<td><code>[ab89x]</code></td>
+<td>原子表，匹配<code>ab89x</code>中的任意一个字符</td>
+</tr>
+<tr>
+<td><code>[^ab89x]</code></td>
+<td>原子表，匹配除<code>ab89x</code>以外的任意一个字符</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>字符</th>
+<th>匹配</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.</code></td>
+<td>匹配除换行外的任意一个字符，要匹配  <code> \n</code> 在内的任意字符，使用 <code>[.\n]</code></td>
+</tr>
+<tr>
+<td><code>^</code></td>
+<td>匹配开始位置</td>
+</tr>
+<tr>
+<td><code>$</code></td>
+<td>匹配结束位置</td>
+</tr>
+<tr>
+<td><code>*</code></td>
+<td>前一个字符出现 <code>0\1\多</code>次</td>
+</tr>
+<tr>
+<td><code>?</code></td>
+<td>前一个字符出现 <code>0\1</code>次</td>
+</tr>
+<tr>
+<td><code>+</code></td>
+<td>前一个字符出现 <code>1\多</code>次</td>
+</tr>
+<tr>
+<td><code>{n}</code></td>
+<td>前一个字符恰好出现n次</td>
+</tr>
+<tr>
+<td><code>{n,}</code></td>
+<td>前一个字符至少出现n次</td>
+</tr>
+<tr>
+<td><code>{n,m}</code></td>
+<td>前一个字符至少n，至多m次</td>
+</tr>
+<tr>
+<td>`</td>
+<td>`</td>
+</tr>
+<tr>
+<td><code>()</code></td>
+<td>模式单元，通俗来说就是，想取出什么内容，就在正则中用小括号将其括起来</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>源字符串</th>
+<th>正则表达式</th>
+<th>匹配结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&quot;aliyuncom&quot;</td>
+<td>&quot;yu&quot;</td>
+<td>yu</td>
+</tr>
+<tr>
+<td>&quot;aliyun\ncom&quot;</td>
+<td>&quot;yun\n&quot;</td>
+<td>yun\n</td>
+</tr>
+<tr>
+<td>&quot;aliyu32094ncom&quot;</td>
+<td>&quot;\w\d\w\d\d\w&quot;</td>
+<td>u32094</td>
+</tr>
+<tr>
+<td>&quot;aliyu32094ncom&quot;</td>
+<td>&quot;\w\d[ncom]\w&quot;</td>
+<td>94nc</td>
+</tr>
+<tr>
+<td>&quot;aliyuncnetostencenosji233489204aoyubaidu&quot;</td>
+<td>&quot;ali...&quot;</td>
+<td>aliyun</td>
+</tr>
+<tr>
+<td>&quot;aliyuncnetostencenosji233489204aoyubaidu&quot;</td>
+<td>&quot;^li&quot;</td>
+<td>None</td>
+</tr>
+<tr>
+<td>&quot;aliyuncnetostencenosji233489204aoyubaidu&quot;</td>
+<td>&quot;^ali...&quot;</td>
+<td>aliyun</td>
+</tr>
+<tr>
+<td>&quot;aliyuncnetostencenosji233489204aoyubaidu&quot;</td>
+<td>&quot;bai..$&quot;</td>
+<td>baidu</td>
+</tr>
+<tr>
+<td>&quot;aliyuncnetostencenosji233489204aoyubaidu&quot;</td>
+<td>&quot;ali.*&quot;</td>
+<td>aliyuncnetostencenosji233489204aoyubaidu</td>
+</tr>
+<tr>
+<td>&quot;aliyunnnnnsji233489204aoyubaidu&quot;</td>
+<td>&quot;aliyun+&quot;</td>
+<td>aliyunnnnn</td>
+</tr>
+<tr>
+<td>&quot;aliyunnnnnsji233489204aoyubaidu&quot;</td>
+<td>&quot;yun{1,2}&quot;</td>
+<td>yunn</td>
+</tr>
+</tbody>
+</table>
+<h3 id="贪婪模式">贪婪模式</h3>
+<blockquote>
+<p>贪婪模式：尽可能多的匹配</p>
+<p>懒惰模式：尽可能少的匹配，精准模式</p>
+</blockquote>
+<p>如果出现 <code>*?</code>、 <code>+?</code>，则代表懒惰模式</p>
+<table>
+<thead>
+<tr>
+<th>源字符串</th>
+<th>正则表达式</th>
+<th>匹配结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&quot;poytphosojvcy823zxh&quot;</td>
+<td>&quot;p.*y&quot;</td>
+<td>poytphosojvcy</td>
+</tr>
+<tr>
+<td>&quot;poytphosojvcy823zxh&quot;</td>
+<td>&quot;p.*?y&quot;</td>
+<td>poy</td>
+</tr>
+</tbody>
+</table>
+<h3 id="模式修正符">模式修正符</h3>
+<blockquote>
+<p>在不改变正则表达式的情况下通过模式修正符使匹配结果发生更改</p>
+<ul>
+<li><code>re.S</code> ：让 <code>.</code>也可以匹配多行</li>
+<li><code>re.I</code>：匹配时忽略大小写</li>
+</ul>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>源字符串</th>
+<th>正则表达式</th>
+<th>匹配方式</th>
+<th>匹配结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&quot;Python&quot;</td>
+<td>&quot;pyt&quot;</td>
+<td><code>re.compile(&quot;pyt&quot;).findall(&quot;Python&quot;)</code></td>
+<td>None</td>
+</tr>
+<tr>
+<td>&quot;Python&quot;</td>
+<td>&quot;pyt&quot;</td>
+<td><code>re.compile(&quot;pyt&quot;,re.I).findall(&quot;Python&quot;)</code></td>
+<td>Pyt</td>
+</tr>
+</tbody>
+</table>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E6%A6%82%E5%BF%B5">网络爬虫概念</a></li>
+<li><a href="#%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3">网络爬虫工作原理详解</a></li>
+<li><a href="#%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E5%B8%B8%E8%A7%81%E7%B1%BB%E5%9E%8B%E4%B8%8E%E5%BA%94%E7%94%A8%E9%A2%86%E5%9F%9F">网络爬虫常见类型与应用领域</a></li>
+<li><a href="#%E6%95%B0%E6%8D%AE%E6%8F%90%E5%8F%96%E5%9F%BA%E7%A1%80">数据提取基础</a>
+<ul>
+<li><a href="#%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F">正则表达式</a></li>
+<li><a href="#%E8%B4%AA%E5%A9%AA%E6%A8%A1%E5%BC%8F">贪婪模式</a></li>
+<li><a href="#%E6%A8%A1%E5%BC%8F%E4%BF%AE%E6%AD%A3%E7%AC%A6">模式修正符</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://zxh-w.github.io/post/xi-tong-she-ji/">
+              <h3 class="post-title">
+                系统设计
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://zxh-w.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

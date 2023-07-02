@@ -1,0 +1,1598 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://zxh-w.github.io</id>
+    <title>Gridea</title>
+    <updated>2023-07-02T00:01:37.803Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://zxh-w.github.io"/>
+    <link rel="self" href="https://zxh-w.github.io/atom.xml"/>
+    <subtitle>温故而知新</subtitle>
+    <logo>https://zxh-w.github.io/images/avatar.png</logo>
+    <icon>https://zxh-w.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2023, Gridea</rights>
+    <entry>
+        <title type="html"><![CDATA[Docker概览]]></title>
+        <id>https://zxh-w.github.io/post/docker-gai-lan/</id>
+        <link href="https://zxh-w.github.io/post/docker-gai-lan/">
+        </link>
+        <updated>2023-05-29T13:17:45.000Z</updated>
+        <content type="html"><![CDATA[<h3 id="docker简介">Docker简介</h3>
+<h4 id="什么是docker">什么是Docker</h4>
+<p>Docker是开发，运行和部署应用程序的开放平台。</p>
+<ul>
+<li>开发人员能利用Docker开发和运行应用程序。</li>
+<li>运维人员能利用Docker部署和管理应用程序。</li>
+</ul>
+<figure data-type="image" tabindex="1"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230529203137105.png" alt="image-20230529203137105" loading="lazy"></figure>
+<h4 id="为什么使用docker">为什么使用Docker</h4>
+<ul>
+<li>
+<p>Docker使您能够将应用程序与基础架构分开，以便您可以快速交付软件。</p>
+</li>
+<li>
+<p>借助Docker，您可以像管理应用程序一样管理基础架构。</p>
+</li>
+<li>
+<p>通过利用Docker的方法快速进行运输，测试和部署代码，可以明显缩短编写代码和在生产环境中运行代码之间的</p>
+<p>延迟。</p>
+<ul>
+<li>开发人员在本地编写代码，可以使用Docker同事进行共享，实现协同工作；</li>
+<li>使用Docker开发完成程序，可以直接对应用程序执行自动和手动测试；</li>
+<li>当开发人员发现吴或BUG时，可以直接在开发环境中修复后，并迅速将它们重新部署到测试环境进行测试和验证；</li>
+<li>利用Docker开发完成后，交付时，直接交付Docker，也就意味着交付完成。后续如果有提供修补程序或更新，需要推送到生成环境运行起来，也是一样的简单。</li>
+</ul>
+</li>
+<li>
+<p>Docker主要解决的问题．</p>
+<ul>
+<li>保证程序运行环境的一致性。</li>
+<li>降低配置开发环境、生产环境的复杂度和成本。</li>
+<li>实现程序的快速部署和分发。</li>
+</ul>
+</li>
+</ul>
+<h3 id="docker整体架构">Docker整体架构</h3>
+<p>Docker Engine是一个包含以下组件的客户端一服务端（C/S）应用程序</p>
+<ul>
+<li>
+<p>服务端---一个长时间运行的守护进程（Docker Daemon)</p>
+</li>
+<li>
+<p>RESTAPI---一套用于与Docker Daemon通信并指示其执行操作的接口</p>
+</li>
+<li>
+<p>客户端---命令行接口CLI(Command Linelnterface)</p>
+<figure data-type="image" tabindex="2"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/Docker_R_C.png" alt="R-C" loading="lazy"></figure>
+</li>
+<li>
+<p>CLI利用Docker命令通过REST API直接操控Docker Daemon执行操作</p>
+</li>
+<li>
+<p>Docker Daemon负责创建并管理Docker的对象（镜像、容器、网络、数据卷）</p>
+</li>
+</ul>
+<h4 id="docker结构">Docker结构</h4>
+<figure data-type="image" tabindex="3"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230529205616866.png" alt="image-20230529205616866" loading="lazy"></figure>
+<ul>
+<li>
+<p>Docker客户端(Docker Client)</p>
+<p>Docker客户端(Docker Client）是用户与Docker进行交互的最主要方式。当在终端输入docke命令时，对应的就会在服务端产生对应的作用，并把结果返回给客户端。Docker Client除了连接本地服务端，通过更改或指定DOCKER_HOST连接远程服务端。</p>
+</li>
+<li>
+<p>Docker服务端(DockerServer)</p>
+<p>Docker Daemon其实就是Docker的服务端。它负责监听Docker API请求（如Docker Client)并管理Docker对象(Docker Objects)，如镜像、容器、网络、数据卷等</p>
+</li>
+<li>
+<p>Docker Registries</p>
+<ul>
+<li>俗称Docke仓库，专门用于存储镜像的云服务环境．</li>
+<li>Docker Hub就是一个公有的存放镜像的地方，类似Github存储代码文件。同样的也可以类似Github搭建私有的仓库。</li>
+</ul>
+</li>
+<li>
+<p>Docker对象(DockerObJects)</p>
+<ul>
+<li>镜像：一个Docker的可执行文件，其中包括运行应用程序所需的所有代码内容、依赖库、环境变量和配置文件等。</li>
+<li>容器：镜像被运行起来后的实例。</li>
+<li>网络：外部或者容器间如何互相访问的网络方式，如host模式、bridge模式。</li>
+<li>数据卷：容器与宿主机之间、容器与容器之间共享存储方式，类似虚拟机与主机之间的共享文件目录。</li>
+</ul>
+</li>
+</ul>
+<h3 id="docker底层技术">Docker底层技术</h3>
+<ul>
+<li>
+<p>Docker使用GO语言实现。</p>
+</li>
+<li>
+<p>Docker利用用linux内核的几个特性来实现功能：</p>
+<ul>
+<li>利用linux的命名空间（Namespaces)：为Docke俗器提供操作系统层面的隔离。
+<ul>
+<li>进程号隔离：每一个容器内运行的第一个进程，进程号总是从1开始起算</li>
+<li>网络隔离：容器的网络与宿主机或其他容器的网络是隔离的、分开的，也就是相当于两个网络</li>
+<li>进程间通隔离：容器中的进程与宿主机或其他容器中的进程是互相不可见的，通信需要借助网络</li>
+<li>文件系统挂载隔离：容器拥有自己单独的工作目录</li>
+<li>内核以及系统版本号隔离：容器查看内核版本号或者系统版本号时，查看的是容器的，而非宿主机的</li>
+</ul>
+</li>
+<li>利用linux控制组（Control Groups)：为Docker容器提供硬件层面的隔离。
+<ul>
+<li>控制组能控制应用程序所使用的硬件资源。</li>
+<li>基于该性质，控制组帮助Docke引擎将硬件资源共享给容器使用，并目加以约束和限制。如控制容器所使用的内存大小。</li>
+</ul>
+</li>
+<li>利用Linux的联合文件系统（Union File Systems)：利用分层(layer）思想管理境像和容器。</li>
+</ul>
+<p>这也就意味着Docker只能在linux上运行。</p>
+<p>在Windows、MacOS上运行Docker，其实本质上是借助了虚拟化技术，然后在linux虚拟机上运行的Docke程序。</p>
+</li>
+<li>
+<p>容器格式（Container Format）：</p>
+<ul>
+<li>Docker Engine将namespace、cgroups、UnionFS进行组合后的一个package，就是一个容器格式(Container Format)。Docker通过对这个package中的namespace、cgroups、UnionFS进管理控制实现容器的创建和生命周期管理。</li>
+<li>容器格式(Container Format)有多种，其中Docker目前使用的容器格式被称为 <code>libcontainer</code>。</li>
+</ul>
+</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Python对象深入]]></title>
+        <id>https://zxh-w.github.io/post/python-dui-xiang-shen-ru/</id>
+        <link href="https://zxh-w.github.io/post/python-dui-xiang-shen-ru/">
+        </link>
+        <updated>2023-05-26T06:51:34.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="type-object和class的关系">type、object和class的关系</h2>
+<figure data-type="image" tabindex="1"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230507082334065.png" alt="image-20230507082334065" loading="lazy"></figure>
+<ul>
+<li>type生成了所有的class</li>
+<li>所有class都继承了object</li>
+<li>object是顶层基类，它没有父类</li>
+<li>type也是一个类，但同时它还是一个对象</li>
+<li>函数和类也是对象，属于Python的一等公民</li>
+</ul>
+<h2 id="python魔法函数">Python魔法函数</h2>
+<blockquote>
+<p>Python的魔法函数是指Python的类中，一系列函数名由双下划线包裹的函数。在特定时刻(调用内置函数时)，Python会自动调用这些函数。魔法函数不是通过继承等机制获得的，而是类一旦定义，Python内部机制自动会给类赋予这些特殊的函数，且用户是不能创建魔法函数的，即使函数名以双下划线开头和双下划线结尾。通过魔法函数可以实现许多个性化、便捷的操作。</p>
+</blockquote>
+<blockquote>
+<p><strong>Python中每个魔法函数都对应了一个Python内置函数或操作。</strong></p>
+</blockquote>
+<h3 id="非数学运算">非数学运算</h3>
+<table>
+<thead>
+<tr>
+<th>描述</th>
+<th>函数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>字符串表示</td>
+<td><code>__repr__</code>、<code>__str__</code></td>
+</tr>
+<tr>
+<td>集合、序列相关</td>
+<td><code>__len__</code>、<code>__getitem__</code>、<code>__setitem__</code>、<code>__delitem__</code>、<code>__contains__</code></td>
+</tr>
+<tr>
+<td>迭代相关</td>
+<td><code>__iter__</code>、<code>__next__</code></td>
+</tr>
+<tr>
+<td>可调用</td>
+<td><code>__call__</code></td>
+</tr>
+<tr>
+<td><code>with</code>上下文管理器</td>
+<td><code>__enter__</code>、<code>__exit__</code></td>
+</tr>
+<tr>
+<td>数值转换</td>
+<td><code>__abs__</code>、<code>__float__</code>、<code>__bool__</code>、<code>__int__</code>、<code>__hsah__</code>、<code>__index__</code></td>
+</tr>
+<tr>
+<td>元类相关</td>
+<td><code>__new__</code>、<code>__init__</code></td>
+</tr>
+<tr>
+<td>属性相关</td>
+<td><code>__getattr__</code>、<code>__setattr__</code>、<code>__getattribute__</code>、<code>__setattribute__</code>、<code>__dir__</code></td>
+</tr>
+<tr>
+<td>属性描述符</td>
+<td><code>__get__</code>、<code>__set__</code>、<code>__delete__</code></td>
+</tr>
+<tr>
+<td>协程</td>
+<td><code>__await__</code>、<code>__aiter__</code>、<code>__anext__</code>、<code>__aenter__</code>、<code>__aexit__</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="数学运算">数学运算</h3>
+<table>
+<thead>
+<tr>
+<th>描述</th>
+<th>函数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>一元运算符</td>
+<td><code>__neg__（-）</code>、<code>__pos__（+）</code>、<code>__abs__</code></td>
+</tr>
+<tr>
+<td>二元运算符</td>
+<td><code>__lt__(&lt;)</code>、<code>__le__ &lt;=</code>、<code> __eq__ ==</code> 、<code>__ne__ !=</code>、<code>__gt__ &gt;</code>、<code> __ge__ &gt;=</code></td>
+</tr>
+<tr>
+<td>算术运算符</td>
+<td><code>__add__ + </code>、<code>__sub__ -</code>、<code>__mul__ *</code>、<code>__truediv__ /</code>、<code> __floordiv__ //</code> 、<code>__mod__ %</code>、<code> __divmod__ divmod()</code> 、<code> __pow__ ** 或 pow()</code> 、 <code>__round__ round()</code></td>
+</tr>
+<tr>
+<td>反向算术运算符</td>
+<td><code>__radd__ </code>、<code> __rsub__</code> 、<code>__rmul__</code>、<code> __rtruediv__</code> 、<code> __rfloordiv__</code> 、<code>__rmod__</code>、<code>__rdivmod__</code> 、<code> __rpow__</code></td>
+</tr>
+<tr>
+<td>增量赋值算术运算符</td>
+<td><code>__iadd__</code> 、 <code>__isub__ </code>、 <code>__imul__</code> 、 <code>__itruediv__ </code>、 <code>__ifloordiv__ </code>、 <code>__imod__</code> 、<code>__ipow__</code></td>
+</tr>
+<tr>
+<td>位运算符</td>
+<td><code>__invert__ ~ </code>、<code>__lshift__ &lt;&lt;</code>、<code>__rshift__ &gt;&gt;</code>、 <code>__and__ &amp; </code>、 <code>__or__ </code>、<code>__xor__ ^</code></td>
+</tr>
+<tr>
+<td>反向位运算符</td>
+<td><code>__rlshift__ &lt;&lt;</code>、<code>__rrshift__ &gt;&gt;</code>、 <code>__rand__ &amp; </code>、 <code>__ror__ </code>、<code>__rxor__ ^</code></td>
+</tr>
+<tr>
+<td>增量赋值位运算符</td>
+<td><code>__ilshift__ </code>、<code>__irshift__</code>、<code>__iand__</code>、<code> __ixor__</code> 、<code> __ior__</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="鸭子类型和多态">鸭子类型和多态</h3>
+<pre><code class="language-python">'''
+Cat、Dog、Duck都有相同的行为，say
+'''
+class Cat(object):
+    def say(self):
+        print('I am a cat')
+class Dog(object):
+    def say(self):
+        print('I am a dog')
+class Duck(object):
+    def say(self):
+        print('I am a duck')
+animals = [Cat,Dog,Duck]
+for animal in animalss:
+    animal().say()
+</code></pre>
+<h3 id="抽象基类abc模块">抽象基类(abc模块)</h3>
+<blockquote>
+<ul>
+<li>抽象基类不能实例化</li>
+<li>子类需要实现基类指定的抽象方法</li>
+</ul>
+</blockquote>
+<ul>
+<li>
+<p>某些情况下希望判定某个对象的类型：<code>isinstance</code></p>
+</li>
+<li>
+<p>需要强制某个子类必须实现某些方法</p>
+<blockquote>
+<p>实现一个web框架，集成cache(redis，cache，memorycache)</p>
+</blockquote>
+<pre><code class="language-python">import abc
+class CacheBase(metaclass=abc.ABCMeta):
+    @abc.abstractmethod
+    def get(self,key):
+        pass
+   	@abc.abstractmethod
+    def set(self,key,value):
+        pass
+</code></pre>
+</li>
+</ul>
+<h3 id="使用-isinstance而不是-type">使用 <code>isinstance</code>而不是 <code>type</code></h3>
+<pre><code class="language-python">class A:
+	pass
+class B:
+    pass
+b = B()
+
+print(isinstance(b,B)) #True
+print(isinstance(b,A)) #True
+print(type(b) is A) #False
+</code></pre>
+<h3 id="类变量和实例变量">类变量和实例变量</h3>
+<pre><code class="language-python">class A:
+    aa = 1 #类变量
+    # 参数self是A的一个实例
+    def __init__(self,x,y):
+        self.x = x #实例变量 
+        self.y = y #实例变量
+
+a = A(2,3)
+A.aa = 11 #修改的是类属性aa
+a.aa = 100 # 会新建一个实例属性aa，并把aa的值设置为100
+print(A.aa)#11
+print(a.aa)#100
+</code></pre>
+<h3 id="类属性和实例属性以及查找顺序">类属性和实例属性以及查找顺序</h3>
+<pre><code class="language-python">class A:
+	name = 'A'
+    def __init()__(self):
+        self.name = 'obj'
+a = A()
+print(a.name)
+</code></pre>
+<blockquote>
+<p>如果使用BFS，那么当C和D有同名方法时，D中的方法就会被覆盖，而我们可能是要D中的方法。</p>
+</blockquote>
+<figure data-type="image" tabindex="2"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230516102002292.png" alt="" loading="lazy"></figure>
+<blockquote>
+<p>深度优先算法不是很合理，因为如果按A-&gt;B-&gt;D-&gt;C的方式查询，C中的方法可能是继承重写D的，这样一来C中的方法就找不到了。</p>
+</blockquote>
+<figure data-type="image" tabindex="3"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230516101557360.png" alt="image-20230516101557360" loading="lazy"></figure>
+<blockquote>
+<p>综上，BFS与DFS均有不适用的情况，Python选择了C3算法。C3算法对第一张图片的查找顺序和DFS相同，对第二张图片的查找顺序和BFS形同。</p>
+</blockquote>
+<h3 id="类方法-静态方法和实例方法">类方法、静态方法和实例方法</h3>
+<blockquote>
+<p>实例方法只能被实例对象调用(Python3 中，如果类调用实例方法，需要显示的传self, 也就是实例对象自己)，静态方法(由<code>@staticmethod</code>装饰的方法)、类方法(由<code>@classmethod</code>装饰的方法)，可以被类或类的实例对象调用。</p>
+</blockquote>
+<ul>
+<li>实例方法：第一个参数必须要默认传实例对象，一般习惯用<code>self</code>。</li>
+<li>静态方法：参数没有要求。</li>
+<li>类方法：第一个参数必须要默认传类，一般习惯用<code>cls</code>。</li>
+</ul>
+<h3 id="数据封装和私有属性">数据封装和私有属性</h3>
+<pre><code class="language-python">class User:
+    def __init__(self,age,weight):
+        self.age = age
+        self.__weight = weight#属性名前加__
+    def get_age(self):
+        return self.age
+    def get_weight(self):
+        return self.__weight
+if __name__ == '__main__':
+    user = User(32,64)
+    print(user.age) # 32
+    print(user.__weight) #报错
+    print(user.get_weight()) # 64
+    print(user._User__wieght) # 64
+</code></pre>
+<h3 id="python对象的自省机制">Python对象的自省机制</h3>
+<blockquote>
+<p>自省是通过一定的机制查询到对象的内部结构。检查某些事物以确定它是什么、它知道什么以及它能做什么。</p>
+</blockquote>
+<p>Python中比较常见的自省（<code>introspection</code>）机制(函数用法)有： <code>dir()</code>，<code>type()</code>,<code> hasattr()</code>,<code> isinstance()</code>，通过这些函数，我们能够在程序运行时得知对象的类型，判断对象是否存在某个属性，访问对象的属性。</p>
+<h3 id="super函数调用"><code>super()</code>函数调用</h3>
+<pre><code class="language-python">class A:
+    def __init__(self):
+        print('A')
+class B(A):
+    def __init__(self):
+        print('B')
+        super().__init__()
+class C(A):
+    def __init__(self):
+        print('C')
+        super().__init__()
+class D(B,C):
+     def __init__(self):
+        print('D')
+        super().__init__()
+d = D()
+print(D.__mro__)
+
+super(C,d).__init__()# A
+</code></pre>
+<p><code>super</code>的作用是 <strong>返回的是<code>obj</code>的MRO中<code>class</code>类的父类</strong>,在这里就表示<strong>返回的是<code>d</code>的MRO中<code>C</code>类的父类</strong>。</p>
+<h3 id="mixin功能">Mixin功能</h3>
+<p>Mixin 即 <code>Mix-in</code>，常被译为“混入”，是一种编程模式，这些类采用统一的命名规范（例如Mixin后缀），以此标识这些类只是用来混合功能的。</p>
+<ul>
+<li>Mixin类功能单一（一个Mixin类往往只实现一个功能（函数））</li>
+<li>如果有多个功能，那就写多个Mixin类</li>
+<li>不要和基类关联，可以和任意基类组合</li>
+<li>在Mixin类中，不要使用super()这种用法，Mixin类只用于拓展子类的功能，不能影响子类的主要功能，子类也不能依赖 Mixin类</li>
+</ul>
+<h3 id="python中上下文管理器">Python中上下文管理器</h3>
+<pre><code class="language-python">def exec_try():
+    try:
+        print('---------codeing  start----------')
+        raise KeyError
+        return 1
+    except KeyError as e:
+        print('---------Key Error-----------')
+        return 2
+    else:
+        print('---------Others--------------')
+        return 3
+    finally:
+        print('-----------final-------------')
+        return 4
+
+res = exec_try()
+print(res)
+</code></pre>
+<figure data-type="image" tabindex="4"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230517105332343.png" alt="image-20230517105332343" loading="lazy"></figure>
+<blockquote>
+<p>当一个类实现了 <code>__enter__()</code>和 <code>__exit__()</code>魔法函数时，那么这个类就实现了上下文管理器协议，<code>with</code>语句就可以直接使用这个类。</p>
+</blockquote>
+<pre><code class="language-python">with context_expression [as target(s)]:
+    with-body
+</code></pre>
+<p>一个类在 Python 中，只要实现以下方法，就实现了[上下文管理器协议]：</p>
+<ul>
+<li><code>__enter__</code>：在进入 <code>with</code> 语法块之前调用，返回值会赋值给 <code>with</code> 的 <code>target</code></li>
+<li><code>__exit__</code>：在退出 <code>with</code> 语法块时调用，一般用作异常处理</li>
+</ul>
+<h3 id="自定义序列">自定义序列</h3>
+<pre><code class="language-python">import numbers
+class Question():
+    def __init__(self,name,num,answer):
+        self.name = name
+        self.num = num
+        self.answer = answer
+    
+    def __getitem__(self,item):
+        cls = type(self)
+        
+        if isinstance(item,slice):
+            return cls(self.name,self.num,self.answer[item])
+        elif isinstance(item,numbers.Integral):
+            return cls(self.name,self.num,[self.answer[item],])
+        
+    def __revers__(self):
+        self.answer.reverse()
+        
+q = Question('test',4,['a','b','c','d'])
+print(q[::2])
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Python变量实质]]></title>
+        <id>https://zxh-w.github.io/post/pythpn-bian-liang-shi-zhi/</id>
+        <link href="https://zxh-w.github.io/post/pythpn-bian-liang-shi-zhi/">
+        </link>
+        <updated>2023-05-26T06:51:04.000Z</updated>
+        <content type="html"><![CDATA[<h3 id="python中的变量">Python中的变量</h3>
+<blockquote>
+<p>Python中的变量实质上是一个指针，可以理解为是一个便利贴</p>
+</blockquote>
+<ul>
+<li>Java中的基本类型变量，存放的是值</li>
+<li>Java中的引用类型变量，一般存放在栈内存中，而值存放在堆内存中（使用new关键字）或者常量池中</li>
+<li>Python中的变量存放的是值的地址</li>
+<li>Python中的变量（任何变量）类似于Java中的引用类型（<code>String</code>、数组、<code>ArrayList</code>、类等）</li>
+</ul>
+<h3 id="和is的区别"><code>==</code>和<code>is</code>的区别</h3>
+<blockquote>
+<p><code>==</code>是相等性比较，比较的是两个对象中的值是否相等，<code>is</code> 是一致性比较，比较的是两个对象的内存空间地址是否相同。</p>
+</blockquote>
+<p><strong>intern机制：</strong></p>
+<p>​	Python 中，其实存在许多内置的性能/效率优化机制。对不可变对象而言，最常见的有 <strong>小整数池</strong> 和 <strong>字符串驻留 (String Interning)</strong>，例如：Python解释器中使用了 intern（字符串驻留）的技术来提高字符串效率，什么是intern机制？即值同样的字符串对象仅仅会保存一份，放在一个字符串储蓄池中，是共用的，当然，肯定不能改变，这也决定了字符串必须是不可变对象。</p>
+<h3 id="del语句和垃圾回收"><code>del</code>语句和垃圾回收</h3>
+<p>在<code>CPython</code>中，<strong>垃圾回收使用的主要算法是引用计数</strong>。但 <strong><code>del</code>语句删除的是名称而不是对象</strong>。<code>del</code>可能会导致对象被当作垃圾回收，当且仅当删除的变量是保存的对象的最后一个引用。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[虚拟机配置]]></title>
+        <id>https://zxh-w.github.io/post/xu-ni-ji-pei-zhi/</id>
+        <link href="https://zxh-w.github.io/post/xu-ni-ji-pei-zhi/">
+        </link>
+        <updated>2023-05-15T01:49:22.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="虚拟网络编辑器配置">虚拟网络编辑器配置</h2>
+<figure data-type="image" tabindex="1"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230515094624174.png" alt="image-20230515094624174" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230515094652766.png" alt="image-20230515094652766" loading="lazy"></figure>
+<h2 id="本地vmnet8配置">本地<code>VMnet8</code>配置</h2>
+<figure data-type="image" tabindex="3"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230515094755409.png" alt="image-20230515094755409" loading="lazy"></figure>
+<h2 id="centos7内部网络配置">CentOS7内部网络配置</h2>
+<figure data-type="image" tabindex="4"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230515091434433.png" alt="image-20230515091434433" loading="lazy"></figure>
+<blockquote>
+<p>如果配置完成后还是不能上网或者和主机相互ping不通，重启虚拟机试一下。</p>
+</blockquote>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[pipenv简单使用]]></title>
+        <id>https://zxh-w.github.io/post/pipenv-jian-dan-shi-yong/</id>
+        <link href="https://zxh-w.github.io/post/pipenv-jian-dan-shi-yong/">
+        </link>
+        <updated>2023-05-14T11:01:48.000Z</updated>
+        <content type="html"><![CDATA[<blockquote>
+<p><code>pipenv</code>就是把<code>pip</code>和<code>virtualenv</code>包装起来的一个便捷工具，它会自动为您的项目创建和管理<code>virtualenv</code>,以及在安装/卸载软件包时添加/删除<code>Pipfile</code>中的软件包。</p>
+</blockquote>
+<ul>
+<li><code>Pipfile</code>：简明地显示项目环境依赖包</li>
+<li><code>Pipfile.lock</code>：详细记录环境依赖，并且使用Hash算法保证了它完整的对应关系</li>
+</ul>
+<h3 id="使用方法">使用方法</h3>
+<ol>
+<li>正确安装<code>pipenv</code>：<code>pip3 install pipenv</code></li>
+<li>创建项目所在的文件夹：<code>mkdir myproject</code></li>
+<li>进入文件夹：<code>cd myproject</code></li>
+<li>初始化虚拟环境：<code>pipenv  --python 3.7</code></li>
+<li>安装某一个包：<code>pipenv install django==2.2</code></li>
+</ol>
+<h3 id="常用命令">常用命令</h3>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pipenv --where</code></td>
+<td>列出本地工程路径</td>
+</tr>
+<tr>
+<td><code>pipenv --venv</code></td>
+<td>列出虚拟环境路径</td>
+</tr>
+<tr>
+<td><code>pipenv --py</code></td>
+<td>列出虚拟环境的Python可执行文件</td>
+</tr>
+<tr>
+<td><code>pipenv install</code></td>
+<td>（创建虚拟环境）</td>
+</tr>
+<tr>
+<td><code>pipenv install moduel --dev</code></td>
+<td>在开发环境安装包</td>
+</tr>
+<tr>
+<td><code>pipenv graph</code></td>
+<td>查看包依赖</td>
+</tr>
+<tr>
+<td><code>pipenv lock</code></td>
+<td>生成lockfile</td>
+</tr>
+<tr>
+<td><code>pipenv install --dev</code></td>
+<td>安装所有开发环境包</td>
+</tr>
+<tr>
+<td><code>pipenv uninstall --all</code></td>
+<td>卸载所有包</td>
+</tr>
+<tr>
+<td><code>pipenv --rm</code></td>
+<td>删除虚拟环境</td>
+</tr>
+<tr>
+<td><code>pipenv run python xxx.py</code></td>
+<td>虚拟环境运行python</td>
+</tr>
+<tr>
+<td><code>pipenv --rm</code></td>
+<td>删除虚拟环境</td>
+</tr>
+<tr>
+<td><code>pipenv uninstall 包名</code></td>
+<td>删除部分包</td>
+</tr>
+</tbody>
+</table>
+<p>参考链接：https://zhuanlan.zhihu.com/p/104935266</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Web与Dajngo]]></title>
+        <id>https://zxh-w.github.io/post/web-yu-dajngo/</id>
+        <link href="https://zxh-w.github.io/post/web-yu-dajngo/">
+        </link>
+        <updated>2023-05-11T15:03:28.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="web的结构">Web的结构</h2>
+<h3 id="网站的前端">网站的前端</h3>
+<p>通过用户肉眼看到的布局、内容、对网站的操作的功能，一切可以让用户直接接触与操作的部分。</p>
+<ul>
+<li>静态功能：静态功能不会和后端服务器进行交互，仅在前端处理并响应用户。</li>
+<li>动态功能：动态功能则通过与后端的交互，通过前端发送给后端的指令，在后端接到指令并作出相应逻辑处理后响应给前端，前端在收到后端响应后，将结果直接或二次加工后呈现给用户。</li>
+</ul>
+<h3 id="网站的后端">网站的后端</h3>
+<p>大量的业务逻辑、数据库IO，属于用户不可见、不可直接接触的部分。</p>
+<h3 id="web结构图">Web结构图</h3>
+<ul>
+<li>
+<p>前后端不分离<img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230511224659675.png" alt="" loading="lazy"></p>
+</li>
+<li>
+<p>前后端分离<img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230511224713733.png" alt="" loading="lazy"></p>
+</li>
+</ul>
+<h2 id="django中的模块">Django中的模块</h2>
+<figure data-type="image" tabindex="1"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-django-MVT.png" alt="image-20230511225144823" loading="lazy"></figure>
+<ul>
+<li><strong>模型Model</strong>：数据层，处理与数据相关的所有事情</li>
+<li><strong>视图View</strong>：视图层，用来处理用户发出的请求</li>
+<li><strong>模板Template</strong>：模板层，通过视图函数渲染html模板，得到动态的前端页面</li>
+<li><strong>路由Url</strong>：网站的入口，关联到对应的视图函数，访问网址就对应一个函数</li>
+<li><strong>表单Forms</strong>：表单，用在浏览器中输入数据提交，并对这些数据进行验证</li>
+<li><strong>后台Admin</strong>：Django自带的一个管理后台，对你提交的数据进行管理</li>
+<li><strong>配置Settings</strong>：Django的设置，配置文件</li>
+</ul>
+<h2 id="django基础命令">Django基础命令</h2>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>django-admin startproject 项目名</code></td>
+<td>创建一个Django项目</td>
+</tr>
+<tr>
+<td><code>python manage.py startapp 应用名</code></td>
+<td>项目中创建一个应用</td>
+</tr>
+<tr>
+<td><code>Python manage.py shell</code></td>
+<td>进入调试代码的模式</td>
+</tr>
+<tr>
+<td><code>python manage.py makemigrations</code></td>
+<td>数据库创建更改文件</td>
+</tr>
+<tr>
+<td><code>python manage.py migrate</code></td>
+<td>同步到数据库进行更新</td>
+</tr>
+<tr>
+<td><code>python manage.py flush</code></td>
+<td>清空数据库</td>
+</tr>
+<tr>
+<td><code>python manage.py runserver 0.0.0.0:8000</code></td>
+<td>启动开发服务器</td>
+</tr>
+<tr>
+<td><code>python manage.py + Enter</code></td>
+<td>查看更多命令</td>
+</tr>
+</tbody>
+</table>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Redis数据结构]]></title>
+        <id>https://zxh-w.github.io/post/redis-shu-ju-lei-xing/</id>
+        <link href="https://zxh-w.github.io/post/redis-shu-ju-lei-xing/">
+        </link>
+        <updated>2023-05-11T10:30:28.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="通用命令">通用命令</h2>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>说明</th>
+<th>时间复杂度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>keys [pattern]</code></td>
+<td>遍历出所有符合通配符的key</td>
+<td><code>O(n)</code></td>
+</tr>
+<tr>
+<td><code>dbsize</code></td>
+<td>计算出key的总数</td>
+<td><code>O(1)</code></td>
+</tr>
+<tr>
+<td><code>exists key</code></td>
+<td>检查key是否存在</td>
+<td><code>O(1)</code></td>
+</tr>
+<tr>
+<td><code>del key [key...]</code></td>
+<td>删除指定的key-value</td>
+<td><code>O(1)</code></td>
+</tr>
+<tr>
+<td><code>expire key seconds</code></td>
+<td>key在seconds秒后过期</td>
+<td><code>O(1)</code></td>
+</tr>
+<tr>
+<td><code>ttl key</code></td>
+<td>查看key剩余的时间</td>
+<td><code>O(1)</code></td>
+</tr>
+<tr>
+<td><code>persist key</code></td>
+<td>去掉key的过期时间</td>
+<td><code>O(1)</code></td>
+</tr>
+<tr>
+<td><code>type key</code></td>
+<td>返回key的类型</td>
+<td><code>O(1)</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="数据结构和内部编码">数据结构和内部编码</h2>
+<figure data-type="image" tabindex="1"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230506162651804.png" alt="image-20230506162651804" loading="lazy"></figure>
+<p><strong>Redis Object</strong></p>
+<figure data-type="image" tabindex="2"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230506162846389.png" alt="image-20230506162846389" loading="lazy"></figure>
+<h2 id="单线程">单线程</h2>
+<figure data-type="image" tabindex="3"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230506213636451.png" alt="image-20230506213636451" loading="lazy"></figure>
+<ul>
+<li>
+<p>纯内存</p>
+</li>
+<li>
+<p>非阻塞IO</p>
+<figure data-type="image" tabindex="4"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230506213815610.png" alt="image-20230506213815610" loading="lazy"></figure>
+</li>
+</ul>
+<p><strong>注意：</strong></p>
+<ol>
+<li>一次只执行一条命令</li>
+<li>拒绝长(慢)命令</li>
+<li>其实不是单线程（<code>fysnc file descriptor</code> <code>close file descriptor</code>）</li>
+</ol>
+<h2 id="字符串">字符串</h2>
+<h3 id="键值结构">键值结构</h3>
+<figure data-type="image" tabindex="5"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230506221446097.png" alt="image-20230506221446097" loading="lazy"></figure>
+<h3 id="api">API</h3>
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>说明</th>
+<th>复杂度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>get key</code></td>
+<td>获取key对应的value</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>set key value</code></td>
+<td>设置key-value</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>del key</code></td>
+<td>删除key-value</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>incr key</code></td>
+<td>key自增1，如果key不存在，自增后get(key)=1</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>decr key</code></td>
+<td>key自减1，如果key不存在，自减后get(key)=-1</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>incrby key k</code></td>
+<td>key自增k，如果key不存在，自增后get(key)=k</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>decrby key k</code></td>
+<td>key自减k，如果key不存在，自减后get(key)=-k</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>set key value</code></td>
+<td>不管key是否存在，都设置</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>setnx key value</code></td>
+<td>key不存在，才设置（插入操作）</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>set key value xx</code></td>
+<td>key存在，才设置(更新操作)</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>mget key1 key2 key3 ...</code></td>
+<td>批量获取key，原子操作</td>
+<td>O(n)</td>
+</tr>
+<tr>
+<td><code>mset key1 value1 key2 value2...</code></td>
+<td>批量设置key-value</td>
+<td>O(n)</td>
+</tr>
+<tr>
+<td><code>getset key newvalue</code></td>
+<td>set key new value并返回旧的value</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>append key value</code></td>
+<td>将value追加到旧的value</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>strlen key</code></td>
+<td>返回字符串长度（注意中文）</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>incrbyfloat key 3.5</code></td>
+<td>增加key对应的值3.5</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>getrange key start end</code></td>
+<td>获取字符串指定下标所有的值</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>setrange key index value</code></td>
+<td>设置指定下标所有对应的值</td>
+<td>O(1)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="hash">HASH</h2>
+<h3 id="键值结构-2">键值结构</h3>
+<blockquote>
+<p>key : filed value</p>
+<p><strong>filed不能相同</strong></p>
+</blockquote>
+<figure data-type="image" tabindex="6"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230507124345404.png" alt="image-20230507124345404" loading="lazy"></figure>
+<h3 id="api-2">API</h3>
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>说明</th>
+<th>复杂度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hget key field</code></td>
+<td>获取hash key对应的field的value</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>hset key filed value</code></td>
+<td>设置hash key对应field的value</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>hdel key field</code></td>
+<td>删除hash key对应的field</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>hexists key field</code></td>
+<td>判断hash key是否有field</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>hlen key</code></td>
+<td>获取hash key field的数量</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>hmget key field1 field2 ...fieldN</code></td>
+<td>获取hash key的一批field对应的值</td>
+<td>O(n)</td>
+</tr>
+<tr>
+<td><code>hmset key field1 value1 field2 value2...fieldN valueN</code></td>
+<td>批量设置hash key的一批field value</td>
+<td>O(n)</td>
+</tr>
+<tr>
+<td><code>hgetall key</code></td>
+<td>返回hash key对应所有field和value</td>
+<td>O(n)</td>
+</tr>
+<tr>
+<td><code>hvals key</code></td>
+<td>返回hashkey对应所有field的value</td>
+<td>O(n)</td>
+</tr>
+<tr>
+<td><code>hkeys key</code></td>
+<td>返回hash key对应所有的field</td>
+<td>O(n)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="列表">列表</h2>
+<h3 id="列表结构">列表结构</h3>
+<figure data-type="image" tabindex="7"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230511163526518.png" alt="image-20230511163526518" loading="lazy"></figure>
+<h3 id="列表特点">列表特点</h3>
+<ul>
+<li>有序</li>
+<li>可以重复</li>
+<li>左右两边都可以弹出</li>
+</ul>
+<h3 id="api-3">API</h3>
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>说明</th>
+<th>复杂度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rpush key value1 value2 ... valueN</code></td>
+<td>列表右端插入N个值</td>
+<td>O(N)</td>
+</tr>
+<tr>
+<td><code>lpush key value1 value2 ... valueN</code></td>
+<td>列表左端插入N个值</td>
+<td>O(N)</td>
+</tr>
+<tr>
+<td>`linsert key before</td>
+<td>after value newValue`</td>
+<td>在list指定的值前|后插入newValue</td>
+</tr>
+<tr>
+<td><code>lpop key</code></td>
+<td></td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>rpop kkey</code></td>
+<td></td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>lrem key count value</code></td>
+<td>根据count,从列表中删除所有value相等的项</td>
+<td>O(N)</td>
+</tr>
+<tr>
+<td><code>ltrim key start end</code></td>
+<td>按照索引范围修剪列表</td>
+<td>O(N)</td>
+</tr>
+<tr>
+<td><code>lrange key start end</code></td>
+<td>获取列表指定索引范围欸内所有item</td>
+<td>O(N)</td>
+</tr>
+<tr>
+<td><code>llen key</code></td>
+<td>获取key所对应的长度</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>lset key index newValue</code></td>
+<td>设置列表指定索引值为newValue</td>
+<td>O(N)</td>
+</tr>
+<tr>
+<td>`blpop</td>
+<td>brpop key timeout`</td>
+<td>`lpop</td>
+</tr>
+</tbody>
+</table>
+<h2 id="集合">集合</h2>
+<h3 id="集合结构">集合结构</h3>
+<figure data-type="image" tabindex="8"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230511165603288.png" alt="image-20230511165603288" loading="lazy"></figure>
+<h3 id="集合特点">集合特点</h3>
+<ul>
+<li>无需</li>
+<li>无重复</li>
+<li>支持集合间操作</li>
+</ul>
+<h3 id="api-4">API</h3>
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>说明</th>
+<th>复杂度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sadd key element</code></td>
+<td>向集合key中添加element</td>
+<td></td>
+</tr>
+<tr>
+<td><code>srem key element</code></td>
+<td>将集合key中的element移出掉</td>
+<td></td>
+</tr>
+<tr>
+<td><code>scard key</code></td>
+<td>计算集合大小</td>
+<td></td>
+</tr>
+<tr>
+<td><code>sismember key val</code></td>
+<td>判断val是否存在集合之中</td>
+<td></td>
+</tr>
+<tr>
+<td><code>srandmember key count=num</code></td>
+<td>从集合中随机选出num个元素,不会破环集合</td>
+<td></td>
+</tr>
+<tr>
+<td><code>smembers key</code></td>
+<td>获取集合所有元素</td>
+<td>O(N)</td>
+</tr>
+<tr>
+<td><code>spop key</code></td>
+<td>从集合中弹出一个元素</td>
+<td></td>
+</tr>
+<tr>
+<td><code>sdiff key1 key2</code></td>
+<td>差集</td>
+<td></td>
+</tr>
+<tr>
+<td><code>sinter key1 key2</code></td>
+<td>交集</td>
+<td></td>
+</tr>
+<tr>
+<td><code>sunion key1 key2</code></td>
+<td>并集</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="有序集合">有序集合</h2>
+<h3 id="有序集合结构">有序集合结构</h3>
+<figure data-type="image" tabindex="9"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230511171201803.png" alt="image-20230511171201803" loading="lazy"></figure>
+<h3 id="有序集合特点">有序集合特点</h3>
+<ul>
+<li>无重复元素</li>
+<li>有序</li>
+<li><code>element + score</code></li>
+</ul>
+<h3 id="api-5">API</h3>
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>说明</th>
+<th>复杂度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>zadd key score element</code></td>
+<td>向集合key中添加element和score</td>
+<td>O(logN)</td>
+</tr>
+<tr>
+<td><code>zrem key element</code></td>
+<td>将集合key中的element移出掉</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>zscore key element</code></td>
+<td>返回元素的分数</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>zincrby key increScore element</code></td>
+<td>增加或者减少元素的分数</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>zcard key</code></td>
+<td>计算有序集合元素个数</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td><code>zrange key start end [WITHSCORES]</code></td>
+<td>返回指定索引范围内的升序元素[分值]</td>
+<td>O(logN + m)</td>
+</tr>
+<tr>
+<td><code>zrangebyscore key minScore maxScore [WITHSCORES]</code></td>
+<td>返回指定分数范围内的升序元素[分值]</td>
+<td>O(logN + m)</td>
+</tr>
+<tr>
+<td><code>zcount key minScore maxScore</code></td>
+<td>返回有序集合内在指定分数范围的个数</td>
+<td>O(logN + m)</td>
+</tr>
+<tr>
+<td><code>zremrangebyrank key start end</code></td>
+<td>删除指定排名内的升序元素</td>
+<td>O(logN + m)</td>
+</tr>
+<tr>
+<td><code>zremrangebyscore key minScore maxScore</code></td>
+<td>删除指定分数内的升序元素</td>
+<td>O(logN + m)</td>
+</tr>
+</tbody>
+</table>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Redis初识]]></title>
+        <id>https://zxh-w.github.io/post/redis-chu-shi/</id>
+        <link href="https://zxh-w.github.io/post/redis-chu-shi/">
+        </link>
+        <updated>2023-05-06T07:04:07.000Z</updated>
+        <content type="html"><![CDATA[<blockquote>
+<p>Redis是一个开源的，<strong>基于内存的数据结构存储</strong>，可用作于数据库、<strong>缓存</strong>、消息中间件。<br>
+Redis的全称是：Remote Dictionary Server，本质上是一个 Key-Value 类型的内存数据库。<br>
+整个数据库加载在内存当中进行操作，定期通过异步操作把数据库数据保存在硬盘。因为是纯内存操作，Redis 的性能非常出色。</p>
+</blockquote>
+<h2 id="redis特性">Redis特性</h2>
+<h3 id="速度快">速度快</h3>
+<ul>
+<li>数据存在内存</li>
+<li>由C语言编写(50000 line)</li>
+<li>使用单线程模型</li>
+</ul>
+<figure data-type="image" tabindex="1"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230506144855242.png" alt="image-20230506144855242" loading="lazy"></figure>
+<h3 id="持久化">持久化</h3>
+<blockquote>
+<p>Redis将所有数据保持在内存中 ，对数据的更新将异步地保存到磁盘上。</p>
+</blockquote>
+<h3 id="多种数据结构">多种数据结构</h3>
+<figure data-type="image" tabindex="2"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230506145108624.png" alt="image-20230506145108624" loading="lazy"></figure>
+<p>除了以上的数据结构，还提供了：</p>
+<ul>
+<li><code>BitMaps</code>：位图</li>
+<li><code>HyperLogLog</code>：超小内存唯一值计数</li>
+<li><code>GEO</code>：地理信息定位</li>
+</ul>
+<h3 id="支持多种语言">支持多种语言</h3>
+<blockquote>
+<p>Java、php、Python、nodejs、lua、Rudy</p>
+</blockquote>
+<h3 id="简单">简单</h3>
+<ul>
+<li>不依赖外部库</li>
+<li>单线程模型</li>
+</ul>
+<h3 id="主从复制">主从复制</h3>
+<figure data-type="image" tabindex="3"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230506145808291.png" alt="image-20230506145808291" loading="lazy"></figure>
+<h3 id="高可用-分布式">高可用、分布式</h3>
+<ul>
+<li>高可用 <code>Redis-Sentinel(v2.8)</code>支持</li>
+<li>分布式 <code>Redis-Cluster(v3.0)</code>支持</li>
+</ul>
+<h2 id="典型应用场景">典型应用场景</h2>
+<ul>
+<li>缓存系统</li>
+<li>计数器</li>
+<li>排行榜</li>
+<li>消息队列系统</li>
+<li>社交网络</li>
+<li>实时系统</li>
+</ul>
+<h2 id="redis安装">Redis安装</h2>
+<h3 id="linux编译安装">Linux编译安装</h3>
+<ul>
+<li><code>wget http://download.redis.io/releases/redis-3.0.7.tar.gz</code></li>
+<li><code>tar -xzvf redis-3.0.7.tar.gz</code></li>
+<li><code>ln -s redis-3.0.7.tar.gz reids</code></li>
+<li><code>make &amp;&amp; make install</code></li>
+</ul>
+<h3 id="可执行文件说明">可执行文件说明</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">执行文件</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>redis-server</code></td>
+<td style="text-align:center">Redis服务器</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>redis-cli</code></td>
+<td style="text-align:center">Redis命令行客户端</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>redis-benchmark</code></td>
+<td style="text-align:center">Redis性能测试工具</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>redis-check-aof</code></td>
+<td style="text-align:center">AOF文件修复工具</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>redis-check-dump</code></td>
+<td style="text-align:center">RDB文件检查工具</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>redis-sentinel</code></td>
+<td style="text-align:center">Sentinel服务器</td>
+</tr>
+</tbody>
+</table>
+<h3 id="三种启动方式">三种启动方式</h3>
+<blockquote>
+<ul>
+<li>生产环境最好选择配置启动</li>
+<li>单机多实例配置文件可以用端口区分开</li>
+</ul>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>启动方式</th>
+<th>命令</th>
+<th>验证</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>最简启动</td>
+<td><code>redis-server</code></td>
+<td>`ps -ef</td>
+</tr>
+<tr>
+<td>配置文件启动</td>
+<td><code>redis-serve --port 6380</code></td>
+<td>`netstat -antpl</td>
+</tr>
+<tr>
+<td>动态参数启动</td>
+<td><code>redis-server configPath</code></td>
+<td><code>redis-cli -h ip -p port ping</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="redis常用配置">Redis常用配置</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>daemonize</code></td>
+<td>是否是守护进程</td>
+</tr>
+<tr>
+<td><code>port</code></td>
+<td>Redis对外端口号（默认端口6379）</td>
+</tr>
+<tr>
+<td><code>logfile</code></td>
+<td>Redis系统日志名</td>
+</tr>
+<tr>
+<td><code>dir</code></td>
+<td>Redis工作目录</td>
+</tr>
+</tbody>
+</table>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Conda安装报错：PackagesNotFoundError]]></title>
+        <id>https://zxh-w.github.io/post/conda-an-zhuang-bao-cuo-packagesnotfounderror/</id>
+        <link href="https://zxh-w.github.io/post/conda-an-zhuang-bao-cuo-packagesnotfounderror/">
+        </link>
+        <updated>2023-04-25T01:41:58.000Z</updated>
+        <content type="html"><![CDATA[<blockquote>
+<p>PackagesNotFoundError: The following packages are not available from current channels:</p>
+<p>otxv2==1.5.12</p>
+</blockquote>
+<ul>
+<li>
+<p>当出现<code>PackagesNotFoundError</code>时，它不一定就是你的<code>conda</code>源出问题了，你可以先在<a href="https://anaconda.org/search">Anaconda</a>的官网搜一下到底<code>conda</code>中有没有这个包，<code>otxv2</code>没有在 <code>conda</code>提供的包里。</p>
+</li>
+<li>
+<p>这时候就要使用 <code>pip</code>工具来下载这个包了，<code>pip install otvx2==1.5.2</code>，虽然找到了包，但是又有了报错：</p>
+<figure data-type="image" tabindex="1"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230425093856141.png" alt="image-20230425093856141" loading="lazy"></figure>
+</li>
+<li>
+<p>这个时候在网上查了一下，输入 <code>pip install OTXv2==1.5.12  -i http://pypi.douban.com/simple --trusted-host pypi.douban.com</code>，安装成功</p>
+<p><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230425094131694.png" alt="image-20230425094131694" loading="lazy"><br>
+参考来源：http://www.cnblogs.com/zengming/</p>
+</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[网络爬虫介绍]]></title>
+        <id>https://zxh-w.github.io/post/wang-luo-pa-chong-jie-shao/</id>
+        <link href="https://zxh-w.github.io/post/wang-luo-pa-chong-jie-shao/">
+        </link>
+        <updated>2023-04-24T09:49:20.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="网络爬虫概念">网络爬虫概念</h2>
+<p>​	网络爬虫是一种互联网信息的自动化采集程序，主要作用是代替人工对互联网中的数据进行自动采集与整理，以快速地、批量地获取目标数据。</p>
+<p>​	从技术手段来说，网络爬虫有很多实现方案，如PHP、Python(Urllib、request、scrapy、selenium……)等。</p>
+<p>​	网络爬虫的难点并不在于网络爬虫本身，而在于<strong>网页的分析与爬虫的反爬</strong>的攻克问题。</p>
+<h2 id="网络爬虫工作原理详解">网络爬虫工作原理详解</h2>
+<figure data-type="image" tabindex="1"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/python-3269952982323.jpg" alt="未命名文件" loading="lazy"></figure>
+<h2 id="网络爬虫常见类型与应用领域">网络爬虫常见类型与应用领域</h2>
+<ul>
+<li>
+<p>聚焦网络爬虫</p>
+<p>一般是目标明确、有目的的爬虫，比如采集目标客户数据，以进行后续营销</p>
+</li>
+<li>
+<p>通用网络爬虫</p>
+<p>比如搜索引擎</p>
+</li>
+<li>
+<p>深层网络爬虫</p>
+<p>例如开发一款火车篇抢票程序（爬取深层页面，必须验证）</p>
+</li>
+</ul>
+<h2 id="数据提取基础">数据提取基础</h2>
+<h3 id="正则表达式">正则表达式</h3>
+<blockquote>
+<p>全局匹配函数的使用格式：<code>re.comppile(regex).find(source string)</code></p>
+<p>注意：正则表达式默认是<strong>贪婪</strong>模式</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>字符</th>
+<th>匹配</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>普通字符</code></td>
+<td>正常匹配</td>
+</tr>
+<tr>
+<td><code>\n</code></td>
+<td>匹配换行符</td>
+</tr>
+<tr>
+<td><code>\t</code></td>
+<td>匹配制表符</td>
+</tr>
+<tr>
+<td><code>\w</code></td>
+<td>匹配字母、数字、下划线 ,等价于 <code>[0-9a-zA-Z_]</code></td>
+</tr>
+<tr>
+<td><code>\W</code></td>
+<td>匹配除字母、数字、下划线</td>
+</tr>
+<tr>
+<td><code>\d</code></td>
+<td>匹配十进制数字</td>
+</tr>
+<tr>
+<td><code>\D</code></td>
+<td>匹配除十进制数字</td>
+</tr>
+<tr>
+<td><code>\s</code></td>
+<td>匹配空白字符</td>
+</tr>
+<tr>
+<td><code>\S</code></td>
+<td>匹配除空白字符</td>
+</tr>
+<tr>
+<td><code>[ab89x]</code></td>
+<td>原子表，匹配<code>ab89x</code>中的任意一个字符</td>
+</tr>
+<tr>
+<td><code>[^ab89x]</code></td>
+<td>原子表，匹配除<code>ab89x</code>以外的任意一个字符</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>字符</th>
+<th>匹配</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.</code></td>
+<td>匹配除换行外的任意一个字符，要匹配  <code> \n</code> 在内的任意字符，使用 <code>[.\n]</code></td>
+</tr>
+<tr>
+<td><code>^</code></td>
+<td>匹配开始位置</td>
+</tr>
+<tr>
+<td><code>$</code></td>
+<td>匹配结束位置</td>
+</tr>
+<tr>
+<td><code>*</code></td>
+<td>前一个字符出现 <code>0\1\多</code>次</td>
+</tr>
+<tr>
+<td><code>?</code></td>
+<td>前一个字符出现 <code>0\1</code>次</td>
+</tr>
+<tr>
+<td><code>+</code></td>
+<td>前一个字符出现 <code>1\多</code>次</td>
+</tr>
+<tr>
+<td><code>{n}</code></td>
+<td>前一个字符恰好出现n次</td>
+</tr>
+<tr>
+<td><code>{n,}</code></td>
+<td>前一个字符至少出现n次</td>
+</tr>
+<tr>
+<td><code>{n,m}</code></td>
+<td>前一个字符至少n，至多m次</td>
+</tr>
+<tr>
+<td>`</td>
+<td>`</td>
+</tr>
+<tr>
+<td><code>()</code></td>
+<td>模式单元，通俗来说就是，想取出什么内容，就在正则中用小括号将其括起来</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>源字符串</th>
+<th>正则表达式</th>
+<th>匹配结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&quot;aliyuncom&quot;</td>
+<td>&quot;yu&quot;</td>
+<td>yu</td>
+</tr>
+<tr>
+<td>&quot;aliyun\ncom&quot;</td>
+<td>&quot;yun\n&quot;</td>
+<td>yun\n</td>
+</tr>
+<tr>
+<td>&quot;aliyu32094ncom&quot;</td>
+<td>&quot;\w\d\w\d\d\w&quot;</td>
+<td>u32094</td>
+</tr>
+<tr>
+<td>&quot;aliyu32094ncom&quot;</td>
+<td>&quot;\w\d[ncom]\w&quot;</td>
+<td>94nc</td>
+</tr>
+<tr>
+<td>&quot;aliyuncnetostencenosji233489204aoyubaidu&quot;</td>
+<td>&quot;ali...&quot;</td>
+<td>aliyun</td>
+</tr>
+<tr>
+<td>&quot;aliyuncnetostencenosji233489204aoyubaidu&quot;</td>
+<td>&quot;^li&quot;</td>
+<td>None</td>
+</tr>
+<tr>
+<td>&quot;aliyuncnetostencenosji233489204aoyubaidu&quot;</td>
+<td>&quot;^ali...&quot;</td>
+<td>aliyun</td>
+</tr>
+<tr>
+<td>&quot;aliyuncnetostencenosji233489204aoyubaidu&quot;</td>
+<td>&quot;bai..$&quot;</td>
+<td>baidu</td>
+</tr>
+<tr>
+<td>&quot;aliyuncnetostencenosji233489204aoyubaidu&quot;</td>
+<td>&quot;ali.*&quot;</td>
+<td>aliyuncnetostencenosji233489204aoyubaidu</td>
+</tr>
+<tr>
+<td>&quot;aliyunnnnnsji233489204aoyubaidu&quot;</td>
+<td>&quot;aliyun+&quot;</td>
+<td>aliyunnnnn</td>
+</tr>
+<tr>
+<td>&quot;aliyunnnnnsji233489204aoyubaidu&quot;</td>
+<td>&quot;yun{1,2}&quot;</td>
+<td>yunn</td>
+</tr>
+</tbody>
+</table>
+<h3 id="贪婪模式">贪婪模式</h3>
+<blockquote>
+<p>贪婪模式：尽可能多的匹配</p>
+<p>懒惰模式：尽可能少的匹配，精准模式</p>
+</blockquote>
+<p>如果出现 <code>*?</code>、 <code>+?</code>，则代表懒惰模式</p>
+<table>
+<thead>
+<tr>
+<th>源字符串</th>
+<th>正则表达式</th>
+<th>匹配结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&quot;poytphosojvcy823zxh&quot;</td>
+<td>&quot;p.*y&quot;</td>
+<td>poytphosojvcy</td>
+</tr>
+<tr>
+<td>&quot;poytphosojvcy823zxh&quot;</td>
+<td>&quot;p.*?y&quot;</td>
+<td>poy</td>
+</tr>
+</tbody>
+</table>
+<h3 id="模式修正符">模式修正符</h3>
+<blockquote>
+<p>在不改变正则表达式的情况下通过模式修正符使匹配结果发生更改</p>
+<ul>
+<li><code>re.S</code> ：让 <code>.</code>也可以匹配多行</li>
+<li><code>re.I</code>：匹配时忽略大小写</li>
+</ul>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>源字符串</th>
+<th>正则表达式</th>
+<th>匹配方式</th>
+<th>匹配结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&quot;Python&quot;</td>
+<td>&quot;pyt&quot;</td>
+<td><code>re.compile(&quot;pyt&quot;).findall(&quot;Python&quot;)</code></td>
+<td>None</td>
+</tr>
+<tr>
+<td>&quot;Python&quot;</td>
+<td>&quot;pyt&quot;</td>
+<td><code>re.compile(&quot;pyt&quot;,re.I).findall(&quot;Python&quot;)</code></td>
+<td>Pyt</td>
+</tr>
+</tbody>
+</table>
+]]></content>
+    </entry>
+</feed>

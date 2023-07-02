@@ -1,0 +1,349 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>系统设计 | Gridea</title>
+<link rel="shortcut icon" href="https://zxh-w.github.io/favicon.ico?v=1688256095979">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://zxh-w.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="系统设计 | Gridea - Atom Feed" href="https://zxh-w.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="什么是系统设计
+
+系统设计面试的形式 及 常见的系统设计面试题
+
+
+设计XXX系统Design XXX System
+
+设计微博 Design Twitter
+设计人人 Design Facebook
+设计滴滴 Design Uber
+设计..." />
+    <meta name="keywords" content="系统设计" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://zxh-w.github.io">
+  <img class="avatar" src="https://zxh-w.github.io/images/avatar.png?v=1688256095979" alt="">
+  </a>
+  <h1 class="site-title">
+    Gridea
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              系统设计
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-04-23
+              </span>
+              <span>
+                3 min read
+              </span>
+              
+                <a href="https://zxh-w.github.io/tag/0TobK0WSq/" class="post-tag">
+                  # 系统设计
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="什么是系统设计">什么是系统设计</h2>
+<blockquote>
+<p>系统设计面试的形式 及 常见的系统设计面试题</p>
+</blockquote>
+<ul>
+<li>设计<code>XXX</code>系统<code>Design XXX System</code>
+<ul>
+<li>设计微博 Design Twitter</li>
+<li>设计人人 Design Facebook</li>
+<li>设计滴滴 Design Uber</li>
+<li>设计微信 Design Whatsapp</li>
+<li>设计点评 Design Yelp</li>
+<li>设计短网址系统 Design Tiny URL</li>
+<li>设计NoSQL 数据库 Design NoSQL</li>
+</ul>
+</li>
+<li>设计某某系统中的某某功能
+<ul>
+<li>设计一个功能实现对用户访问频率的限制</li>
+<li>设计一个功能实现统计某个具体事件的历史发生次数</li>
+<li>设计删除一个Tweet的功能</li>
+<li>设计邮件系统中将所有邮件标记为可读的功能</li>
+</ul>
+</li>
+</ul>
+<h2 id="系统设计-vs-面向对象设计">系统设计 vs 面向对象设计</h2>
+<ul>
+<li>形式上：
+<ul>
+<li>面向对象设计手把手的Coding</li>
+<li>系统设计高屋建瓴的&quot;扯淡&quot;</li>
+</ul>
+</li>
+<li>考察的知识：
+<ul>
+<li>面向对象设计：Class，Objec，Method,Inheritance,Interface</li>
+<li>‘系统设计：Database, Schema, SQL,NoSQL,File System,Latency,Scalbility,Master Slave,Load Balance,Web Server,Message Queue,Sharding,QPS,……</li>
+</ul>
+</li>
+<li>典型题
+<ul>
+<li>面型对象设计：电梯设计，游戏设计</li>
+<li>系统设计：短网址系统设计，新鲜事系统设计</li>
+</ul>
+</li>
+</ul>
+<h2 id="系统设计评分标准">系统设计评分标准</h2>
+<ul>
+<li>可行解  Work Solution 25%</li>
+<li>特定问题 Special Case 20%</li>
+<li>分析能力 Analysis 25%</li>
+<li>权衡 Tradeoff 15 %</li>
+<li>知识储备 Knowledge Base 15 %</li>
+</ul>
+<h2 id="系统设计问题的4s分析法">系统设计问题的<code>4S</code>分析法</h2>
+<blockquote>
+<p>Scenario，Service，Storage，Scale</p>
+</blockquote>
+<ul>
+<li>Scenario  场景
+<ul>
+<li>需要设计哪些功能，设计得多牛</li>
+<li>Ask <code>Features/QPS/DAU/Interfaces</code></li>
+</ul>
+</li>
+<li>Service 服务
+<ul>
+<li>将大系统拆分为小服务</li>
+<li><code>Split/Application/Module</code></li>
+</ul>
+</li>
+<li>Storage 存储
+<ul>
+<li>数据如何存储与访问</li>
+<li><code>Schema/Data/SQL/NoSQL/Fill System</code></li>
+</ul>
+</li>
+<li>Scale 升级
+<ul>
+<li>解决缺陷，处理可能遇到得问题</li>
+<li><code>Sharding/Optimize/Special Case</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="scenario-场景">Scenario 场景</h2>
+<blockquote>
+<ol>
+<li>Ask 问面试官
+<ul>
+<li>需要设计哪些功能？</li>
+<li>需要承受多大得访问量？</li>
+</ul>
+</li>
+<li>Analysis 分析</li>
+</ol>
+</blockquote>
+<ul>
+<li>
+<p>日活跃用户(DAU)</p>
+</li>
+<li>
+<p>月活跃用户(MAU) : 一般不是注册用户，而是用月活跃用户来代表一个网站的用户数</p>
+</li>
+<li>
+<p>并发用户（Concurrent User）</p>
+<ul>
+<li>日活跃 * 每个用户平均请求次数/一天多少秒 = <code>150M * 60 / 86400 ~ 100k</code></li>
+<li>峰值 <code>Peak = Average Concurrent User * 3 ~ 300k</code></li>
+</ul>
+</li>
+<li>
+<p>读频率 Read QPS(Queries Per Second)</p>
+<ul>
+<li>300k</li>
+</ul>
+</li>
+<li>
+<p>写频率 Write QPS</p>
+</li>
+</ul>
+<h2 id="qps的作用">QPS的作用</h2>
+<ul>
+<li>
+<p>QPS = 100</p>
+<p>用笔记本做Web服务器就好了</p>
+</li>
+<li>
+<p>QPS = 1k</p>
+<ul>
+<li>需要用一台好一点的Web服务器</li>
+<li>需要考虑Single Point Failure</li>
+</ul>
+</li>
+<li>
+<p>QPS = 1m</p>
+<ul>
+<li>需要建设一个1000台Web服务器的集群</li>
+<li>需要考虑Maintainance(某一台服务器挂了怎么办)</li>
+</ul>
+</li>
+<li>
+<p>QPS和Web Server(服务器)/Database(数据库之间的关系)</p>
+<ul>
+<li>一台Web Server约承受量是1k的QPS（考虑到逻辑处理事件以及数据库查询的瓶颈）</li>
+<li>一台SQL Database 约承受量是1k的QPS（如果JOIN和INDEX query比较多的话，这个值会更小）</li>
+<li>一台NoSQL Database(Cassandra)约承受量是10k的QPS</li>
+<li>一台NoSQL Database(Memcached)约承受量是1M的QPS</li>
+</ul>
+</li>
+</ul>
+<h2 id="service-服务">Service 服务</h2>
+<blockquote>
+<p>将大系统拆分为为小服务</p>
+<ul>
+<li>Replay 重放需求</li>
+<li>Merge 归并需求</li>
+</ul>
+</blockquote>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1">什么是系统设计</a></li>
+<li><a href="#%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1-vs-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%AE%BE%E8%AE%A1">系统设计 vs 面向对象设计</a></li>
+<li><a href="#%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E8%AF%84%E5%88%86%E6%A0%87%E5%87%86">系统设计评分标准</a></li>
+<li><a href="#%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E9%97%AE%E9%A2%98%E7%9A%844s%E5%88%86%E6%9E%90%E6%B3%95">系统设计问题的<code>4S</code>分析法</a></li>
+<li><a href="#scenario-%E5%9C%BA%E6%99%AF">Scenario 场景</a></li>
+<li><a href="#qps%E7%9A%84%E4%BD%9C%E7%94%A8">QPS的作用</a></li>
+<li><a href="#service-%E6%9C%8D%E5%8A%A1">Service 服务</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://zxh-w.github.io/post/centos-fu-wu-qi-hou-tai-yun-xing-jupyter/">
+              <h3 class="post-title">
+                CentOS服务器后台运行Jupyter
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://zxh-w.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

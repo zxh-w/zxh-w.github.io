@@ -1,0 +1,472 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>OpenCTI安装记录 | Gridea</title>
+<link rel="shortcut icon" href="https://zxh-w.github.io/favicon.ico?v=1688256095979">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://zxh-w.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="OpenCTI安装记录 | Gridea - Atom Feed" href="https://zxh-w.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="
+OpenCTI的安装整整花费了我两天时间,得到了一个非常重要的教训,一定要先看安装文档,有不懂的再查找博客
+
+Docker命令
+查看运行容器
+docker ps
+
+查看所有容器
+docker ps -a
+
+进入容器
+docker exec..." />
+    <meta name="keywords" content="OpenCTI" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://zxh-w.github.io">
+  <img class="avatar" src="https://zxh-w.github.io/images/avatar.png?v=1688256095979" alt="">
+  </a>
+  <h1 class="site-title">
+    Gridea
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              OpenCTI安装记录
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-04-22
+              </span>
+              <span>
+                7 min read
+              </span>
+              
+                <a href="https://zxh-w.github.io/tag/NZCJb--k0/" class="post-tag">
+                  # OpenCTI
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <blockquote>
+<p>OpenCTI的安装整整花费了我两天时间,得到了一个非常重要的教训,一定要先看安装文档,有不懂的再查找博客</p>
+</blockquote>
+<h2 id="docker命令">Docker命令</h2>
+<h3 id="查看运行容器">查看运行容器</h3>
+<pre><code class="language-bash">docker ps
+</code></pre>
+<h3 id="查看所有容器">查看所有容器</h3>
+<pre><code>docker ps -a
+</code></pre>
+<h3 id="进入容器">进入容器</h3>
+<pre><code>docker exec -it 容器ID /bin/bash
+</code></pre>
+<h3 id="停用全部运行中的容器">停用全部运行中的容器</h3>
+<pre><code>docker stop $(docker ps -q)
+</code></pre>
+<h3 id="删除全部容器">删除全部容器</h3>
+<pre><code class="language-bash">docker rm $(docker ps -aq)
+</code></pre>
+<h3 id="一条命令实现停用并删除容器">一条命令实现停用并删除容器</h3>
+<pre><code class="language-bash">docker stop $(docker ps -q) &amp; docker rm $(docker ps -aq)
+</code></pre>
+<h3 id="查看镜像">查看镜像</h3>
+<pre><code>docker images -a
+</code></pre>
+<h3 id="删除所有镜像">删除所有镜像</h3>
+<pre><code class="language-bash">docker rmi $(docker images -a)
+</code></pre>
+<h3 id="查看容器日志">查看容器日志</h3>
+<pre><code>docker logs -f 容器ID
+</code></pre>
+<h2 id="opencti的安装">OpenCTI的安装</h2>
+<h3 id="安装docker">安装docker</h3>
+<ul>
+<li>
+<p>卸载旧版本</p>
+<pre><code class="language-bash">yum remove docker \
+                  docker-client \
+                  docker-client-latest \
+                  docker-common \
+                  docker-latest \
+                  docker-latest-logrotate \
+                  docker-logrotate \
+                  docker-selinux \
+                  docker-engine-selinux \
+                  docker-engine
+</code></pre>
+</li>
+<li>
+<p>安装依赖包</p>
+<pre><code class="language-bash">yum install -y yum-utils device-mapper-persistent-data lvm2
+</code></pre>
+</li>
+<li>
+<p><strong>添加yum软件源</strong></p>
+<blockquote>
+<p>如果不添加这个软件源，在下面的操作中会出现elasticsearch的docker镜像pull失败。</p>
+</blockquote>
+<pre><code class="language-bash">yum-config-manager \
+    	--add-repo \
+        https://mirrors.ustc.edu.cn/docker-ce/linux/centos/docker-ce.repo
+</code></pre>
+</li>
+<li>
+<p>安装docker-ce</p>
+<pre><code class="language-bash">yum install -y docker-ce
+</code></pre>
+</li>
+<li>
+<p>启动Docker服务并设置开机启动</p>
+<pre><code>systemctl start docker
+systemctl enable docker
+</code></pre>
+</li>
+<li>
+<p>测试docker安装</p>
+<pre><code class="language-bash">dokcer -v
+</code></pre>
+</li>
+</ul>
+<h3 id="安装docker-compose">安装docker-compose</h3>
+<ul>
+<li>
+<p>下载docker-compose</p>
+<pre><code class="language-bash">curl -L https://get.daocloud.io/docker/compose/releases/download/v2.1.1/docker-compose-`uname -s`-`uname -m` &gt; /usr/local/bin/docker-compose
+</code></pre>
+</li>
+<li>
+<p>修改docker-compose的权限</p>
+<pre><code class="language-bash">chmod +x /usr/local/bin/docker-compose
+</code></pre>
+</li>
+<li>
+<p>验证安装是否成功</p>
+<pre><code class="language-bash">docker-compose -v
+</code></pre>
+</li>
+</ul>
+<h3 id="安装opencti">安装OpenCTI</h3>
+<ul>
+<li>
+<p>下载OpenCTI</p>
+<pre><code class="language-bash">mkdir /root/opencti #创建一个文件夹
+cd /root/opencti    #进入该文件夹
+git clone https://github.com/OpenCTI-Platform/docker.git
+</code></pre>
+</li>
+<li>
+<p><strong>配置环境变量</strong></p>
+<blockquote>
+<p>这一步非常重要，如果这一步出错，后续会出现非常多的错误，后面我卡了一天，最后才找到是这里出错。</p>
+</blockquote>
+<ol>
+<li>
+<p>拷贝出<code>.env.sample</code>里的内容（不要直接把一些博客里改好的内容拷贝，因为版本不同参数也会有不同，我就是在这里偷懒了）</p>
+<pre><code>OPENCTI_ADMIN_EMAIL=admin@opencti.io
+OPENCTI_ADMIN_PASSWORD=changeme
+OPENCTI_ADMIN_TOKEN=ChangeMe_UUIDv4
+OPENCTI_BASE_URL=http://localhost:8080
+MINIO_ROOT_USER=opencti
+MINIO_ROOT_PASSWORD=changeme
+RABBITMQ_DEFAULT_USER=opencti
+RABBITMQ_DEFAULT_PASS=changeme
+CONNECTOR_EXPORT_FILE_STIX_ID=dd817c8b-abae-460a-9ebc-97b1551e70e6
+CONNECTOR_EXPORT_FILE_CSV_ID=7ba187fb-fde8-4063-92b5-c3da34060dd7
+CONNECTOR_EXPORT_FILE_TXT_ID=ca715d9c-bd64-4351-91db-33a8d728a58b
+CONNECTOR_IMPORT_FILE_STIX_ID=72327164-0b35-482b-b5d6-a5a3f76b845f
+CONNECTOR_IMPORT_DOCUMENT_ID=c3970f8a-ce4b-4497-a381-20b7256f56f0
+SMTP_HOSTNAME=localhost
+ELASTIC_MEMORY_SIZE=4G
+</code></pre>
+</li>
+<li>
+<p>按照如下方式修改</p>
+<pre><code>OPENCTI_ADMIN_EMAIL=admin@opencti.io #这里随便写一个邮箱就可以，当作登录账号
+OPENCTI_ADMIN_PASSWORD=changeme #这里写账号的密码
+OPENCTI_ADMIN_TOKEN=ChangeMe_UUIDv4 #这里填写一个UUID（网上可以在线生成）
+OPENCTI_BASE_URL=http://localhost:8080
+MINIO_ROOT_USER=opencti
+MINIO_ROOT_PASSWORD=changeme #这里需要写一个密码
+RABBITMQ_DEFAULT_USER=opencti
+RABBITMQ_DEFAULT_PASS=changeme #这里需要写一个密码
+CONNECTOR_EXPORT_FILE_STIX_ID=dd817c8b-abae-460a-9ebc-97b1551e70e6
+CONNECTOR_EXPORT_FILE_CSV_ID=7ba187fb-fde8-4063-92b5-c3da34060dd7
+CONNECTOR_EXPORT_FILE_TXT_ID=ca715d9c-bd64-4351-91db-33a8d728a58b
+CONNECTOR_IMPORT_FILE_STIX_ID=72327164-0b35-482b-b5d6-a5a3f76b845f
+CONNECTOR_IMPORT_DOCUMENT_ID=c3970f8a-ce4b-4497-a381-20b7256f56f0
+SMTP_HOSTNAME=localhost
+ELASTIC_MEMORY_SIZE=4G #这里写你可以给与elasticsearch的内存
+</code></pre>
+</li>
+<li>
+<p>在该文件夹中创建<code>.env</code>文件，将上一步的内容写到文件<code>.env</code>中，并使其生效</p>
+<pre><code class="language-bash">source .env
+</code></pre>
+</li>
+</ol>
+</li>
+<li>
+<p>调整机器内存参数</p>
+<pre><code class="language-bash">echo &quot;vm.max_map_count=65360&quot; &gt;&gt; /etc/sysctl.conf
+</code></pre>
+</li>
+<li>
+<p>拉动镜像</p>
+<pre><code>docker-compose pull
+</code></pre>
+</li>
+<li>
+<p>重启docker</p>
+<pre><code class="language-bash">docker-compose up -d
+</code></pre>
+</li>
+<li>
+<p>创造并启动容器</p>
+<blockquote>
+<p>注意：一定要指定docker-compose的配置文件，不然会出现非常多意想不到的错误，不要问我是怎么知道的😂</p>
+</blockquote>
+<pre><code class="language-bash">docker-compose -f docker-compose.yml up -d
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230421224939624.png" alt="image-20230421224939624" loading="lazy"></figure>
+<blockquote>
+<p>如果没有出现错误，访问 <code>http://ip:8080</code>应该如下图所示：</p>
+</blockquote>
+<figure data-type="image" tabindex="2"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230421224726415.png" alt="image-20230421224726415" loading="lazy"></figure>
+</li>
+</ul>
+<h3 id="配置alienvault连接器">配置AlienVault连接器</h3>
+<ul>
+<li>
+<p>注册<a href="https://otx.alienvault.com/">AlienVault</a>，这一步我是用的Google邮箱，需要用到梯子</p>
+<figure data-type="image" tabindex="3"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230421224219266.png" alt="image-20230421224219266" loading="lazy"></figure>
+</li>
+<li>
+<p>打开<a href="https://github.com/OpenCTI-Platform/connectors/blob/5.7.1/external-import/alienvault/docker-compose.yml">alienvaultconnector</a>，这是 <code>5.7.1</code>版本的AlienVault的连接器，修改后添加进docker目录下的 <code>docker-compose.yml</code></p>
+<figure data-type="image" tabindex="4"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230421224257777.png" alt="image-20230421224257777" loading="lazy"></figure>
+</li>
+<li>
+<p>修改后的内容如下</p>
+<pre><code>connector-alienvault:
+    image: opencti/connector-alienvault:5.7.1
+    environment:
+      - OPENCTI_URL=http://opencti:8080
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
+      - CONNECTOR_ID=ChangeMe #网上生成一个UUID
+      - CONNECTOR_TYPE=EXTERNAL_IMPORT
+      - CONNECTOR_NAME=AlienVault
+      - CONNECTOR_SCOPE=alienvault
+      - CONNECTOR_CONFIDENCE_LEVEL=15 # From 0 (Unknown) to 100 (Fully trusted)
+      - CONNECTOR_UPDATE_EXISTING_DATA=false
+      - CONNECTOR_LOG_LEVEL=info
+      - ALIENVAULT_BASE_URL=https://otx.alienvault.com
+      - ALIENVAULT_API_KEY=ChangeMe#你在AlienVault网站中的OTX Key
+      - ALIENVAULT_TLP=White
+      - ALIENVAULT_CREATE_OBSERVABLES=true
+      - ALIENVAULT_CREATE_INDICATORS=true
+      - ALIENVAULT_PULSE_START_TIMESTAMP=2020-05-01T00:00:00                  # BEWARE! Could be a lot of pulses!
+      - ALIENVAULT_REPORT_TYPE=threat-report
+      - ALIENVAULT_REPORT_STATUS=New
+      - ALIENVAULT_GUESS_MALWARE=false                                        # Use tags to guess malware.
+      - ALIENVAULT_GUESS_CVE=false                                            # Use tags to guess CVE.
+      - ALIENVAULT_EXCLUDED_PULSE_INDICATOR_TYPES=FileHash-MD5,FileHash-SHA1  # Excluded Pulse indicator types.
+      - ALIENVAULT_ENABLE_RELATIONSHIPS=true                                  # Enable/Disable relationship creation between SDOs.
+      - ALIENVAULT_ENABLE_ATTACK_PATTERNS_INDICATES=true                      # Enable/Disable &quot;indicates&quot; relationships between indicators and attack patterns
+      - ALIENVAULT_INTERVAL_SEC=1800 #刷新的时间间隔，按自己所需修改
+    restart: always
+</code></pre>
+</li>
+<li>
+<p>重新启动容器</p>
+<pre><code>docker-compose -f docker-compose.yml up -d
+</code></pre>
+<blockquote>
+<p>如果没有错误，访问后如下图所示</p>
+</blockquote>
+<figure data-type="image" tabindex="5"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230421224539357.png" alt="image-20230421224539357" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230421224629295.png" alt="image-20230421224629295" loading="lazy"></figure>
+</li>
+</ul>
+<p>​</p>
+<h3 id="错误一">错误一</h3>
+<blockquote>
+<p>如下图所示,如果elasticsearch的容器出现下面错误,你没有指定docker-compose.yml文件</p>
+</blockquote>
+<figure data-type="image" tabindex="7"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230420184222926.png" alt="image-20230420184222926" loading="lazy"></figure>
+<h3 id="错误二">错误二</h3>
+<blockquote>
+<p>如果你的AlienVault容器出现下列错误,那么是网络问题(可能需要梯子),我这里是一直开着它,后来它自己好了,不报错了</p>
+</blockquote>
+<pre><code>Traceback (most recent call last):
+  File &quot;/usr/local/lib/python3.10/site-packages/requests/adapters.py&quot;, line 489, in send
+    resp = conn.urlopen(
+  File &quot;/usr/local/lib/python3.10/site-packages/urllib3/connectionpool.py&quot;, line 878, in urlopen
+    return self.urlopen(
+  File &quot;/usr/local/lib/python3.10/site-packages/urllib3/connectionpool.py&quot;, line 878, in urlopen
+    return self.urlopen(
+  File &quot;/usr/local/lib/python3.10/site-packages/urllib3/connectionpool.py&quot;, line 878, in urlopen
+    return self.urlopen(
+  [Previous line repeated 2 more times]
+  File &quot;/usr/local/lib/python3.10/site-packages/urllib3/connectionpool.py&quot;, line 868, in urlopen
+    retries = retries.increment(method, url, response=response, _pool=self)
+  File &quot;/usr/local/lib/python3.10/site-packages/urllib3/util/retry.py&quot;, line 592, in increment
+    raise MaxRetryError(_pool, url, error or ResponseError(cause))
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='otx.alienvault.com', port=443): Max retries exceeded with url: /api/v1/pulses/subscribed?limit=20&amp;modified_s
+ince=2020-05-01T00:00:00&amp;page=2 (Caused by ResponseError('too many 500 error responses'))
+</code></pre>
+<h2 id="参考来源">参考来源：</h2>
+<p>https://blog.csdn.net/jeikerxiao/article/details/78476925</p>
+<p>https://blog.csdn.net/weixin_40263219/article/details/123866396</p>
+<p>https://blog.csdn.net/WEARE001/article/details/123897058</p>
+<p>https://www.cnblogs.com/J-xiaowei/p/12932567.html</p>
+<p>https://na1r.com/post/60</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#docker%E5%91%BD%E4%BB%A4">Docker命令</a>
+<ul>
+<li><a href="#%E6%9F%A5%E7%9C%8B%E8%BF%90%E8%A1%8C%E5%AE%B9%E5%99%A8">查看运行容器</a></li>
+<li><a href="#%E6%9F%A5%E7%9C%8B%E6%89%80%E6%9C%89%E5%AE%B9%E5%99%A8">查看所有容器</a></li>
+<li><a href="#%E8%BF%9B%E5%85%A5%E5%AE%B9%E5%99%A8">进入容器</a></li>
+<li><a href="#%E5%81%9C%E7%94%A8%E5%85%A8%E9%83%A8%E8%BF%90%E8%A1%8C%E4%B8%AD%E7%9A%84%E5%AE%B9%E5%99%A8">停用全部运行中的容器</a></li>
+<li><a href="#%E5%88%A0%E9%99%A4%E5%85%A8%E9%83%A8%E5%AE%B9%E5%99%A8">删除全部容器</a></li>
+<li><a href="#%E4%B8%80%E6%9D%A1%E5%91%BD%E4%BB%A4%E5%AE%9E%E7%8E%B0%E5%81%9C%E7%94%A8%E5%B9%B6%E5%88%A0%E9%99%A4%E5%AE%B9%E5%99%A8">一条命令实现停用并删除容器</a></li>
+<li><a href="#%E6%9F%A5%E7%9C%8B%E9%95%9C%E5%83%8F">查看镜像</a></li>
+<li><a href="#%E5%88%A0%E9%99%A4%E6%89%80%E6%9C%89%E9%95%9C%E5%83%8F">删除所有镜像</a></li>
+<li><a href="#%E6%9F%A5%E7%9C%8B%E5%AE%B9%E5%99%A8%E6%97%A5%E5%BF%97">查看容器日志</a></li>
+</ul>
+</li>
+<li><a href="#opencti%E7%9A%84%E5%AE%89%E8%A3%85">OpenCTI的安装</a>
+<ul>
+<li><a href="#%E5%AE%89%E8%A3%85docker">安装docker</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85docker-compose">安装docker-compose</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85opencti">安装OpenCTI</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AEalienvault%E8%BF%9E%E6%8E%A5%E5%99%A8">配置AlienVault连接器</a></li>
+<li><a href="#%E9%94%99%E8%AF%AF%E4%B8%80">错误一</a></li>
+<li><a href="#%E9%94%99%E8%AF%AF%E4%BA%8C">错误二</a></li>
+</ul>
+</li>
+<li><a href="#%E5%8F%82%E8%80%83%E6%9D%A5%E6%BA%90">参考来源：</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://zxh-w.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

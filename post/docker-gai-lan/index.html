@@ -1,0 +1,316 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Docker概览 | Gridea</title>
+<link rel="shortcut icon" href="https://zxh-w.github.io/favicon.ico?v=1688256095979">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://zxh-w.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Docker概览 | Gridea - Atom Feed" href="https://zxh-w.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="Docker简介
+什么是Docker
+Docker是开发，运行和部署应用程序的开放平台。
+
+开发人员能利用Docker开发和运行应用程序。
+运维人员能利用Docker部署和管理应用程序。
+
+
+为什么使用Docker
+
+
+Docker使您能够..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://zxh-w.github.io">
+  <img class="avatar" src="https://zxh-w.github.io/images/avatar.png?v=1688256095979" alt="">
+  </a>
+  <h1 class="site-title">
+    Gridea
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Docker概览
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-05-29
+              </span>
+              <span>
+                5 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h3 id="docker简介">Docker简介</h3>
+<h4 id="什么是docker">什么是Docker</h4>
+<p>Docker是开发，运行和部署应用程序的开放平台。</p>
+<ul>
+<li>开发人员能利用Docker开发和运行应用程序。</li>
+<li>运维人员能利用Docker部署和管理应用程序。</li>
+</ul>
+<figure data-type="image" tabindex="1"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230529203137105.png" alt="image-20230529203137105" loading="lazy"></figure>
+<h4 id="为什么使用docker">为什么使用Docker</h4>
+<ul>
+<li>
+<p>Docker使您能够将应用程序与基础架构分开，以便您可以快速交付软件。</p>
+</li>
+<li>
+<p>借助Docker，您可以像管理应用程序一样管理基础架构。</p>
+</li>
+<li>
+<p>通过利用Docker的方法快速进行运输，测试和部署代码，可以明显缩短编写代码和在生产环境中运行代码之间的</p>
+<p>延迟。</p>
+<ul>
+<li>开发人员在本地编写代码，可以使用Docker同事进行共享，实现协同工作；</li>
+<li>使用Docker开发完成程序，可以直接对应用程序执行自动和手动测试；</li>
+<li>当开发人员发现吴或BUG时，可以直接在开发环境中修复后，并迅速将它们重新部署到测试环境进行测试和验证；</li>
+<li>利用Docker开发完成后，交付时，直接交付Docker，也就意味着交付完成。后续如果有提供修补程序或更新，需要推送到生成环境运行起来，也是一样的简单。</li>
+</ul>
+</li>
+<li>
+<p>Docker主要解决的问题．</p>
+<ul>
+<li>保证程序运行环境的一致性。</li>
+<li>降低配置开发环境、生产环境的复杂度和成本。</li>
+<li>实现程序的快速部署和分发。</li>
+</ul>
+</li>
+</ul>
+<h3 id="docker整体架构">Docker整体架构</h3>
+<p>Docker Engine是一个包含以下组件的客户端一服务端（C/S）应用程序</p>
+<ul>
+<li>
+<p>服务端---一个长时间运行的守护进程（Docker Daemon)</p>
+</li>
+<li>
+<p>RESTAPI---一套用于与Docker Daemon通信并指示其执行操作的接口</p>
+</li>
+<li>
+<p>客户端---命令行接口CLI(Command Linelnterface)</p>
+<figure data-type="image" tabindex="2"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/Docker_R_C.png" alt="R-C" loading="lazy"></figure>
+</li>
+<li>
+<p>CLI利用Docker命令通过REST API直接操控Docker Daemon执行操作</p>
+</li>
+<li>
+<p>Docker Daemon负责创建并管理Docker的对象（镜像、容器、网络、数据卷）</p>
+</li>
+</ul>
+<h4 id="docker结构">Docker结构</h4>
+<figure data-type="image" tabindex="3"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230529205616866.png" alt="image-20230529205616866" loading="lazy"></figure>
+<ul>
+<li>
+<p>Docker客户端(Docker Client)</p>
+<p>Docker客户端(Docker Client）是用户与Docker进行交互的最主要方式。当在终端输入docke命令时，对应的就会在服务端产生对应的作用，并把结果返回给客户端。Docker Client除了连接本地服务端，通过更改或指定DOCKER_HOST连接远程服务端。</p>
+</li>
+<li>
+<p>Docker服务端(DockerServer)</p>
+<p>Docker Daemon其实就是Docker的服务端。它负责监听Docker API请求（如Docker Client)并管理Docker对象(Docker Objects)，如镜像、容器、网络、数据卷等</p>
+</li>
+<li>
+<p>Docker Registries</p>
+<ul>
+<li>俗称Docke仓库，专门用于存储镜像的云服务环境．</li>
+<li>Docker Hub就是一个公有的存放镜像的地方，类似Github存储代码文件。同样的也可以类似Github搭建私有的仓库。</li>
+</ul>
+</li>
+<li>
+<p>Docker对象(DockerObJects)</p>
+<ul>
+<li>镜像：一个Docker的可执行文件，其中包括运行应用程序所需的所有代码内容、依赖库、环境变量和配置文件等。</li>
+<li>容器：镜像被运行起来后的实例。</li>
+<li>网络：外部或者容器间如何互相访问的网络方式，如host模式、bridge模式。</li>
+<li>数据卷：容器与宿主机之间、容器与容器之间共享存储方式，类似虚拟机与主机之间的共享文件目录。</li>
+</ul>
+</li>
+</ul>
+<h3 id="docker底层技术">Docker底层技术</h3>
+<ul>
+<li>
+<p>Docker使用GO语言实现。</p>
+</li>
+<li>
+<p>Docker利用用linux内核的几个特性来实现功能：</p>
+<ul>
+<li>利用linux的命名空间（Namespaces)：为Docke俗器提供操作系统层面的隔离。
+<ul>
+<li>进程号隔离：每一个容器内运行的第一个进程，进程号总是从1开始起算</li>
+<li>网络隔离：容器的网络与宿主机或其他容器的网络是隔离的、分开的，也就是相当于两个网络</li>
+<li>进程间通隔离：容器中的进程与宿主机或其他容器中的进程是互相不可见的，通信需要借助网络</li>
+<li>文件系统挂载隔离：容器拥有自己单独的工作目录</li>
+<li>内核以及系统版本号隔离：容器查看内核版本号或者系统版本号时，查看的是容器的，而非宿主机的</li>
+</ul>
+</li>
+<li>利用linux控制组（Control Groups)：为Docker容器提供硬件层面的隔离。
+<ul>
+<li>控制组能控制应用程序所使用的硬件资源。</li>
+<li>基于该性质，控制组帮助Docke引擎将硬件资源共享给容器使用，并目加以约束和限制。如控制容器所使用的内存大小。</li>
+</ul>
+</li>
+<li>利用Linux的联合文件系统（Union File Systems)：利用分层(layer）思想管理境像和容器。</li>
+</ul>
+<p>这也就意味着Docker只能在linux上运行。</p>
+<p>在Windows、MacOS上运行Docker，其实本质上是借助了虚拟化技术，然后在linux虚拟机上运行的Docke程序。</p>
+</li>
+<li>
+<p>容器格式（Container Format）：</p>
+<ul>
+<li>Docker Engine将namespace、cgroups、UnionFS进行组合后的一个package，就是一个容器格式(Container Format)。Docker通过对这个package中的namespace、cgroups、UnionFS进管理控制实现容器的创建和生命周期管理。</li>
+<li>容器格式(Container Format)有多种，其中Docker目前使用的容器格式被称为 <code>libcontainer</code>。</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#docker%E7%AE%80%E4%BB%8B">Docker简介</a>
+<ul>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AFdocker">什么是Docker</a></li>
+<li><a href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8docker">为什么使用Docker</a></li>
+</ul>
+</li>
+<li><a href="#docker%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84">Docker整体架构</a>
+<ul>
+<li><a href="#docker%E7%BB%93%E6%9E%84">Docker结构</a></li>
+</ul>
+</li>
+<li><a href="#docker%E5%BA%95%E5%B1%82%E6%8A%80%E6%9C%AF">Docker底层技术</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://zxh-w.github.io/post/python-dui-xiang-shen-ru/">
+              <h3 class="post-title">
+                Python对象深入
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://zxh-w.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
