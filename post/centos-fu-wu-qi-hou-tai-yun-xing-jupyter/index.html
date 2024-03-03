@@ -1,0 +1,4435 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="keywords" content="网络安全 威胁情报 NLP 研究生 BUPT">
+<meta name="description" content="温故而知新">
+<meta name="theme-color" content="#000">
+<title>CentOS服务器后台运行Jupyter | zxh</title>
+<link rel="shortcut icon" href="/favicon.ico?v=1709463781380">
+<link rel="stylesheet" href="/media/css/gemini.css">
+<link rel="stylesheet" href="/media/fonts/font-awesome.css">
+<link
+  href="//fonts.loli.net/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Rosario:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext"
+  rel="stylesheet" type="text/css">
+
+<link href="/media/hljs/styles/default.css"
+  rel="stylesheet">
+
+<link rel="stylesheet" href="/styles/main.css">
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<script src="/media/js/jquery.js"></script>
+<script src="/media/hljs/highlight.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.0/velocity.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.0/velocity.ui.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css"
+  integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"
+  integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"
+  integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"
+  onload="renderMathInElement(document.body);"></script>
+
+
+
+
+
+
+  <meta name="description" content="CentOS服务器后台运行Jupyter" />
+  <meta name="keywords" content="" />
+</head>
+
+<body>
+  <div class="head-top-line"></div>
+  <div class="header-box">
+    
+<div class="gemini">
+  <header class="header  ">
+    <div class="blog-header box-shadow-wrapper bg-color " id="header">
+      <div class="nav-toggle" id="nav_toggle">
+        <div class="toggle-box">
+          <div class="line line-top"></div>
+          <div class="line line-center"></div>
+          <div class="line line-bottom"></div>
+        </div>
+      </div>
+      <div class="site-meta">       
+        <div class="site-title">
+          
+            <a href="/" class="brand">
+              <span>zxh</span>
+            </a>  
+          
+        </div>
+        
+          <p class="subtitle">精于心，简于形</p>
+        
+      </div>
+      <nav class="site-nav" id="site_nav">
+        <ul id="nav_ul">
+          
+            
+            
+              
+            
+            <li class="nav-item ">
+              
+              
+                <a href="/" target="_self">
+                  <i class="fa fa-globe"></i> 首页
+                </a>
+              
+            </li>
+          
+            
+            
+              
+            
+            <li class="nav-item ">
+              
+              
+                <a href="/archives" target="_self">
+                  <i class="fa fa-globe"></i> 归档
+                </a>
+              
+            </li>
+          
+            
+            
+              
+            
+            <li class="nav-item ">
+              
+              
+                <a href="/tags" target="_self">
+                  <i class="fa fa-globe"></i> 标签
+                </a>
+              
+            </li>
+          
+            
+            
+              
+            
+            <li class="nav-item ">
+              
+              
+                <a href="/post/about" target="_self">
+                  <i class="fa fa-globe"></i> 关于
+                </a>
+              
+            </li>
+          
+          
+            
+              <li class="nav-item ">
+                <a href="/friends/" target="_self">
+                  
+                    <i class="fa fa-address-book"></i> 友链
+                  
+                </a>
+              </li>
+            
+          
+          
+            <li id="fa_search" class="nav-item">
+              <a href="javascript:void(0);">
+                <i class="fa fa-search"></i> <span class="language" data-lan="search">搜索</span>
+              </a>
+            </li>
+          
+        </ul>
+      </nav>
+    </div>
+  </header>
+</div>
+
+<script type="text/javascript"> 
+ 
+  let showNav = true;
+
+  let navToggle = document.querySelector('#nav_toggle'),
+  siteNav = document.querySelector('#site_nav');
+  
+  function navClick() {
+    let sideBar = document.querySelector('.sidebar');
+    let navUl = document.querySelector('#nav_ul');
+    navToggle.classList.toggle('nav-toggle-active');
+    siteNav.classList.toggle('nav-menu-active');
+    if (siteNav.classList.contains('nav-menu-active')) {
+      siteNav.style = "height: " + (navUl.children.length * 42) +"px !important";
+    } else {
+      siteNav.style = "";
+    }
+  }
+
+  navToggle.addEventListener('click',navClick);  
+</script>
+  </div>
+  <div class="main-continer">
+    
+    <div
+      class="section-layout gemini ">
+      <div class="section-layout-wrapper">
+        
+
+<div class="sidebar">
+  
+    <div class="sidebar-box box-shadow-wrapper bg-color right-motion" id="sidebar">
+      
+        <div class="post-list-sidebar">
+          <div class="sidebar-title">
+            <span id="tocSideBar" class="sidebar-title-item sidebar-title-active language" data-lan="index">文章目录</span>
+            <span id="metaSideBar" class="sidebar-title-item language" data-lan="preview">站点概览</span>
+          </div>
+        </div>
+      
+      <div class="sidebar-body gemini" id="sidebar_body">
+        
+          
+            <div class="post-side-meta" id="post_side_meta">
+              
+<div class="sidebar-wrapper box-shadow-wrapper bg-color">
+  <div class="sidebar-item">
+    <img class="site-author-image right-motion" src="/images/avatar.png"/>
+    <p class="site-author-name">zxh</p>
+    
+    <div class="site-description right-motion">
+      
+      
+      
+        <p>一名网安研究生</p>
+      
+      
+    </div>
+    
+  </div>
+  <div class="sidebar-item side-item-stat right-motion">
+    <div class="sidebar-item-box">
+      <a href="/archives/">
+        
+        <span class="site-item-stat-count">21</span>
+        <span class="site-item-stat-name language" data-lan="article">文章</span>
+      </a>
+    </div>
+    <div class="sidebar-item-box">
+      <a href="/tags/">
+        <span class="site-item-stat-count">7</span>
+        <span class="site-item-stat-name language" data-lan="tag">标签</span>
+      </a>
+    </div>
+  </div>
+  
+    
+  
+  
+
+
+
+</div>
+            </div>
+            <div class="post-toc sidebar-body-active" id="post_toc" style="opacity: 1;">
+              <div class="toc-box right-motion">
+  <div class="toc-wrapper  auto"
+    id="toc_wrapper">
+    <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E5%8F%82%E8%80%83%E6%9D%A5%E6%BA%90">参考来源</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+</div>
+
+<script>
+
+  let lastTop = 0, lList = [], hList = [], postBody, lastIndex = -1;
+  let active = 'active-show', activeClass = 'active-current';
+  let tocWrapper = document.querySelector('#toc_wrapper');
+  let tocContent = tocWrapper.children[0];
+  let autoNumber = tocWrapper && tocWrapper.classList.contains('auto-number');
+
+  function addTocNumber(elem, deep) {
+    if (!elem) {
+      return;
+    }
+    let prop = elem.__proto__;
+
+    if (prop === HTMLUListElement.prototype) {
+      for (let i = 0; i < elem.children.length; i++) {
+        addTocNumber(elem.children[i], deep + (i + 1) + '.');
+      }
+    } else if (prop === HTMLLIElement.prototype) {
+      // 保存li元素
+      if (elem.children[0] && elem.children[0].__proto__ === HTMLAnchorElement.prototype) {
+        lList.push(elem);
+      }
+      for (let i = 0; i < elem.children.length; i++) {
+        let cur = elem.children[i];
+        if (cur.__proto__ === HTMLAnchorElement.prototype) {
+          if (autoNumber) {
+            cur.text = deep + ' ' + cur.text;
+          }
+        } else if (cur.__proto__ === HTMLUListElement.prototype) {
+          addTocNumber(cur, deep);
+        }
+      }
+    }
+  }
+
+  function removeParentActiveClass() {
+    let parents = tocContent.querySelectorAll('.' + active)
+    parents.forEach(function (elem) {
+      elem.classList.remove(active);
+    });
+  }
+
+  function addActiveClass(index) {
+    if (index >= 0 && index < hList.length) {
+      lList[index].classList.add(activeClass);
+    }
+  }
+
+  function removeActiveClass(index) {
+    if (index >= 0 && index < hList.length) {
+      lList[index].classList.remove(activeClass);
+    }
+  }
+
+  function addActiveLiElemment(elem, parent) {
+    if (!elem || elem === parent) {
+      return;
+    } else {
+      if (elem.__proto__ === HTMLLIElement.prototype) {
+        elem.classList.add(active);
+      }
+      addActiveLiElemment(elem.parentElement, parent);
+    }
+  }
+
+  function showToc() {
+    if (tocWrapper) {
+      postBody = document.querySelector('#post_body');
+      for (let i = 0; i < postBody.children.length; i++) {
+        if (postBody.children[i].__proto__ === HTMLHeadingElement.prototype) {
+          hList.push(postBody.children[i]);
+        }
+      }
+      if (tocWrapper.classList.contains('compress')) {
+        tocContent.classList.add('closed');
+      } else if (tocWrapper.classList.contains('no_compress')) {
+        tocContent.classList.add('expanded');
+      } else {
+        if (hList.length > 10) {
+          active = 'active-hidden'
+          tocContent.classList.add('closed');
+        } else {
+          tocContent.classList.add('expanded');
+        }
+      }
+    }
+  }
+
+  (function () {
+    // 处理不是从#一级标题开始目录
+    if (tocContent.children.length === 1 && tocContent.children[0].__proto__ === HTMLLIElement.prototype) {
+      let con = tocContent.children[0].children[0];
+      tocContent.innerHTML = con.innerHTML;
+    }
+    let markdownItTOC = document.querySelector('.markdownIt-TOC');
+    let innerHeight = window.innerHeight;
+    markdownItTOC.style = `max-height: ${innerHeight - 80 > 0 ? innerHeight - 80 : innerHeight}px`
+    addTocNumber(tocContent, '');
+  })();
+
+  document.addEventListener('scroll', function (e) {
+    if (lList.length <= 0) {
+      return;
+    }
+    let scrollTop = document.scrollingElement.scrollTop + 10;
+    let dir;
+
+    if (lastTop - scrollTop > 0) {
+      dir = 'up';
+    } else {
+      dir = 'down';
+    }
+
+    lastTop = scrollTop;
+    if (scrollTop <= 0) {
+      if (lastIndex >= 0 && lastIndex < hList.length) {
+        lList[lastIndex].classList.remove(activeClass);
+      }
+      return;
+    }
+
+    let current = 0, hasFind = false;
+    for (let i = 0; i < hList.length; i++) {
+      if (hList[i].offsetTop > scrollTop) {
+        current = i;
+        hasFind = true;
+        break;
+      }
+    }
+    if (!hasFind && scrollTop > lList[lList.length - 1].offsetTop) {
+      current = hList.length - 1;
+    } else {
+      current--;
+    }
+    if (dir === 'down') {
+      if (current > lastIndex) {
+        addActiveClass(current);
+        removeActiveClass(lastIndex)
+        lastIndex = current;
+        removeParentActiveClass();
+        lList[current] && addActiveLiElemment(lList[current].parentElement, tocContent);
+      }
+    } else {
+      if (current < lastIndex) {
+        addActiveClass(current);
+        removeActiveClass(lastIndex);
+        lastIndex = current;
+        removeParentActiveClass();
+        lList[current] && addActiveLiElemment(lList[current].parentElement, tocContent);
+      }
+    }
+  });
+
+
+  window.addEventListener('load', function () {
+    showToc();
+    document.querySelector('#sidebar').style = 'display: block;';
+    tocWrapper.classList.add('toc-active');
+    setTimeout(function () {
+      if ("createEvent" in document) {
+        let evt = document.createEvent("HTMLEvents");
+        evt.initEvent("scroll", false, true);
+        document.dispatchEvent(evt);
+      }
+      else {
+        document.fireEvent("scroll");
+      }
+    }, 500)
+  })
+
+</script>
+            </div>
+          
+        
+      </div>
+    </div>
+  
+</div>
+<script>
+  const SIDEBAR_TITLE_ACTIVE = 'sidebar-title-active';
+  const SIDEBAR_BODY_ACTIVE = 'sidebar-body-active';
+  const SLIDE_UP_IN = 'slide-up-in';
+
+  let sidebar = document.querySelector('#sidebar'),
+  tocSideBar = document.querySelector('#tocSideBar'),
+  metaSideBar = document.querySelector('#metaSideBar'),
+  postToc = document.querySelector('#post_toc'),
+  postSiteMeta = document.querySelector('#post_side_meta'),
+  sidebarTitle = document.querySelector('.sidebar-title'),
+  sidebarBody = document.querySelector('#sidebar_body');
+
+  tocSideBar && tocSideBar.addEventListener('click', (e) => {
+    toggleSidebar(e);
+  });
+
+  metaSideBar && metaSideBar.addEventListener('click', (e) => {
+    toggleSidebar(e);
+  });
+
+  function toggleSidebar(e) {
+    let currentTitle = document.querySelector("."+SIDEBAR_TITLE_ACTIVE);
+    if (currentTitle == e.srcElement) {
+      return ;
+    }
+    let current, showElement, hideElement;
+    if (e.srcElement == metaSideBar) {
+      showElement = postSiteMeta;
+      hideElement = postToc;
+    } else if (e.srcElement == tocSideBar){
+      showElement = postToc;
+      hideElement = postSiteMeta;
+    }
+    currentTitle.classList.remove(SIDEBAR_TITLE_ACTIVE);
+    e.srcElement.classList.add(SIDEBAR_TITLE_ACTIVE);
+
+    jQuery.Velocity(hideElement, 'stop');
+    jQuery.Velocity(hideElement, 'transition.slideUpOut', {
+      display: 'none',
+      duration: 200,
+      complete: function () {
+        jQuery.Velocity(showElement, 'transition.slideDownIn', {
+          duration: 200
+        });
+      }
+    })
+    hideElement.classList.remove(SIDEBAR_BODY_ACTIVE);
+    showElement.classList.add(SIDEBAR_BODY_ACTIVE);
+  }
+
+  postToc && postToc.addEventListener('transitionend', function() {
+    this.classList.remove(SLIDE_UP_IN);
+  });
+
+  if (sidebarBody) {
+    if (sidebarBody.classList.contains('pisces') || sidebarBody.classList.contains('gemini')) {
+      let hasFix = false;
+      let scrollEl = document.querySelector('.main-continer');
+      let limitTop = document.querySelector('#nav_ul').children.length * 42 + 162;
+      window.addEventListener('scroll', function(e) {
+        if (document.scrollingElement.scrollTop >= limitTop) {
+          if (!hasFix) {
+            sidebar.classList.add('sidebar-fixed');
+            hasFix = true;
+          }
+        } else {
+          if (hasFix) {
+            sidebar.classList.remove('sidebar-fixed');
+            hasFix = false;
+          }
+        }
+      });
+    }
+  }
+  
+</script>
+        <div class="section-box box-shadow-wrapper">
+          <div class="section bg-color post post-page">
+            <section class="post-header">
+  <h1 class="post-title">
+    <a class="post-title-link" href="https://zxh-w.github.io/post/centos-fu-wu-qi-hou-tai-yun-xing-jupyter/"> CentOS服务器后台运行Jupyter </a>
+  </h1>
+  <div class="post-meta">
+    
+    <span class="meta-item pc-show">
+      <i class="fa fa-calendar-o"></i>
+      <span class="language" data-lan="publish">发布于</span>
+      <span class="publish-time" data-t="2023-04-22 12:25:38">2023-04-22</span>
+      <span class="post-meta-divider pc-show">|</span>
+    </span>
+    
+    <span class="meta-item">
+      <i class="fa fa-clock-o"></i>
+      <span
+        >1<span class="language" data-lan="minute"
+          >分钟</span
+        ></span
+      >
+    </span>
+    <span class="meta-item">
+      <span class="post-meta-divider">|</span>
+      <i class="fa fa-file-word-o"></i>
+      <span
+        >155<span class="pc-show language" data-lan="words"
+          >字数</span
+        ></span
+      >
+    </span>
+    
+  </div>
+</section>
+
+            <div class="post-body next-md-body" id="post_body">
+              <blockquote>
+<p>需要将jupyter notebook 在CentOS服务器后台挂起，保证随时可以远程访问，同时也不能受到连接终端断开的影响</p>
+</blockquote>
+<ol>
+<li>
+<p>使用<code>tmux new -s jupyter</code>命令，建立名为jupyter的会话窗口，这会跳转到这个session中</p>
+</li>
+<li>
+<p>在这个session内执行后台运行jupyter notebook的指令：具体指令为：</p>
+<pre><code class="language-bash">nohup jupyter notebook --allow-root &gt; jupyter.log2 &gt;&amp;1 &amp;
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230422122419905.png" alt="image-20230422122419905" loading="lazy"></figure>
+</li>
+<li>
+<p>使用快捷键 Ctrl+b+d，就能退出当前窗口回到正常页面了（不影响session，可以使用<code>tmux a -t jupyter</code>可以再次进入该会话查看）</p>
+</li>
+</ol>
+<h2 id="参考来源">参考来源</h2>
+<p>https://zhuanlan.zhihu.com/p/365985728</p>
+
+            </div>
+            
+              <div class="reward-btn">
+                <div class="reward-btn-text">赞赏</div>
+              </div>
+            
+            
+              <div class="post-footer">
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong class="language" data-lan="author">本文作者：</strong>
+      zxh
+    </li>
+    <li class="post-copyright-link">
+      <strong class="language" data-lan="link">本文链接：</strong>
+      <a href="https://zxh-w.github.io/post/centos-fu-wu-qi-hou-tai-yun-xing-jupyter/" title="CentOS服务器后台运行Jupyter">https://zxh-w.github.io/post/centos-fu-wu-qi-hou-tai-yun-xing-jupyter/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong class="language" data-lan="copyright">版权声明： </strong>
+      本博客所有文章除特别声明外，均采用<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i> BY-NC-SA</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+  <div class="tags">
+    
+  </div>
+  <div class="nav">
+    <div class="nav-prev">
+      
+        <i class="fa fa-chevron-left"></i>
+        <a class="nav-pc-next" title="系统设计" href="https://zxh-w.github.io/post/xi-tong-she-ji/">系统设计</a class="nav-pc-next">
+        <a class="nav-mobile-prev" title="系统设计" href="https://zxh-w.github.io/post/xi-tong-she-ji/">上一篇</a>
+      
+    </div>
+    <div class="nav-next">
+      
+        <a class="nav-pc-next" title="OpenCTI安装记录" href="https://zxh-w.github.io/post/opencti-an-zhuang-ji-lu/">OpenCTI安装记录</a>
+        <a class="nav-mobile-next" title="OpenCTI安装记录" href="https://zxh-w.github.io/post/opencti-an-zhuang-ji-lu/">下一篇</a>
+        <i class="fa fa-chevron-right"></i>
+      
+    </div>
+  </div>
+</div>
+            
+            
+  
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-box">
+  <footer class="footer">
+    <center id="runTimeBox">
+      已运行:<span id="run_time"></span>
+    </center>
+    <span id="busuanzi_container_site_pv">浏览数:<span id="busuanzi_value_site_pv"></span> 次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">访客数:<span id="busuanzi_value_site_uv"></span> 人</span>
+
+    <script>
+      BirthDay = new Date('');
+      if (BirthDay.getTime()) {
+        function runTime() {
+          str = "";
+          today = new Date();
+          timeold = today.getTime() - BirthDay.getTime();
+          msPerDay = 24 * 60 * 60 * 1000;
+          e_daysold = timeold / msPerDay;
+          daysold = Math.floor(e_daysold);
+          str += daysold + "天";
+          return str;
+        }
+        setInterval(function () {
+          $("#run_time").html(runTime());
+        }, 1000);
+      } else {
+        document.querySelector('.footer').removeChild(document.querySelector('#runTimeBox'));
+      }
+    </script>
+    <div class="poweredby">
+      Powered by <a href="https://github.com/zxh-w" target="_blank">zxh-w</a>
+    </div>
+  </footer>
+  
+    
+        <div class="gemini back-to-top" id="back_to_top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span class="scrollpercent"> <span id="back_to_top_text">0</span>% </span>
+            
+        </div>
+        
+                  
+                        
+</div>
+<script>
+  let sideBarOpen = "sidebar-open";
+  let body = document.body;
+  let back2Top = document.querySelector("#back_to_top"),
+    back2TopText = document.querySelector("#back_to_top_text"),
+    drawerBox = document.querySelector("#drawer_box"),
+    rightSideBar = document.querySelector(".sidebar"),
+    viewport = document.querySelector("body");
+
+  function scrollAnimation(currentY, targetY) {
+    let needScrollTop = targetY - currentY;
+    let _currentY = currentY;
+    setTimeout(() => {
+      const dist = Math.ceil(needScrollTop / 10);
+      _currentY += dist;
+      window.scrollTo(_currentY, currentY);
+      if (needScrollTop > 10 || needScrollTop < -10) {
+        scrollAnimation(_currentY, targetY);
+      } else {
+        window.scrollTo(_currentY, targetY);
+      }
+    }, 1);
+  }
+
+  back2Top.addEventListener("click", function (e) {
+    scrollAnimation(document.scrollingElement.scrollTop, 0);
+    e.stopPropagation();
+    return false;
+  });
+
+  window.addEventListener("scroll", function (e) {
+    let percent =
+      (document.scrollingElement.scrollTop /
+        (document.scrollingElement.scrollHeight -
+          document.scrollingElement.clientHeight)) *
+      100;
+    if (percent > 1 && !back2Top.classList.contains("back-top-active")) {
+      back2Top.classList.add("back-top-active");
+    }
+    if (percent == 0) {
+      back2Top.classList.remove("back-top-active");
+    }
+    if (back2TopText) {
+      back2TopText.textContent = Math.floor(percent);
+    }
+  });
+
+  let hasCacu = false;
+  window.addEventListener("resize", function (e) {
+    calcuHeight();
+  });
+
+  function calcuHeight() {
+    // 动态调整站点概览高度
+    if (
+      (!hasCacu && back2Top.classList.contains("pisces")) ||
+      back2Top.classList.contains("gemini")
+    ) {
+      let sideBar = document.querySelector(".sidebar");
+      let navUl = document.querySelector("#site_nav");
+      sideBar.style =
+        "margin-top:" + (navUl.offsetHeight + navUl.offsetTop + 15) + "px;";
+      hasCacu = true;
+    }
+  }
+  calcuHeight();
+
+  let open = false,
+    MOTION_TIME = 300,
+    RIGHT_MOVE_DIS = "320px";
+
+  if (drawerBox) {
+    let rightMotions = document.querySelectorAll(".right-motion");
+    let right = drawerBox.classList.contains("right");
+
+    let transitionDir = right
+      ? "transition.slideRightIn"
+      : "transition.slideLeftIn";
+
+    let openProp, closeProp;
+    if (right) {
+      openProp = {
+        paddingRight: RIGHT_MOVE_DIS,
+      };
+      closeProp = {
+        paddingRight: "0px",
+      };
+    } else {
+      openProp = {
+        paddingLeft: RIGHT_MOVE_DIS,
+      };
+      closeProp = {
+        paddingLeft: "0px",
+      };
+    }
+
+    drawerBox.onclick = function () {
+      open = !open;
+      jQuery.Velocity(rightSideBar, "stop");
+      jQuery.Velocity(viewport, "stop");
+      jQuery.Velocity(rightMotions, "stop");
+      if (open) {
+        jQuery.Velocity(
+          rightSideBar,
+          {
+            width: RIGHT_MOVE_DIS,
+          },
+          {
+            duration: MOTION_TIME,
+            begin: function () {
+              jQuery.Velocity(rightMotions, transitionDir, {});
+            },
+          }
+        );
+        jQuery.Velocity(viewport, openProp, {
+          duration: MOTION_TIME,
+        });
+      } else {
+        jQuery.Velocity(
+          rightSideBar,
+          {
+            width: "0px",
+          },
+          {
+            duration: MOTION_TIME,
+            begin: function () {
+              jQuery.Velocity(rightMotions, {
+                opacity: 0,
+              });
+            },
+          }
+        );
+        jQuery.Velocity(viewport, closeProp, {
+          duration: MOTION_TIME,
+        });
+      }
+      for (let i = 0; i < drawerBox.children.length; i++) {
+        drawerBox.children[i].classList.toggle("muse-line");
+      }
+      drawerBox.classList.toggle(sideBarOpen);
+    };
+  }
+
+  // 链接跳转
+  let newWindow = "false";
+  if (newWindow === "true") {
+    let links = document.querySelectorAll(".post-body a");
+    links.forEach((item) => {
+      if (!item.classList.contains("btn")) {
+        item.setAttribute("target", "_blank");
+      }
+    });
+  }
+
+  let faSearch = document.querySelector("#fa_search");
+  faSearch &&
+    faSearch.addEventListener("click", function () {
+      document.querySelector("#search_mask").style = "";
+    });
+
+  // 代码高亮
+  hljs.initHighlightingOnLoad();
+
+  // 离开当前页title变化
+  var leaveTitle = "";
+  var normal_title = document.title;
+  if (leaveTitle) {
+    document.addEventListener("visibilitychange", function () {
+      if (document.visibilityState == "hidden") {
+        normal_title = document.title;
+        document.title = leaveTitle;
+      } else {
+        document.title = normal_title;
+      }
+    });
+  }
+</script>
+
+<link rel="stylesheet" href="/media/css/jquery.fancybox.css" />
+<script src="/media/js/jquery.fancybox.js"></script>
+
+<script>
+  let images = document.querySelectorAll(".section img");
+  images.forEach((image) => {
+    var parent = image.parentElement;
+    var next = image.nextElementSibling;
+    parent.removeChild(image);
+    var aelem = document.createElement("a");
+    aelem.href = image.src;
+    aelem.dataset["fancybox"] = "images";
+    aelem.dataset["rel"] = "fancybox-button";
+    aelem.classList.add("fancybox");
+    aelem.appendChild(image);
+    parent.insertBefore(aelem, next);
+  });
+</script>
+    <div class="reward-mask" style="display: none;">
+  <div class="reward-relative">
+    <span class="close" aria-hidden="true">x</span>
+    <div class="reward-body">
+      <h2>感谢您的支持，我会继续努力的!</h2>
+      <div class="reward-img-box">
+        <div style="position: relative; width: 140px; height: 140px;">
+          
+          
+          
+            <img id="wx" class="reward-img" src="\media\images\custom-wxImg.jpg" alt="赞赏码">
+          
+        </div>
+      </div>
+      <p class="reward-word">扫码打赏，你说多少就多少</p>
+      <p class="reward-tip"> </p>
+    </div>
+    <div class="bottom">
+      
+      
+      <div id="wxBtn" class="pay-text">
+        微信支付
+      </div>
+      
+    </div>
+  </div>
+</div>
+<style>
+  .reward-mask {
+    position: fixed;
+    z-index: 99999;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #00000054;
+  }
+
+  .reward-relative {
+    position: relative;
+    width: 480px;
+    text-align: center;
+    margin: 0 auto;
+    border-radius: 5px;
+    background-color: #fff;
+    top: 50%;
+    margin-top: -205px;
+  }
+
+  .reward-relative .close {
+    position: absolute;
+    right: 10px;
+    font-weight: normal;
+    font-size: 16px;
+    color: #929292;
+  }
+
+  .reward-body {
+    padding: 40px 20px 20px;
+  }
+
+  .bottom {
+    display: flex;
+  }
+
+  .reward-btn {
+    text-align: center;
+  }
+
+  .reward-btn-text {
+    display: inline-block;
+    cursor: pointer;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    border-radius: 50%;
+    background-color: #ff9734;
+    color: #FFF;
+    margin-top: 20px;
+  }
+
+  .pay-text {
+    margin-top: 10px;
+    padding: 10px;
+    flex: 1;
+    transition: all .2s linear;
+  }
+
+  .pay-text:hover {
+    background-color: #a5a5a536;
+  }
+
+  .reward-body h2 {
+    padding-top: 10px;
+    text-align: center;
+    color: #a3a3a3;
+    font-size: 16px;
+    font-weight: normal;
+    margin: 0 0 20px;
+  }
+
+  .reward-body h2:after,
+  .reward-body h2:before {
+    font-family: Arial, Helvetica, sans-serif;
+    background: 0 0;
+    width: 0;
+    height: 0;
+    font-style: normal;
+    color: #eee;
+    font-size: 80px;
+    position: absolute;
+    top: 20px;
+  }
+
+  .reward-body h2:before {
+    content: '\201c';
+    left: 50px;
+  }
+
+  .reward-body h2:after {
+    content: '\201d';
+    right: 80px;
+  }
+
+  .reward-img-box {
+    display: inline-block;
+    padding: 10px;
+    border: 6px solid #ea5f00;
+    margin: 0 auto;
+    border-radius: 3px;
+    position: relative;
+  }
+
+  .reward-img {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+  }
+
+  @media (max-width: 767px) {
+    .reward-relative {
+      height: 100%;
+      top: 0px;
+      margin-top: 0;
+      width: auto;
+    }
+
+    .reward-relative .bottom {
+      flex-direction: column;
+    }
+
+    .reward-relative .pay-text {
+      width: 80%;
+      margin: 5px auto;
+      border: 1px solid silver;
+      padding: 6px;
+      border-radius: 4px;
+    }
+
+    .reward-body h2:after {
+      right: 40px;
+    }
+
+    .reward-body h2:after,
+    .reward-body h2:before {
+      font-size: 60px;
+    }
+
+    .reward-body h2:before {
+      left: 20px;
+    }
+  }
+</style>
+<script>
+  !function () {
+    var mask = document.querySelector('.reward-mask');
+    let close = document.querySelector('.reward-relative .close');
+    let rewardBtn = document.querySelector('.reward-btn');
+
+    let zfb = document.querySelector('#zfb'),
+      wx = document.querySelector('#wx'),
+      zfbBtn = document.querySelector('#zfbBtn'),
+      wxBtn = document.querySelector('#wxBtn');
+
+    if (zfbBtn && wxBtn) {
+      zfbBtn.addEventListener('click', () => {
+        jQuery.Velocity(zfb, 'transition.slideLeftIn', {
+          duration: 400
+        });
+        jQuery.Velocity(wx, 'transition.slideRightOut', {
+          display: 'none',
+          duration: 400
+        });
+      });
+
+      wxBtn.addEventListener('click', () => {
+        jQuery.Velocity(wx, 'transition.slideRightIn', {
+          duration: 400
+        });
+        jQuery.Velocity(zfb, 'transition.slideLeftOut', {
+          display: 'none',
+          duration: 400
+        });
+      });
+    }
+
+    rewardBtn.addEventListener('click', (e) => {
+      jQuery.Velocity(mask, 'transition.slideDownIn', {
+        duration: 400
+      })
+    });
+
+    close.addEventListener('click', (e) => {
+      e.preventDefault();
+      jQuery.Velocity(mask, 'transition.slideUpOut', {
+        duration: 400
+      })
+    })
+  }()
+</script>
+
+  </div>
+</body>
+
+  <div class="search-mask" id="search_mask" style="display: none;">
+  <div class="search-box">
+    <div class="search-title">
+      <i class="fa fa-search"></i>
+      <div class="input-box">
+        <input id="search" type="text" class="language" data-lan="search" placeholder="搜索">
+      </div>
+      <i id="close" class="fa fa-times-circle"></i>
+    </div>
+    <div class="stat-box">
+      <span id="stat_count">0</span><span class="language" data-lan="stat">条相关条目，使用了</span><span id="stat_times">0</span><span class="language" data-lan="stat-time">毫秒</span>
+      <hr>
+    </div>
+    <div class="result" id="result">
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://zxh-w.github.io/post/pa-chong-ji-chu-ku/"" data-c="
+          &lt;h1 id=&#34;requests&#34;&gt;requests&lt;/h1&gt;
+&lt;h2 id=&#34;requests模块介绍&#34;&gt;requests模块介绍&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;requests 文档：https://requests.readthedocs.io/projects/cn/zh_CN/latest/&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;requests模块的作用&#34;&gt;requests模块的作用&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;发送http请求，获取响应数据&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;requests模块的安装&#34;&gt;requests模块的安装&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;pip install requests&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id=&#34;response响应对象&#34;&gt;response响应对象&lt;/h2&gt;
+&lt;p&gt;有时候 &lt;code&gt;response.text&lt;/code&gt;会出现好多乱码；这是因为编解码使用的字苻集不同早造成的；我们尝试使用下边的办法来决中文乱码问题：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;response.text&lt;/code&gt;是&lt;code&gt;requests&lt;/code&gt;模块按照&lt;code&gt;charset&lt;/code&gt;模块推测出的编码字符集进行解码的结果&lt;/li&gt;
+&lt;li&gt;网络传输的字符串都是&lt;code&gt;bytes&lt;/code&gt;类型的，所以&lt;code&gt;response.text=response.content.decode(&#39;推测出的编码字符集&#39;）&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;我们可以在网页源码中搜索&lt;code&gt;charset&lt;/code&gt;，尝试参考该编码字符集，注意存在不准确的情况&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;responsetext和responsecontent的区别&#34;&gt;response.text和response.content的区别&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;response.text&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;类型：&lt;code&gt;str&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;解码类型：&lt;code&gt;requests&lt;/code&gt;模块自动根据HTTP头部对响应的编码作出有根据的推测，推测的文本编码&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;response.content&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;类型：&lt;code&gt;bytes&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;解码类型：没有指定&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;通过对responsecontent进行decode解决中文乱码&#34;&gt;通过对response.content进行decode,解决中文乱码&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;response.content.decode() #默认utf-8&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;response.content.decode(&#39;GBK&#39;)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;常见的编码字符集
+&lt;ul&gt;
+&lt;li&gt;utf-8&lt;/li&gt;
+&lt;li&gt;gbk&lt;/li&gt;
+&lt;li&gt;gbk2312&lt;/li&gt;
+&lt;li&gt;ascii&lt;/li&gt;
+&lt;li&gt;iso-8859-1&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;response响应对象的其它常用属性或方法&#34;&gt;response响应对象的其它常用属性或方法&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;response = requests.get(url)&lt;/code&gt;中&lt;code&gt;response&lt;/code&gt;是发送请求获取的响应对象；response()响应对象中除了 text、content获取响应内容外还有属性或方法：&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;reponse.url&lt;/code&gt; 响应的url;有时候响应的url和请求的url并不一致&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;response.status_code&lt;/code&gt; 响应状态码&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;response.request.headers&lt;/code&gt; 响应对应的请求头&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;response.headers&lt;/code&gt; 响应头&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;response.request._cookies&lt;/code&gt; 响应对应请求的cookie，返回cookieJar类型&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;response.cookies&lt;/code&gt; 响应的cookie（经过了set-cookie动作；返回型cookieJar类型）&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;response.json&lt;/code&gt;() 自动将&lt;code&gt;json&lt;/code&gt;字符串类型的响应内容转挨为python对象(dict or list)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;requestssession进行状态保持&#34;&gt;requests.session进行状态保持&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;requests模块中的Session类能自动处理发送请求获取响应过程中产生的cookie，进而达到状态保持的目的。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;作用及应用场景&#34;&gt;作用及应用场景&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;requests.session&lt;/code&gt;的作用
+&lt;ul&gt;
+&lt;li&gt;自动处理cookie，即下一次的请求会带上前一次的cookie&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;requests.session&lt;/code&gt;的应用场景
+&lt;ul&gt;
+&lt;li&gt;自动处理连续的多次请求过程中产生的cookie&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;requestssession使用方法&#34;&gt;&lt;code&gt;requests.session&lt;/code&gt;使用方法&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;session实例在请求了一个网站后，对方服务器设置在本地的cookie会保存在session中，下一次再使用session请求对方服务器的时候，会带上前一次的cookie。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;session = requests.session()
+response = session.get(url,headers,...)
+response = session.post(url,data,...)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;session实例发送get或post请求的参数，与requests模块发送请求的参数完全一致&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;post数据来源&#34;&gt;post数据来源&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;固定值：抓包比较后不变值&lt;/li&gt;
+&lt;li&gt;输入值：抓包比较后根据自身变化值&lt;/li&gt;
+&lt;li&gt;预设值-静态文件：需要提前从静态HTML中提取&lt;/li&gt;
+&lt;li&gt;预设值-发送请求：需要对指定地址发送请求&lt;/li&gt;
+&lt;li&gt;在客户端生成：分析JS，模拟生成数据&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;数据提取&#34;&gt;数据提取&lt;/h1&gt;
+&lt;h2 id=&#34;响应内容的分类&#34;&gt;响应内容的分类&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;结构化的响应内容
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;json&lt;/code&gt;字符串：可以使用&lt;code&gt;re&lt;/code&gt;、&lt;code&gt;json&lt;/code&gt;等模块来提取特定数据&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;xml&lt;/code&gt;字符串：可以使用re、lxml等模块来提取特定数据&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;非结构化响应内容
+&lt;ul&gt;
+&lt;li&gt;html字符串：可以使用用re、lxml等模块来提取特定内容&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;xml与html的区别&#34;&gt;xml与html的区别&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;xml是一种可扩展标记语言，样子和html很像，功能更专注于数据传输。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;数据格式&lt;/th&gt;
+&lt;th&gt;描述&lt;/th&gt;
+&lt;th&gt;设计目标&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;XML&lt;/td&gt;
+&lt;td&gt;可扩展标记语言&lt;/td&gt;
+&lt;td&gt;被设计为传输和存储数据，其焦点是数据的内容&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;HTML&lt;/td&gt;
+&lt;td&gt;超文本标记语言&lt;/td&gt;
+&lt;td&gt;显示数据以及如何更好地显示数据&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;常用数据解析方法&#34;&gt;常用数据解析方法&lt;/h2&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230702073422947.png&#34; alt=&#34;image-20230702073422947&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h2 id=&#34;jsonpath模块&#34;&gt;jsonpath模块&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;如果有一个多层嵌套的复杂字典，想要根据key和下标来批量提取value，这是比较困难的。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;jsonpath可以按照key对python字典进行批量数据提取&lt;/li&gt;
+&lt;li&gt;模块安装：&lt;code&gt;pip install jsonpath&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;使用方法：&lt;code&gt;ret = jsonpath(a_dict,&#39;json语法规则字符串&#39;)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;jsonpath语法规则&#34;&gt;jsonpath语法规则&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;JSONPath&lt;/th&gt;
+&lt;th&gt;描述&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;$&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;根节点&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;@&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;现行结点&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;.&lt;/code&gt;or &lt;code&gt;[]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;取子节点&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;..&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;不管位置，选择所有符合条件的结点&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;*&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;匹配所有元素结点&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;[]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;迭代器标识（可以在里面做简单的迭代操作，如数组下标、根据内容选值）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;[,]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;支持迭代器中做多选&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;?()&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;支持过滤操作&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;()&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;支持表达式计算&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;xpath和lxml模块&#34;&gt;xpath和lxml模块&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;lxm模块可以利用XPath规则语法，来快速的定位HTML以ML文档中特定元紊以及获取节点信息（文本、内容、属性值）&lt;/li&gt;
+&lt;li&gt;XPath(XML Path Language)是一门在HTML\XML文档中查找倍息的语言，可用来在HTML\XML文档中对&lt;strong&gt;元素和属性进行遍历&lt;/strong&gt;。
+&lt;ul&gt;
+&lt;li&gt;W3School官方文档：http://www.w3school.com/cn/xpath/index.asp&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;提取xml、html中的数据需要lxml块xpath语法配合使用&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;xpath语法&#34;&gt;xpath语法&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;每个html、xml的标签我们都称之为结点，其中最顶层的结点称为根节点。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;2&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230702084404706.png&#34; alt=&#34;image-20230702084404706&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;ol&gt;
+&lt;li&gt;xpath使用路径表达式来选取XML文档中的节点或者节点集&lt;/li&gt;
+&lt;li&gt;这些路径和我们在常规的电脑文件系统中看到的表达式非常相似&lt;/li&gt;
+&lt;li&gt;使用chrome插件选择标签的时候，选中时，选择的标签会添加属性 &lt;code&gt;class=&amp;quot;xh-highlight&amp;quot;&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;表达式&lt;/th&gt;
+&lt;th&gt;描述&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;nodename&lt;/td&gt;
+&lt;td&gt;选中该元素&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;/&lt;/td&gt;
+&lt;td&gt;从根节点中选取、或者是元素和元素之间的过滤&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;//&lt;/td&gt;
+&lt;td&gt;从匹配选择的当前节点中选择文档中的节点，而不考虑它们的位置&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;.&lt;/td&gt;
+&lt;td&gt;选取当前结点&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;..&lt;/td&gt;
+&lt;td&gt;选取当前结点的父节点&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;@&lt;/td&gt;
+&lt;td&gt;选取属性&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;text()&lt;/td&gt;
+&lt;td&gt;选取文本&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+">爬虫基础库</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://zxh-w.github.io/post/gin-he-web/"" data-c="
+          &lt;h3 id=&#34;软件开发流程&#34;&gt;软件开发流程&lt;/h3&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/14135927173.png&#34; alt=&#34;软件定制开发流程- 湖北国菱计算机科技有限公司-湖北国联计算机科技有限公司-荆州网站建设-荆州软件开发-政府网站建设公司&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h3 id=&#34;简化开发流程&#34;&gt;简化开发流程&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;需求分析&lt;/li&gt;
+&lt;li&gt;设计（概要，详细）&lt;/li&gt;
+&lt;li&gt;开发&amp;amp;&amp;amp;调试&lt;/li&gt;
+&lt;li&gt;测试-上线&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;gin-web开发分层&#34;&gt;Gin Web开发分层&lt;/h3&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;2&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230801184827409.png&#34; alt=&#34;image-20230801184827409&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+">Gin和Web</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://zxh-w.github.io/post/tcp-tong-xin/"" data-c="
+          &lt;h2 id=&#34;非阻塞io&#34;&gt;非阻塞IO&lt;/h2&gt;
+&lt;h3 id=&#34;网络分层&#34;&gt;网络分层&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;RESP是Redis的通信协议。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230803122354420.png&#34; alt=&#34;image-20230803122354420&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h3 id=&#34;tcp通信过程&#34;&gt;TCP通信过程&lt;/h3&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;2&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/78805a221a988e7.png&#34; alt=&#34;img&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h3 id=&#34;socket&#34;&gt;Socket&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;很多系统都提供Socket作为TCP网络连接的对象&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Linux —&amp;gt; Internet domain socket —&amp;gt; &lt;code&gt;SOCK_STREAM&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Linux中Socket以&amp;quot;文件描述符&amp;quot; FD作为标识&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;通信过程：&lt;/p&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;3&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230803125644938.png&#34; alt=&#34;image-20230803125644938&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;4&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230803130319200.png&#34; alt=&#34;image-20230803130319200&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;io模型&#34;&gt;IO模型&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;IO模型是指同时操作Socket的方案&lt;/li&gt;
+&lt;li&gt;阻塞&lt;/li&gt;
+&lt;li&gt;非阻塞&lt;/li&gt;
+&lt;li&gt;多路复用、&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;阻塞io模型&#34;&gt;阻塞IO模型&lt;/h4&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;5&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230803132801639.png&#34; alt=&#34;image-20230803132801639&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;同步读写Socket时，线程陷入内核态&lt;/li&gt;
+&lt;li&gt;进程阻塞挂起不消耗CPU资源，及时响应每个操作&lt;/li&gt;
+&lt;li&gt;当读写成功后，切换回用户态，继续执行&lt;/li&gt;
+&lt;li&gt;优点：开发难度小，代码简单&lt;/li&gt;
+&lt;li&gt;缺点：因为一个请求IO会阻塞进程，所以，得为每请求分配一个处理进程（线程）以及时响应，系统开销大&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;非阻塞io模型&#34;&gt;非阻塞IO模型&lt;/h4&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;6&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230803133418920.png&#34; alt=&#34;image-20230803133418920&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;如果暂时无法收发数据，会返回错误&lt;/li&gt;
+&lt;li&gt;应用回不断轮询，直到Socket可以读写&lt;/li&gt;
+&lt;li&gt;优点：不会陷入内核态，自由度高&lt;/li&gt;
+&lt;li&gt;缺点：需要自旋轮询&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;多路复用linux-epoll&#34;&gt;多路复用—Linux epoll&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;多个的进程的IO可以注册到一个复用器（select）上，然后用一个进程调用该select， select会监听所有注册进来的IO；&lt;/p&gt;
+&lt;p&gt;如果select监听的IO在内核缓冲区都没有可读数据，select调用进程会被阻塞；而当任一IO在内核缓冲区中有可数据时，select调用就会返回；&lt;/p&gt;
+&lt;p&gt;而后select调用进程可以自己或通知另外的进程（注册进程）来再次发起读取IO，读取内核中准备好的数据。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;7&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230803133750072.png&#34; alt=&#34;image-20230803133750072&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;注册多个Socket事件&lt;/li&gt;
+&lt;li&gt;调用epool，当有事件发生，返回&lt;/li&gt;
+&lt;li&gt;优点：提供里事件列表，不需要轮询各个Socket&lt;/li&gt;
+&lt;li&gt;缺点：开发难度大，逻辑复杂&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;go抽象epoll&#34;&gt;Go抽象epoll&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;结合阻塞模型和多路复用：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;在底层使用操作系统的多路复用IO&lt;/li&gt;
+&lt;li&gt;在协程层次使用阻塞模型&lt;/li&gt;
+&lt;li&gt;阻塞协程时，协程休眠&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;8&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230803134430288.png&#34; alt=&#34;image-20230803134430288&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;9&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230803134854919.png&#34; alt=&#34;image-20230803134854919&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;epoll抽象层是为了统一各个操作系统对多路复用器的实现&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Linux：Epoll&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows：IOCP&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Mac：Kqueue&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;各个系统的多路复用都有以下功能&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;新建多路复用器 &lt;code&gt;epoll_create()&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;往多路复用器里插入需要监听的事件： &lt;code&gt;epoll_ctl()&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;查询什么事件发生了 &lt;code&gt;epoll_wait()&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Go Network Poller(&lt;strong&gt;多路复用抽象层&lt;/strong&gt;)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;epoll_create()&lt;/code&gt; ——&amp;gt; &lt;code&gt;netpollinit()&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;新建Epoll&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;新建一个pipe管道用于中断Epoll&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;将“管道有数据到达”事件注册在Epoll中&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;epoll_ctl()&lt;/code&gt; ——&amp;gt; &lt;code&gt;netpollopen()&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;传入一个&lt;code&gt;Socket&lt;/code&gt;的FD和&lt;code&gt;pollDesc&lt;/code&gt;指针&lt;/li&gt;
+&lt;li&gt;pollDesc指针是Socket相关详细信息&lt;/li&gt;
+&lt;li&gt;pollDesc中记录了哪个协程休眠在等待此Socket&lt;/li&gt;
+&lt;li&gt;将Socket可读、可写、断开事件注册到Epoll&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;epoll_wait()&lt;/code&gt; ——&amp;gt; &lt;code&gt;netpoll()&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;调用epoll_wait()，查询那些事件发生了&lt;/li&gt;
+&lt;li&gt;根据Socket相关的pollDesc信息，返回哪些协程可以唤醒&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;network-poller&#34;&gt;Network Poller&lt;/h3&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;10&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230803145554863.png&#34; alt=&#34;image-20230803145554863&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Network Poller初始化&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;poll_runtime_pollServerInit()&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;使用原子操作保证只初始化一次&lt;/li&gt;
+&lt;li&gt;调用&lt;code&gt;netpollinit()&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;pollCache&lt;/code&gt;与 &lt;code&gt;pollDesc&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;pollCache&lt;/code&gt;：一个带锁的链表头&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;pollDesc&lt;/code&gt;：链表的成员&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;pollDesc&lt;/code&gt;是runtime包对Socket在Go中的详细描述&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;rg&lt;/code&gt;，&lt;code&gt;wg&lt;/code&gt;：1, 或 2,或等待的协程G的地址&lt;/p&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;11&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230803143053384.png&#34; alt=&#34;image-20230803143053384&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;收发数据&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;协程需要收发数据时，Socket已经可以读写
+&lt;ul&gt;
+&lt;li&gt;runtime循环调用&lt;code&gt;netpoll()&lt;/code&gt;方法（&lt;code&gt;g0协程&lt;/code&gt;）&lt;/li&gt;
+&lt;li&gt;发现Socket可读写时，给对应的&lt;code&gt;rg&lt;/code&gt;或者&lt;code&gt;wg&lt;/code&gt;置为&lt;code&gt;pdReady(1）&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;协程想要调用Socket时，协程调用&lt;code&gt;poll_runtime_poIIWait()&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;判断&lt;code&gt;rg&lt;/code&gt;或者&lt;code&gt;wg&lt;/code&gt;已经置为&lt;code&gt;pdReady(1)&lt;/code&gt;,返回0&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;协程需要收发数据时，Socket暂时无法读写
+&lt;ul&gt;
+&lt;li&gt;runtime循环调用&lt;code&gt;netpoll()&lt;/code&gt;方法（&lt;code&gt;g0协程&lt;/code&gt;）&lt;/li&gt;
+&lt;li&gt;协程调用&lt;code&gt;poll_runtime_poIIWait()&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;发现对应的&lt;code&gt;rg&lt;/code&gt;或者&lt;code&gt;wg&lt;/code&gt;为0&lt;/li&gt;
+&lt;li&gt;给对应的&lt;code&gt;rg&lt;/code&gt;或者&lt;code&gt;wg&lt;/code&gt;置为协程地址&lt;/li&gt;
+&lt;li&gt;休眠等待&lt;/li&gt;
+&lt;li&gt;runtime循环调用netpoll()方法（&lt;code&gt;g0&lt;/code&gt;协程）&lt;/li&gt;
+&lt;li&gt;发现Socket可读写时，给对应的查看对应的&lt;code&gt;rg&lt;/code&gt;或者&lt;code&gt;wg&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;若为协程地址，返回协程地址&lt;/li&gt;
+&lt;li&gt;调度器开始调度对应协程&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;socket抽象&#34;&gt;Socket抽象&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;net包&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;net包是go原生的网络包&lt;/li&gt;
+&lt;li&gt;net包实现了TCP、UDP、UTTP等操作&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;net.Listen()&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;新建Socket()，并执行bind操作&lt;/li&gt;
+&lt;li&gt;新建一个FD（net包对Socket的详情描述）&lt;/li&gt;
+&lt;li&gt;返回一个TCPListener&lt;/li&gt;
+&lt;li&gt;将TCPListener的FD信息加入监听&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;TCPListener.Accept()&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;直接调用Socket的accept()&lt;/li&gt;
+&lt;li&gt;如果失败，休眠等待新的连接&lt;/li&gt;
+&lt;li&gt;将新的Socket包装为TCPConn变量返回&lt;/li&gt;
+&lt;li&gt;将TCPConn的FD信息加入监听&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;TCPConn.Read()/Write()&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;直接调用Socket原生读写方法&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;如果失败，休眠等待可读/可写&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;被唤醒后调用系统Socket&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;net包抽象了TCP网络操作&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;使用net.Listen()得到TCPListener(LISTEN状态的Socket)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;使用TCPListener.Accept()得到TCPConn(ESTABLESHED)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;TCPConn.Read()/Write()进行读写Socket的操作&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;NetworkPoller作为上述功能的底层支撑&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+">TCP通信</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://zxh-w.github.io/post/pa-chong-zhong-de-qu-chong-chu-li/"" data-c="
+          &lt;h2 id=&#34;爬虫中的去重处理&#34;&gt;爬虫中的去重处理&lt;/h2&gt;
+&lt;h3 id=&#34;去重应用场景以及基本原理&#34;&gt;去重应用场景以及基本原理&lt;/h3&gt;
+&lt;h4 id=&#34;什么业务需要使用去重&#34;&gt;什么业务需要使用去重&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;防止发出重复的请求&lt;/li&gt;
+&lt;li&gt;防止存储重复的数据&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;去重实现的基本原理&#34;&gt;去重实现的基本原理&lt;/h4&gt;
+&lt;p&gt;根据给定的判断依据和给定的去重容器，将原始数据逐一进行判断，判断去重容器中是否有该数据。如果没有那就把该数据对应的判断依&lt;/p&gt;
+&lt;p&gt;据添加去重容器中，同时标记该数据是&lt;strong&gt;不重复数据&lt;/strong&gt;；如果有就不添加，同时标记该数据是&lt;strong&gt;重复数据&lt;/strong&gt;。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;判断依据（&lt;strong&gt;原始数据&lt;/strong&gt;、&lt;strong&gt;原始数据特征值&lt;/strong&gt;）&lt;/li&gt;
+&lt;li&gt;去重容器（存储判断数据）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;根据原始数据进行去重判断&#34;&gt;根据原始数据进行去重判断&lt;/h4&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230710182031264.png&#34; alt=&#34;image-20230710182031264&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h4 id=&#34;根据原始数据特征值进行去重判断&#34;&gt;根据原始数据特征值进行去重判断&lt;/h4&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;2&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230710182206514.png&#34; alt=&#34;image-20230710182206514&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h4 id=&#34;临时去重容器和持久化去重容器&#34;&gt;临时去重容器和持久化去重容器&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;临时去重容器指如利用list、set等编程语言的数据结构存储去重数据，一旦程序关闭或重启，去重容器中的数据就被回收了
+&lt;ul&gt;
+&lt;li&gt;持久化去重容器是指如利用Redis、MySQL等数据库存储去重数据&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;3&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230710182829961.png&#34; alt=&#34;image-20230710182829961&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h3 id=&#34;基于信息摘要算法的去重&#34;&gt;基于信息摘要算法的去重&lt;/h3&gt;
+&lt;h4 id=&#34;信息摘要hash算法的介绍&#34;&gt;信息摘要HASH算法的介绍&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;信息摘要hash算法指可以将任意长度的文本、字节数据，通过一个算法得到一个固定长度的文本。如MD5（128位）、SHA1（160位）等。
+&lt;ul&gt;
+&lt;li&gt;特征：只要源文本不同，计算得到的结果，必然不同（摘要）。&lt;/li&gt;
+&lt;li&gt;摘要：摘要算法主要用于比对信息源是否一致，因为只要源发生变化，得到的摘要必然不同；而且通常结果要比源短很多，所以称为&amp;quot;摘要&amp;quot;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;正因此，利用信息摘要算法能大大降低去重容器的存储空间使用率，并提高判断速度，且由扌其强唯一性的特征几乎不存在误判。&lt;/li&gt;
+&lt;li&gt;注意：
+&lt;ul&gt;
+&lt;li&gt;hash算法得出的结果其实本质上就是一串数值，如md5的128位指的是二进制的长度，十六进制的长度是32位。一个十六进制等于四个二进制。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;信息摘要hash算法去重方案实现&#34;&gt;信息摘要HASH算法去重方案实现&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;普通内存版本&lt;/li&gt;
+&lt;li&gt;Redis持久化版本&lt;/li&gt;
+&lt;li&gt;MySQL持久化版本&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;基于simhash算法的去重&#34;&gt;基于simhash算法的去重&lt;/h3&gt;
+&lt;h4 id=&#34;应用场景&#34;&gt;应用场景&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;simhash算法是一种局部敏感哈希算法，能实现&lt;strong&gt;相似&lt;/strong&gt;文本内容的去重。&lt;/li&gt;
+&lt;li&gt;与信息摘要算法的区别：
+&lt;ul&gt;
+&lt;li&gt;信息摘要算法：如果原始内容只相差一个字节，所产生的签名也很可能差别很大。&lt;/li&gt;
+&lt;li&gt;Simhash算法：如果原始内容只相差一个字节，所产生的签名差别非常小。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Simhash值比对：通过两者的simhash值的二进制位的差异来表示原始文本内容的差异。差异个数又被称为海明距离。&lt;/li&gt;
+&lt;li&gt;注意：
+&lt;ul&gt;
+&lt;li&gt;Simhash对长文本500字+比较适用，短文本可能偏差较大&lt;/li&gt;
+&lt;li&gt;在google的论文给出的数据中，64位simhash值，在海明距离为3的情况下，可认为两篇文档是相似的或者是重复的。当然这个值只是参考值，针对自己的应用可能有不同的测试&lt;br&gt;
+取值。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;使用方法&#34;&gt;使用方法&lt;/h4&gt;
+&lt;p&gt;https://leons.im/posts/a-python-implementation-of-simhash-algorithm/&lt;/p&gt;
+&lt;h3 id=&#34;布隆过滤器原理与实现&#34;&gt;布隆过滤器原理与实现&lt;/h3&gt;
+&lt;h4 id=&#34;原理&#34;&gt;原理&lt;/h4&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;4&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230716080203569.png&#34; alt=&#34;image-20230716080203569&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;5&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230716090620557.png&#34; alt=&#34;image-20230716090620557&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h4 id=&#34;布隆过滤器实现redis版&#34;&gt;布隆过滤器实现(Redis版)&lt;/h4&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# 布隆过滤器 redis 版本实现
+import hashlib
+import redis
+
+
+# 1.多个hash函数的实现和求值
+# 2.hash表实现和实现对应的映射和判断
+
+
+class MultipleHash(object):
+    &amp;quot;&amp;quot;&amp;quot;根据提供的原始数据，和预定义的多个salt,生成多个hash函数值 &amp;quot;&amp;quot;&amp;quot;
+
+    def __int__(self, salts, hash_func_name=&amp;quot;md5&amp;quot;):
+        if len(salts) &amp;lt; 3:
+            raise Exception(&amp;quot;请提供至少3个salt!&amp;quot;)
+        self.salts = salts
+        self.hash_func = getattr(hashlib, hash_func_name)
+
+    def _safe_data(self, data):
+        &amp;quot;&amp;quot;&amp;quot;
+        :param data:原始数据
+        :return: 二进制类型的字符串数据
+        &amp;quot;&amp;quot;&amp;quot;
+        if isinstance(data, bytes):
+            return data
+        elif isinstance(data, str):
+            return data.encode()
+        else:
+            raise Exception(&amp;quot;请提供一个字符串！&amp;quot;)
+
+    def get_hash_values(self, data):
+        hash_values = []
+        for salt in self.salts:
+            hash_obj = self.hash_func()
+            hash_obj.update(self._safe_data(data))
+            hash_obj.update(self._safe_data(salt))
+            value = hash_obj.hexdigest()
+            hash_values.append(int(value, 16))
+        return hash_values
+
+class BloomFilter(object):
+
+    def __int__(self, salts, redis_host=&amp;quot;localhost&amp;quot;, redis_post=6379, redis_db=0, redis_key=&amp;quot;domain&amp;quot;):
+        self.redis_host = redis_host
+        self.redis_port = redis_post
+        self.redis_db = redis_db
+        self.redis_key = redis_key
+        self.client = self._get_redis_conn()
+        self.multiple_hash = MultipleHash(salts)
+
+    def _get_redis_conn(self):
+        &amp;quot;&amp;quot;&amp;quot;
+        :return:返回一个redis连接对象
+        &amp;quot;&amp;quot;&amp;quot;
+        poll = redis.ConnectionPool(self.redis_host, self.redis_port, self.redis_db, &amp;quot;664548&amp;quot;)
+        client = redis.StrictRedis(connection_pool=poll)
+        return client
+
+    def _get_offset(self,hash_value):
+        return hash_value % (2**8 * 2**20 * 2**3)
+
+    def save(self, data):
+        hash_values = self.multiple_hash.get_hash_values(data)
+        for hash_value in hash_values:
+            offset = self._get_offset(hash_value)
+            self.client.setbit(self.redis_key,offset,1)
+        return True
+
+    def is_exits(self, data):
+        hash_values = self.multiple_hash.get_hash_values(data)
+        for hash_value in hash_values:
+            offset = self._get_offset(hash_value)
+            v = self.client.getbit(self.redis_key, offset)
+            if v == 0:
+                return False
+        return True
+&lt;/code&gt;&lt;/pre&gt;
+">爬虫中的去重处理</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://zxh-w.github.io/post/windows-chang-yong-ming-ling/"" data-c="
+          &lt;p&gt;&lt;code&gt;ifconfig /all&lt;/code&gt; 获取获取域名、IP地址、DHCP服务器、网关、MAC地址、主机名&lt;br&gt;
+&lt;code&gt;net time /domain&lt;/code&gt; 查看域名、时间&lt;br&gt;
+&lt;code&gt;net view /domain&lt;/code&gt; 查看域内所有共享&lt;br&gt;
+&lt;code&gt;net view ip&lt;/code&gt; 查看对方局域网内开启了哪些共享&lt;br&gt;
+&lt;code&gt;net config workstation&lt;/code&gt; 查看域名、机器名等&lt;br&gt;
+&lt;code&gt;net user 用户名 密码 /add&lt;/code&gt; 建立用户&lt;br&gt;
+&lt;code&gt;net user 用户名 /del&lt;/code&gt; 删除用户&lt;br&gt;
+&lt;code&gt;net user guest /active:yes&lt;/code&gt; 激活guest账户&lt;br&gt;
+&lt;code&gt;net user&lt;/code&gt; 查看账户&lt;br&gt;
+&lt;code&gt;net user 账户名&lt;/code&gt; 查看指定账户信息&lt;br&gt;
+&lt;code&gt;net user /domain&lt;/code&gt; 查看域内有哪些用户，Windows NT Workstation 计算机上可用，由此可以此判断用户是否是域成员。&lt;br&gt;
+&lt;code&gt;net user 用户名 /domain&lt;/code&gt; 查看账户信息&lt;br&gt;
+&lt;code&gt;net group /domain&lt;/code&gt; 查看域中的组&lt;br&gt;
+&lt;code&gt;net group &amp;quot;domain admins&amp;quot; /domain&lt;/code&gt; 查看当前域的管理用户&lt;br&gt;
+&lt;code&gt;query user&lt;/code&gt; 查看当前在线的用户&lt;br&gt;
+&lt;code&gt;net localgroup&lt;/code&gt; 查看所有的本地组&lt;br&gt;
+&lt;code&gt;net localgroup administrators&lt;/code&gt; 查看administrators组中有哪些用户&lt;br&gt;
+&lt;code&gt;net localgroup administrators&lt;/code&gt; 用户名 /add 把用户添加到管理员组中&lt;br&gt;
+&lt;code&gt;net start&lt;/code&gt; 查看开启服务&lt;br&gt;
+&lt;code&gt;net start&lt;/code&gt; 服务名 开启某服务&lt;br&gt;
+&lt;code&gt;net stop&lt;/code&gt; 服务名 停止某服务&lt;br&gt;
+&lt;code&gt;net share&lt;/code&gt; 查看本地开启的共享&lt;br&gt;
+&lt;code&gt;net share ipc$&lt;/code&gt; 开启&lt;code&gt;ipc$&lt;/code&gt;共享&lt;br&gt;
+&lt;code&gt;net share ipc$ /del&lt;/code&gt; 删除&lt;code&gt;ipc$&lt;/code&gt;共享&lt;br&gt;
+&lt;code&gt;net share c$ /del&lt;/code&gt; 删除C：共享&lt;br&gt;
+&lt;code&gt;\\192.168.0.108\c&lt;/code&gt; 访问默认共享c盘&lt;br&gt;
+&lt;code&gt;dsquery server&lt;/code&gt; 查看所有域控制器&lt;br&gt;
+&lt;code&gt;dsquery subnet&lt;/code&gt; 查看域内内子网&lt;br&gt;
+&lt;code&gt;dsquery group&lt;/code&gt; 查看域内工作组&lt;br&gt;
+&lt;code&gt;dsquery site&lt;/code&gt; 查看域内站点&lt;br&gt;
+&lt;code&gt;netstat -a&lt;/code&gt; 查看开启了哪些端口,常用netstat -an&lt;br&gt;
+&lt;code&gt;netstat -n&lt;/code&gt; 查看端口的网络连接情况，常用netstat -an&lt;br&gt;
+&lt;code&gt;netstat -v&lt;/code&gt; 查看正在进行的工作&lt;br&gt;
+&lt;code&gt;netstat -p&lt;/code&gt; 协议名 例：netstat -p tcq/ip 查看某协议使用情况（查看tcp/ip协议使用情况）&lt;br&gt;
+&lt;code&gt;netstat -s&lt;/code&gt; 查看正在使用的所有协议使用情况&lt;br&gt;
+&lt;code&gt;nbtstat -A ip&lt;/code&gt; 对方136到139其中一个端口开了的话，就可查看对方最近登陆的用户名（03前的为用户名）-注意：参数-A要大写&lt;br&gt;
+&lt;code&gt;reg save hklm\sam sam.hive&lt;/code&gt; 导出用户组信息、权限配置&lt;br&gt;
+&lt;code&gt;reg save hklm\system system.hive&lt;/code&gt; 导出SYSKEY&lt;br&gt;
+&lt;code&gt;net use \\目标IP\ipc$ 密码 /u:用户名&lt;/code&gt; 连接目标机器&lt;br&gt;
+&lt;code&gt;at \\目标IP 21:31 c:\server.exe&lt;/code&gt; 在某个时间启动某个应用&lt;br&gt;
+&lt;code&gt;wmic /node:&amp;quot;目标IP&amp;quot; /password:&amp;quot;123456&amp;quot; /user:&amp;quot;admin&amp;quot;&lt;/code&gt; 连接目标机器&lt;br&gt;
+&lt;code&gt;psexec.exe \\目标IP -u username -p password -s cmd&lt;/code&gt; 在目标机器上执行cmd&lt;br&gt;
+&lt;code&gt;finger username @host&lt;/code&gt; 查看最近有哪些用户登陆&lt;br&gt;
+&lt;code&gt;route print&lt;/code&gt; 显示出IP路由，将主要显示网络地址Network addres，子网掩码Netmask，网关地址Gateway addres，接口地址Interface&lt;br&gt;
+&lt;code&gt;arp&lt;/code&gt; 查看和处理ARP缓存，ARP是名字解析的意思，负责把一个IP解析成一个物理性的MAC地址。&lt;br&gt;
+&lt;code&gt;arp -a&lt;/code&gt; 将显示出全部信息&lt;br&gt;
+&lt;code&gt;nslookup&lt;/code&gt; IP地址侦测器&lt;br&gt;
+&lt;code&gt;tasklist&lt;/code&gt; 查看当前进程&lt;br&gt;
+&lt;code&gt;taskkill /pid PID数&lt;/code&gt; 终止指定PID进程&lt;br&gt;
+&lt;code&gt;whoami&lt;/code&gt; 查看当前用户及权限&lt;br&gt;
+&lt;code&gt;systeminfo&lt;/code&gt; 查看计算机信息（版本，位数，补丁情况）&lt;br&gt;
+&lt;code&gt;ver&lt;/code&gt; 查看计算机操作系统版本&lt;br&gt;
+&lt;code&gt;tasklist /svc&lt;/code&gt; 查看当前计算机进程情况&lt;br&gt;
+&lt;code&gt;netstat -ano&lt;/code&gt; 查看当前计算机进程情况&lt;br&gt;
+&lt;code&gt;wmic product &amp;gt; ins.txt&lt;/code&gt; 查看安装软件以及版本路径等信息，重定向到ins.txt&lt;/p&gt;
+">Windows常用命令</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://zxh-w.github.io/post/yun-yuan-sheng/"" data-c="
+          &lt;h3 id=&#34;云原生概述&#34;&gt;云原生概述&lt;/h3&gt;
+&lt;h4 id=&#34;定义&#34;&gt;定义&lt;/h4&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.cncf.io/about/who-we-are/&#34;&gt;云原生基金会&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;云原生技术有利于各组织在公有云、私有云和混合云等新型动态环境中，构建和运行可弹性扩展的应用。云原生的代表技术包括容器、服务网格、微服务、不可变基础设施和声明式API。&lt;/p&gt;
+&lt;p&gt;这些技术能够构建容错性好、易于管理和便于观察的松耦合系统。结合可靠的自动化手段，云原生技术使工程师能够轻松地对系统作出频繁和可预测的重大变更。&lt;/p&gt;
+&lt;p&gt;云原生计算基金会（CNCF）致力于培育和维护一个厂商中立的开源生态系统，来推广云原生技术。我们通过将最前沿的模式民主化，让这些创新为大众所用。&lt;/p&gt;
+&lt;h4 id=&#34;生态&#34;&gt;&lt;a href=&#34;https://www.cncf.io/projects/&#34;&gt;生态&lt;/a&gt;&lt;/h4&gt;
+&lt;h3 id=&#34;容器&#34;&gt;容器&lt;/h3&gt;
+&lt;h4 id=&#34;容器的调用链路&#34;&gt;容器的调用链路&lt;/h4&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-container-way.png&#34; alt=&#34;image-20230828224333615&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h3 id=&#34;不可变基础设施&#34;&gt;不可变基础设施&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;传统的基础设施管理方式中，管理员需要手动修改和维护服务器(Server)和应用程序(Application)的配置。而不可变基础设施的思想是将整个基础设施定义为代码，通过自动化的方式进行创建、部署和管理。当需要更新或修改基础设施时，不是直接在现有实例上进行修改，而是通过创建新的实例来替代旧的实例，确保每次更新都是在一个全新的环境中进行。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;2&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230828230047409.png&#34; alt=&#34;image-20230828230047409&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;手动配置和维护：传统的基础设施管理方式需要管理员手动配置和维护服务器和应用程序的各种设置，包括安装、更新、修改配置等，容易出现人为错误和配置差异。&lt;/li&gt;
+&lt;li&gt;可靠性和稳定性：由于人为的操作和配置差异，传统基础设施管理方式容易引入错误和故障，导致系统的不稳定和不可靠。&lt;/li&gt;
+&lt;li&gt;难以扩展和缩减：传统基础设施管理方式需要手动进行扩展和缩减，需要管理员手动配置和部署新的服务器或移除旧的服务器，操作复杂、耗时且容易出错。&lt;/li&gt;
+&lt;li&gt;难以追踪和管理：传统基础设施管理方式下，很难准确追踪和管理服务器和应用程序的状态和配置变化，容易导致管理混乱和不可控。&lt;/li&gt;
+&lt;li&gt;安全性风险：传统基础设施管理方式下，管理员需要直接在服务器上进行配置和修改，容易引入潜在的安全漏洞和风险。&lt;/li&gt;
+&lt;li&gt;难以复原和回滚：由于传统基础设施管理方式下的修改是直接在现有实例上进行的，当出现问题时，很难快速复原和回滚到之前的状态。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;3&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230828230110809.png&#34; alt=&#34;image-20230828230110809&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;可靠性：由于不可变基础设施是通过创建全新实例来更新，可以避免由于修改配置而引入的错误和故障。&lt;/li&gt;
+&lt;li&gt;可重现性：通过将基础设施定义为代码，可以确保每次创建的实例都是一致的，减少了因为手动配置而引入的差异。&lt;/li&gt;
+&lt;li&gt;安全性：由于不可变基础设施不允许直接修改，减少了潜在的安全漏洞和风险。&lt;/li&gt;
+&lt;li&gt;可扩展性：通过自动化的方式创建和管理基础设施，可以更容易地进行扩展和缩减。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;声明式api&#34;&gt;声明式API&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;通过一行命令执行多个命令的集合&lt;/p&gt;
+&lt;/blockquote&gt;
+">云原生</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://zxh-w.github.io/post/bian-yuan-ji-suan/"" data-c="
+          &lt;h3 id=&#34;万物互联面临的挑战&#34;&gt;万物互联面临的挑战&lt;/h3&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230827222108697.png&#34; alt=&#34;image-20230827222108697&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h4 id=&#34;海量设备&#34;&gt;海量设备&lt;/h4&gt;
+&lt;p&gt;每秒钟大概有100多台物联网设备接入互联网，在物联网的设备快速增长的背景下将会有海量设备需要管理，将会面临海量设备的管理问题&lt;/p&gt;
+&lt;h4 id=&#34;带宽瓶颈&#34;&gt;带宽瓶颈&lt;/h4&gt;
+&lt;p&gt;由于设备较多，数据的交互频率也会大幅提高，那么就会随之带宽瓶颈问题&lt;/p&gt;
+&lt;h4 id=&#34;计算可靠&#34;&gt;计算可靠&lt;/h4&gt;
+&lt;p&gt;海量设备下云端进行统一管理由于云端计算任务太大计算的可靠性难以得到保证&lt;/p&gt;
+&lt;h4 id=&#34;安全性&#34;&gt;安全性&lt;/h4&gt;
+&lt;p&gt;由于设备产生的数据通过网络进行传输，也将面临数据安全性问题&lt;/p&gt;
+&lt;h4 id=&#34;数据实时&#34;&gt;数据实时&lt;/h4&gt;
+&lt;p&gt;由于带宽不够，产生数据延迟云端计算资源不够的情况下，再向云端发起请求就要很久才能等到响应&lt;/p&gt;
+&lt;h3 id=&#34;边缘计算解决方案&#34;&gt;边缘计算解决方案&lt;/h3&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;2&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230827222253998.png&#34; alt=&#34;image-20230827222253998&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h4 id=&#34;云原生特性的边缘计算&#34;&gt;云原生特性的边缘计算&lt;/h4&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;3&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230827222437820.png&#34; alt=&#34;image-20230827222437820&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h4 id=&#34;诞生背景&#34;&gt;诞生背景&lt;/h4&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;4&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230827223842961.png&#34; alt=&#34;image-20230827223842961&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;物联网：物联网设备地理位置非常分散，响应时间、海量设备管理、数据安全性难以保证。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;人工智能：人工智能应用需要大量的逻辑运算资源，当对运算速度有更高的要求时候，数据传输带来的性能消耗问题，将会让AI应用的响应延迟。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;解决方案：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;边缘计算，让计算更贴近数据的源头！从而解决海量设备管理、数据传输等问题&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;5&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230827224218390.png&#34; alt=&#34;image-20230827224218390&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;应用案例&#34;&gt;应用案例&lt;/h4&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;6&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230827224720433.png&#34; alt=&#34;image-20230827224720433&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;7&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230827225348396.png&#34; alt=&#34;image-20230827225348396&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h4 id=&#34;物联网&#34;&gt;物联网&lt;/h4&gt;
+&lt;p&gt;原始物联网架构图&lt;/p&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;8&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230827225505888.png&#34; alt=&#34;image-20230827225505888&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;p&gt;加入边缘计算后的物联网架构图‘&lt;/p&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;9&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230827225650998.png&#34; alt=&#34;image-20230827225650998&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h4 id=&#34;云原生&#34;&gt;云原生&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;标准环境：基于标准的API环境开发和移植应用程序&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;容器化能够解决边缘计算产品的运行环境问题，但是随着生产环境的增多，也暴露出很多不足之处。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;10&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230827230249689.png&#34; alt=&#34;image-20230827230249689&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;strong&gt;不足之处&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;单机限制&lt;/strong&gt;：缺乏多机通信网络，限制边缘总算力规模&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;编排限制&lt;/strong&gt;：缺乏多实例和扩展主机的连接能力，限制了对复杂业务的描述能力&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;更新限制&lt;/strong&gt;：需要安装业务之外的应用才能对容器进行更新&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;管理限制&lt;/strong&gt;：边缘应用的定义和管理模式与应用分离，限制了业务的敏捷性&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;统一编排：由单一的控制面系统管理云和边缘的应用&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;可伸缩性：一套架构能够支持不同性能、不同规模的设施&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;去中心化：模糊边缘和中心的边界，实现应用和数据的全局分布式协作&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;开源社区&#34;&gt;开源社区&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;KubeEdge&lt;/strong&gt;&lt;/p&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;11&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-kubeEdge-system.png&#34; alt=&#34;image-20230827231101983&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;OpenYurt&lt;/strong&gt;&lt;/p&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;12&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-OpenYurt-system3.png&#34; alt=&#34;image-20230827231248813&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Baetyl&lt;/strong&gt;&lt;/p&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;13&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-Baetyl.png&#34; alt=&#34;image-20230827231552306&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;14&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-Baetyl-system.png&#34; alt=&#34;image-20230827231744501&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;相同点：
+&lt;ul&gt;
+&lt;li&gt;底层基于&lt;code&gt;Kubernetes&lt;/code&gt;，将边缘节点抽象为Node结点&lt;/li&gt;
+&lt;li&gt;边缘应用以容器（&lt;code&gt;K8S Pod&lt;/code&gt;）方式运行&lt;/li&gt;
+&lt;li&gt;通过数据缓存和同步保证离线算&lt;/li&gt;
+&lt;li&gt;云端管理，边缘计算，云边协同&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+">边缘计算</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://zxh-w.github.io/post/web-kuang-jia-gai-lan/"" data-c="
+          &lt;blockquote&gt;
+&lt;p&gt;对于Web框架的印象大概就是：处理HTTP请求的。好在因为我们造的轮子其实都不是从0到1，所以我们可以通过参考其它web框来设计自己的框架。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;beego&#34;&gt;Beego&lt;/h2&gt;
+&lt;h3 id=&#34;controller抽象&#34;&gt;Controller抽象&lt;/h3&gt;
+&lt;p&gt;Beego是基于MVC(Model-View-Controller)的，所以它定义了一个核心接口 &lt;code&gt;ControllerInterface&lt;/code&gt;.&lt;/p&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230730194521173.png&#34; alt=&#34;image-20230730194521173&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;code&gt;ControllerInterface&lt;/code&gt;定义了一个控制器必须要解决什么问题。同时&lt;code&gt;ControllerInterface&lt;/code&gt;的默认实现&lt;code&gt;Controller&lt;/code&gt;提供了实现自定义控制器的各种辅助方法，所以在Beego里面，一般都是组合&lt;code&gt;Controller&lt;/code&gt;来实现自己的&lt;code&gt;Controller&lt;/code&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;httpserver和controllerregister&#34;&gt;HttpServer和ControllerRegister&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;ControllerInterface&lt;/code&gt;可以看作核心接口，因为它直接体现了Beego的设计初衷：MVC模式。同时它也是用户的核心接入点。&lt;/p&gt;
+&lt;p&gt;但是如果从功能特性上来说，HttpServer和ControllerRegister才是核心。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;HttpServer&lt;/code&gt;：代表一个“服务器”，大多数时候它就是一个进程。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ControllerRegister&lt;/code&gt;：真正干活的人。注册路由，路由匹配和执行业务代码都是透过它来完成的。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;context抽象&#34;&gt;Context抽象&lt;/h3&gt;
+&lt;p&gt;用户操作请求和响应是通过&lt;code&gt;Ctx&lt;/code&gt;来达成的。它代表的是整个请求执行过程的上下文。进一步，Beego又将Context细分了几个部分：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Input：定义了很多和处理请求有关的方法&lt;/li&gt;
+&lt;li&gt;Output：定义了很多和响应有关的方法&lt;/li&gt;
+&lt;li&gt;Response：对&lt;code&gt;http.ResdponseWriter&lt;/code&gt;的二次封装&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;核心抽象&#34;&gt;核心抽象&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;ControllerRegister&lt;/code&gt;最为基础，它解决了路由注册和路由匹配这个基础问题。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Context&lt;/code&gt;和&lt;code&gt;Controller&lt;/code&gt;为用户提供了丰富API,用于辅助构建系统。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;HttpServer&lt;/code&gt;作为服务器抽象，用于管理应用生命周期和资源隔离单位。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;gin&#34;&gt;Gin&lt;/h2&gt;
+&lt;h3 id=&#34;iroutes接口&#34;&gt;IRoutes接口&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Gin没有controller的抽象。即MVC应该是用户组织web项目的模式，而不是中间件设计者要考虑的。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;核心接口IRoutes：提供的是注册路由的抽象。它的实现类Engine类似于ControllerRegister。&lt;/li&gt;
+&lt;li&gt;Use方法提供里用户接入自定义逻辑的能力，这个一般情况下也被看作插件机制。&lt;/li&gt;
+&lt;li&gt;额外提供了静态文件的接口。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;engine实现&#34;&gt;Engine实现&lt;/h3&gt;
+&lt;p&gt;Engine可以看作是Beego中HttpServer和ControllerRegister的合体。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;实现了路由树功能，提供注册和匹配路由的功能&lt;/li&gt;
+&lt;li&gt;它本身可以作为一个Handler传递到http包，用于启动服务器。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Engine的路由树功能本质上是依赖于methodTree的。&lt;/p&gt;
+&lt;h3 id=&#34;methodtrees和methodtree&#34;&gt;methodTrees和methodTree&lt;/h3&gt;
+&lt;p&gt;methodTree才是真正的路由树。&lt;/p&gt;
+&lt;p&gt;Gin定义了methodTrees，它实际上代表的是森林，即每一个HTTP方法都对应一棵树。&lt;/p&gt;
+&lt;h3 id=&#34;handlerfunc和handlerschain&#34;&gt;HandlerFunc和HandlersChain&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;HandlerFunc定义了核心抽象——处理逻辑。&lt;/li&gt;
+&lt;li&gt;在默认情况下，它代表了注册路由的业务代码。&lt;/li&gt;
+&lt;li&gt;HandlersChain则是构造了责任链模式。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;context抽象-2&#34;&gt;Context抽象&lt;/h3&gt;
+&lt;p&gt;context也是代表了执行的上下文，提供了丰富的API:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;处理请求的API,代表的是以Get和Bind为前缀的方法&lt;/li&gt;
+&lt;li&gt;处理响应的API,例如返回JSON或者XML响应的方法&lt;/li&gt;
+&lt;li&gt;渲染页面，如HTML方法&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;iris&#34;&gt;Iris&lt;/h2&gt;
+&lt;h3 id=&#34;application&#34;&gt;Application&lt;/h3&gt;
+&lt;p&gt;Application是lris的核心抽象，它代表的是&amp;quot;应用&amp;quot;。实际上这个语义更加接近Beego的HttpServer和Gin的Engine。它提供了：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;生命周期控制功能，如Shutdown等方法&lt;/li&gt;
+&lt;li&gt;注册路由的API&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;路由相关&#34;&gt;路由相关&lt;/h3&gt;
+&lt;p&gt;lris的设计非常复杂。在Beego和Gin里面能够明显看到路由树的痕迹，但是在lris里面就很难看出来。&lt;br&gt;
+和处理路由相关的三个抽象：&lt;br&gt;
+&lt;code&gt;Route&lt;/code&gt;：直接代表了已经注册的路由。在Beego和Gin里面，对应的是路由树的节点&lt;br&gt;
+&lt;code&gt;APlBuilder&lt;/code&gt;：创建Route的Builder模式，Party也是它创建的&lt;br&gt;
+&lt;code&gt;repository&lt;/code&gt;：存储了所有的Routes,有点接近Gin的methodTrees的概念&lt;/p&gt;
+&lt;h3 id=&#34;context抽象-3&#34;&gt;Context抽象&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Context也是代表上下文。&lt;/li&gt;
+&lt;li&gt;Context本身也是提供了各种处理请求和响应的方法。&lt;/li&gt;
+&lt;li&gt;基本上和Beego和Gin的Context没啥区别。&lt;/li&gt;
+&lt;li&gt;比较有特色的是它的Context支持请求级别的添加Handler,即&lt;code&gt;AddHandler&lt;/code&gt;方法。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;echo&#34;&gt;Echo&lt;/h2&gt;
+&lt;h3 id=&#34;echo-2&#34;&gt;Echo&lt;/h3&gt;
+&lt;p&gt;Echo是它内部的一个结构体，类似于Beego的HttpServer和Gin的Engine:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;暴露了注册路由的方法，但是它并不是路由树的载体&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;生命周期管理：如Shutdown和Start等方法&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;在Echo里面有两个相似的字段：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;router:这其实就是代表路由树&lt;/li&gt;
+&lt;li&gt;routers：这代表的是根据Host来进行分组组织，可以看做是近似于&lt;code&gt;namespace&lt;/code&gt;之类的概念，既是一种组织方式，也是一种隔离机制&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;route和node&#34;&gt;Route和node&lt;/h3&gt;
+&lt;p&gt;Router代表的就是路由树，node代表的是路由树上的节点。&lt;/p&gt;
+&lt;p&gt;node里面有一个很有意思的设计：&lt;code&gt;staticChildren&lt;/code&gt;、&lt;code&gt;paramChild&lt;/code&gt;和&lt;code&gt;anyChild&lt;/code&gt;利用这种设计可以轻松实现路由优先级和路由冲突检测。&lt;/p&gt;
+&lt;p&gt;它里面还有一个子echo,维护的是使用Route的Echo实例。这种设计形态在别的地方也能见到，比如说在&lt;code&gt;sql.Tx&lt;/code&gt;里面维持了一个&lt;code&gt;sql.DB&lt;/code&gt;的实例。&lt;/p&gt;
+&lt;h3 id=&#34;context&#34;&gt;Context&lt;/h3&gt;
+&lt;p&gt;一个大而全的接口，定义了处理请求和响应的各种方法。&lt;/p&gt;
+&lt;p&gt;和Beego、Gin、lris的Context没有什么区别。&lt;/p&gt;
+&lt;h2 id=&#34;框架对比&#34;&gt;框架对比&lt;/h2&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;2&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230730205915660.png&#34; alt=&#34;image-20230730205915660&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h2 id=&#34;web框架面试题&#34;&gt;Web框架面试题&lt;/h2&gt;
+&lt;p&gt;从整体上来面的话，比较高频率的问题：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;web框架拿来做什么？处理HTTP请求，为用户提供便捷API,为用户提供无侵入式的插件机制，提供如上传下载等默认功能&lt;/li&gt;
+&lt;li&gt;为什么都已经有了http包，还要开发web框架？高级路由功能、封装HTTP上下文以提供简单APls封装server以提供生命周期控制、设计插件机制以提供无侵入式解决方案&lt;/li&gt;
+&lt;li&gt;web框架的核心？路由树、上下文Context、Server&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;server&#34;&gt;Server&lt;/h2&gt;
+&lt;p&gt;从前面框架对比来看,对于一个Web框架来说,我们首先要有一个整体代表服务器的抽象，也就是Server。&lt;/p&gt;
+&lt;p&gt;Server从特性上来说，至少要提供三部分功能：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;生命周期控制&lt;/strong&gt;：即启动、关闭。如果在后期，我们还要考虑增加生命周期回调特性&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;路由注册接口&lt;/strong&gt;：提供路由注册功能&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;作为http包到web框架的桥梁&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;3&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230730211112825.png&#34; alt=&#34;image-20230730211112825&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+">Web框架概览</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://zxh-w.github.io/post/docker-gai-lan/"" data-c="
+          &lt;h3 id=&#34;docker简介&#34;&gt;Docker简介&lt;/h3&gt;
+&lt;h4 id=&#34;什么是docker&#34;&gt;什么是Docker&lt;/h4&gt;
+&lt;p&gt;Docker是开发，运行和部署应用程序的开放平台。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;开发人员能利用Docker开发和运行应用程序。&lt;/li&gt;
+&lt;li&gt;运维人员能利用Docker部署和管理应用程序。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230529203137105.png&#34; alt=&#34;image-20230529203137105&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h4 id=&#34;为什么使用docker&#34;&gt;为什么使用Docker&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Docker使您能够将应用程序与基础架构分开，以便您可以快速交付软件。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;借助Docker，您可以像管理应用程序一样管理基础架构。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;通过利用Docker的方法快速进行运输，测试和部署代码，可以明显缩短编写代码和在生产环境中运行代码之间的&lt;/p&gt;
+&lt;p&gt;延迟。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;开发人员在本地编写代码，可以使用Docker同事进行共享，实现协同工作；&lt;/li&gt;
+&lt;li&gt;使用Docker开发完成程序，可以直接对应用程序执行自动和手动测试；&lt;/li&gt;
+&lt;li&gt;当开发人员发现吴或BUG时，可以直接在开发环境中修复后，并迅速将它们重新部署到测试环境进行测试和验证；&lt;/li&gt;
+&lt;li&gt;利用Docker开发完成后，交付时，直接交付Docker，也就意味着交付完成。后续如果有提供修补程序或更新，需要推送到生成环境运行起来，也是一样的简单。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Docker主要解决的问题．&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;保证程序运行环境的一致性。&lt;/li&gt;
+&lt;li&gt;降低配置开发环境、生产环境的复杂度和成本。&lt;/li&gt;
+&lt;li&gt;实现程序的快速部署和分发。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;docker整体架构&#34;&gt;Docker整体架构&lt;/h3&gt;
+&lt;p&gt;Docker Engine是一个包含以下组件的客户端一服务端（C/S）应用程序&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;服务端---一个长时间运行的守护进程（Docker Daemon)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;RESTAPI---一套用于与Docker Daemon通信并指示其执行操作的接口&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;客户端---命令行接口CLI(Command Linelnterface)&lt;/p&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;2&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/Docker_R_C.png&#34; alt=&#34;R-C&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;CLI利用Docker命令通过REST API直接操控Docker Daemon执行操作&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Docker Daemon负责创建并管理Docker的对象（镜像、容器、网络、数据卷）&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;docker结构&#34;&gt;Docker结构&lt;/h4&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;3&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230529205616866.png&#34; alt=&#34;image-20230529205616866&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Docker客户端(Docker Client)&lt;/p&gt;
+&lt;p&gt;Docker客户端(Docker Client）是用户与Docker进行交互的最主要方式。当在终端输入docke命令时，对应的就会在服务端产生对应的作用，并把结果返回给客户端。Docker Client除了连接本地服务端，通过更改或指定DOCKER_HOST连接远程服务端。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Docker服务端(DockerServer)&lt;/p&gt;
+&lt;p&gt;Docker Daemon其实就是Docker的服务端。它负责监听Docker API请求（如Docker Client)并管理Docker对象(Docker Objects)，如镜像、容器、网络、数据卷等&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Docker Registries&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;俗称Docke仓库，专门用于存储镜像的云服务环境．&lt;/li&gt;
+&lt;li&gt;Docker Hub就是一个公有的存放镜像的地方，类似Github存储代码文件。同样的也可以类似Github搭建私有的仓库。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Docker对象(DockerObJects)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;镜像：一个Docker的可执行文件，其中包括运行应用程序所需的所有代码内容、依赖库、环境变量和配置文件等。&lt;/li&gt;
+&lt;li&gt;容器：镜像被运行起来后的实例。&lt;/li&gt;
+&lt;li&gt;网络：外部或者容器间如何互相访问的网络方式，如host模式、bridge模式。&lt;/li&gt;
+&lt;li&gt;数据卷：容器与宿主机之间、容器与容器之间共享存储方式，类似虚拟机与主机之间的共享文件目录。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;docker底层技术&#34;&gt;Docker底层技术&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Docker使用GO语言实现。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Docker利用用linux内核的几个特性来实现功能：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;利用linux的命名空间（Namespaces)：为Docke俗器提供操作系统层面的隔离。
+&lt;ul&gt;
+&lt;li&gt;进程号隔离：每一个容器内运行的第一个进程，进程号总是从1开始起算&lt;/li&gt;
+&lt;li&gt;网络隔离：容器的网络与宿主机或其他容器的网络是隔离的、分开的，也就是相当于两个网络&lt;/li&gt;
+&lt;li&gt;进程间通隔离：容器中的进程与宿主机或其他容器中的进程是互相不可见的，通信需要借助网络&lt;/li&gt;
+&lt;li&gt;文件系统挂载隔离：容器拥有自己单独的工作目录&lt;/li&gt;
+&lt;li&gt;内核以及系统版本号隔离：容器查看内核版本号或者系统版本号时，查看的是容器的，而非宿主机的&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;利用linux控制组（Control Groups)：为Docker容器提供硬件层面的隔离。
+&lt;ul&gt;
+&lt;li&gt;控制组能控制应用程序所使用的硬件资源。&lt;/li&gt;
+&lt;li&gt;基于该性质，控制组帮助Docke引擎将硬件资源共享给容器使用，并目加以约束和限制。如控制容器所使用的内存大小。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;利用Linux的联合文件系统（Union File Systems)：利用分层(layer）思想管理境像和容器。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这也就意味着Docker只能在linux上运行。&lt;/p&gt;
+&lt;p&gt;在Windows、MacOS上运行Docker，其实本质上是借助了虚拟化技术，然后在linux虚拟机上运行的Docke程序。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;容器格式（Container Format）：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Docker Engine将namespace、cgroups、UnionFS进行组合后的一个package，就是一个容器格式(Container Format)。Docker通过对这个package中的namespace、cgroups、UnionFS进管理控制实现容器的创建和生命周期管理。&lt;/li&gt;
+&lt;li&gt;容器格式(Container Format)有多种，其中Docker目前使用的容器格式被称为 &lt;code&gt;libcontainer&lt;/code&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+">Docker概览</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://zxh-w.github.io/post/python-dui-xiang-shen-ru/"" data-c="
+          &lt;h2 id=&#34;type-object和class的关系&#34;&gt;type、object和class的关系&lt;/h2&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230507082334065.png&#34; alt=&#34;image-20230507082334065&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;type生成了所有的class&lt;/li&gt;
+&lt;li&gt;所有class都继承了object&lt;/li&gt;
+&lt;li&gt;object是顶层基类，它没有父类&lt;/li&gt;
+&lt;li&gt;type也是一个类，但同时它还是一个对象&lt;/li&gt;
+&lt;li&gt;函数和类也是对象，属于Python的一等公民&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;python魔法函数&#34;&gt;Python魔法函数&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Python的魔法函数是指Python的类中，一系列函数名由双下划线包裹的函数。在特定时刻(调用内置函数时)，Python会自动调用这些函数。魔法函数不是通过继承等机制获得的，而是类一旦定义，Python内部机制自动会给类赋予这些特殊的函数，且用户是不能创建魔法函数的，即使函数名以双下划线开头和双下划线结尾。通过魔法函数可以实现许多个性化、便捷的操作。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Python中每个魔法函数都对应了一个Python内置函数或操作。&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;非数学运算&#34;&gt;非数学运算&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;描述&lt;/th&gt;
+&lt;th&gt;函数&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;字符串表示&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;__repr__&lt;/code&gt;、&lt;code&gt;__str__&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;集合、序列相关&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;__len__&lt;/code&gt;、&lt;code&gt;__getitem__&lt;/code&gt;、&lt;code&gt;__setitem__&lt;/code&gt;、&lt;code&gt;__delitem__&lt;/code&gt;、&lt;code&gt;__contains__&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;迭代相关&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;__iter__&lt;/code&gt;、&lt;code&gt;__next__&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;可调用&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;__call__&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;with&lt;/code&gt;上下文管理器&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;__enter__&lt;/code&gt;、&lt;code&gt;__exit__&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;数值转换&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;__abs__&lt;/code&gt;、&lt;code&gt;__float__&lt;/code&gt;、&lt;code&gt;__bool__&lt;/code&gt;、&lt;code&gt;__int__&lt;/code&gt;、&lt;code&gt;__hsah__&lt;/code&gt;、&lt;code&gt;__index__&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;元类相关&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;__new__&lt;/code&gt;、&lt;code&gt;__init__&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;属性相关&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;__getattr__&lt;/code&gt;、&lt;code&gt;__setattr__&lt;/code&gt;、&lt;code&gt;__getattribute__&lt;/code&gt;、&lt;code&gt;__setattribute__&lt;/code&gt;、&lt;code&gt;__dir__&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;属性描述符&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;__get__&lt;/code&gt;、&lt;code&gt;__set__&lt;/code&gt;、&lt;code&gt;__delete__&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;协程&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;__await__&lt;/code&gt;、&lt;code&gt;__aiter__&lt;/code&gt;、&lt;code&gt;__anext__&lt;/code&gt;、&lt;code&gt;__aenter__&lt;/code&gt;、&lt;code&gt;__aexit__&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;数学运算&#34;&gt;数学运算&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;描述&lt;/th&gt;
+&lt;th&gt;函数&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;一元运算符&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;__neg__（-）&lt;/code&gt;、&lt;code&gt;__pos__（+）&lt;/code&gt;、&lt;code&gt;__abs__&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;二元运算符&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;__lt__(&amp;lt;)&lt;/code&gt;、&lt;code&gt;__le__ &amp;lt;=&lt;/code&gt;、&lt;code&gt; __eq__ ==&lt;/code&gt; 、&lt;code&gt;__ne__ !=&lt;/code&gt;、&lt;code&gt;__gt__ &amp;gt;&lt;/code&gt;、&lt;code&gt; __ge__ &amp;gt;=&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;算术运算符&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;__add__ + &lt;/code&gt;、&lt;code&gt;__sub__ -&lt;/code&gt;、&lt;code&gt;__mul__ *&lt;/code&gt;、&lt;code&gt;__truediv__ /&lt;/code&gt;、&lt;code&gt; __floordiv__ //&lt;/code&gt; 、&lt;code&gt;__mod__ %&lt;/code&gt;、&lt;code&gt; __divmod__ divmod()&lt;/code&gt; 、&lt;code&gt; __pow__ ** 或 pow()&lt;/code&gt; 、 &lt;code&gt;__round__ round()&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;反向算术运算符&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;__radd__ &lt;/code&gt;、&lt;code&gt; __rsub__&lt;/code&gt; 、&lt;code&gt;__rmul__&lt;/code&gt;、&lt;code&gt; __rtruediv__&lt;/code&gt; 、&lt;code&gt; __rfloordiv__&lt;/code&gt; 、&lt;code&gt;__rmod__&lt;/code&gt;、&lt;code&gt;__rdivmod__&lt;/code&gt; 、&lt;code&gt; __rpow__&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;增量赋值算术运算符&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;__iadd__&lt;/code&gt; 、 &lt;code&gt;__isub__ &lt;/code&gt;、 &lt;code&gt;__imul__&lt;/code&gt; 、 &lt;code&gt;__itruediv__ &lt;/code&gt;、 &lt;code&gt;__ifloordiv__ &lt;/code&gt;、 &lt;code&gt;__imod__&lt;/code&gt; 、&lt;code&gt;__ipow__&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;位运算符&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;__invert__ ~ &lt;/code&gt;、&lt;code&gt;__lshift__ &amp;lt;&amp;lt;&lt;/code&gt;、&lt;code&gt;__rshift__ &amp;gt;&amp;gt;&lt;/code&gt;、 &lt;code&gt;__and__ &amp;amp; &lt;/code&gt;、 &lt;code&gt;__or__ &lt;/code&gt;、&lt;code&gt;__xor__ ^&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;反向位运算符&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;__rlshift__ &amp;lt;&amp;lt;&lt;/code&gt;、&lt;code&gt;__rrshift__ &amp;gt;&amp;gt;&lt;/code&gt;、 &lt;code&gt;__rand__ &amp;amp; &lt;/code&gt;、 &lt;code&gt;__ror__ &lt;/code&gt;、&lt;code&gt;__rxor__ ^&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;增量赋值位运算符&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;__ilshift__ &lt;/code&gt;、&lt;code&gt;__irshift__&lt;/code&gt;、&lt;code&gt;__iand__&lt;/code&gt;、&lt;code&gt; __ixor__&lt;/code&gt; 、&lt;code&gt; __ior__&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;鸭子类型和多态&#34;&gt;鸭子类型和多态&lt;/h3&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;&#39;&#39;&#39;
+Cat、Dog、Duck都有相同的行为，say
+&#39;&#39;&#39;
+class Cat(object):
+    def say(self):
+        print(&#39;I am a cat&#39;)
+class Dog(object):
+    def say(self):
+        print(&#39;I am a dog&#39;)
+class Duck(object):
+    def say(self):
+        print(&#39;I am a duck&#39;)
+animals = [Cat,Dog,Duck]
+for animal in animalss:
+    animal().say()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;抽象基类abc模块&#34;&gt;抽象基类(abc模块)&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;抽象基类不能实例化&lt;/li&gt;
+&lt;li&gt;子类需要实现基类指定的抽象方法&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;某些情况下希望判定某个对象的类型：&lt;code&gt;isinstance&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;需要强制某个子类必须实现某些方法&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;实现一个web框架，集成cache(redis，cache，memorycache)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import abc
+class CacheBase(metaclass=abc.ABCMeta):
+    @abc.abstractmethod
+    def get(self,key):
+        pass
+   	@abc.abstractmethod
+    def set(self,key,value):
+        pass
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;使用-isinstance而不是-type&#34;&gt;使用 &lt;code&gt;isinstance&lt;/code&gt;而不是 &lt;code&gt;type&lt;/code&gt;&lt;/h3&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class A:
+	pass
+class B:
+    pass
+b = B()
+
+print(isinstance(b,B)) #True
+print(isinstance(b,A)) #True
+print(type(b) is A) #False
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;类变量和实例变量&#34;&gt;类变量和实例变量&lt;/h3&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class A:
+    aa = 1 #类变量
+    # 参数self是A的一个实例
+    def __init__(self,x,y):
+        self.x = x #实例变量 
+        self.y = y #实例变量
+
+a = A(2,3)
+A.aa = 11 #修改的是类属性aa
+a.aa = 100 # 会新建一个实例属性aa，并把aa的值设置为100
+print(A.aa)#11
+print(a.aa)#100
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;类属性和实例属性以及查找顺序&#34;&gt;类属性和实例属性以及查找顺序&lt;/h3&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class A:
+	name = &#39;A&#39;
+    def __init()__(self):
+        self.name = &#39;obj&#39;
+a = A()
+print(a.name)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;如果使用BFS，那么当C和D有同名方法时，D中的方法就会被覆盖，而我们可能是要D中的方法。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;2&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230516102002292.png&#34; alt=&#34;&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;blockquote&gt;
+&lt;p&gt;深度优先算法不是很合理，因为如果按A-&amp;gt;B-&amp;gt;D-&amp;gt;C的方式查询，C中的方法可能是继承重写D的，这样一来C中的方法就找不到了。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;3&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230516101557360.png&#34; alt=&#34;image-20230516101557360&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;blockquote&gt;
+&lt;p&gt;综上，BFS与DFS均有不适用的情况，Python选择了C3算法。C3算法对第一张图片的查找顺序和DFS相同，对第二张图片的查找顺序和BFS形同。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;类方法-静态方法和实例方法&#34;&gt;类方法、静态方法和实例方法&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;实例方法只能被实例对象调用(Python3 中，如果类调用实例方法，需要显示的传self, 也就是实例对象自己)，静态方法(由&lt;code&gt;@staticmethod&lt;/code&gt;装饰的方法)、类方法(由&lt;code&gt;@classmethod&lt;/code&gt;装饰的方法)，可以被类或类的实例对象调用。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;实例方法：第一个参数必须要默认传实例对象，一般习惯用&lt;code&gt;self&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;静态方法：参数没有要求。&lt;/li&gt;
+&lt;li&gt;类方法：第一个参数必须要默认传类，一般习惯用&lt;code&gt;cls&lt;/code&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;数据封装和私有属性&#34;&gt;数据封装和私有属性&lt;/h3&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class User:
+    def __init__(self,age,weight):
+        self.age = age
+        self.__weight = weight#属性名前加__
+    def get_age(self):
+        return self.age
+    def get_weight(self):
+        return self.__weight
+if __name__ == &#39;__main__&#39;:
+    user = User(32,64)
+    print(user.age) # 32
+    print(user.__weight) #报错
+    print(user.get_weight()) # 64
+    print(user._User__wieght) # 64
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;python对象的自省机制&#34;&gt;Python对象的自省机制&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;自省是通过一定的机制查询到对象的内部结构。检查某些事物以确定它是什么、它知道什么以及它能做什么。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Python中比较常见的自省（&lt;code&gt;introspection&lt;/code&gt;）机制(函数用法)有： &lt;code&gt;dir()&lt;/code&gt;，&lt;code&gt;type()&lt;/code&gt;,&lt;code&gt; hasattr()&lt;/code&gt;,&lt;code&gt; isinstance()&lt;/code&gt;，通过这些函数，我们能够在程序运行时得知对象的类型，判断对象是否存在某个属性，访问对象的属性。&lt;/p&gt;
+&lt;h3 id=&#34;super函数调用&#34;&gt;&lt;code&gt;super()&lt;/code&gt;函数调用&lt;/h3&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class A:
+    def __init__(self):
+        print(&#39;A&#39;)
+class B(A):
+    def __init__(self):
+        print(&#39;B&#39;)
+        super().__init__()
+class C(A):
+    def __init__(self):
+        print(&#39;C&#39;)
+        super().__init__()
+class D(B,C):
+     def __init__(self):
+        print(&#39;D&#39;)
+        super().__init__()
+d = D()
+print(D.__mro__)
+
+super(C,d).__init__()# A
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;super&lt;/code&gt;的作用是 &lt;strong&gt;返回的是&lt;code&gt;obj&lt;/code&gt;的MRO中&lt;code&gt;class&lt;/code&gt;类的父类&lt;/strong&gt;,在这里就表示&lt;strong&gt;返回的是&lt;code&gt;d&lt;/code&gt;的MRO中&lt;code&gt;C&lt;/code&gt;类的父类&lt;/strong&gt;。&lt;/p&gt;
+&lt;h3 id=&#34;mixin功能&#34;&gt;Mixin功能&lt;/h3&gt;
+&lt;p&gt;Mixin 即 &lt;code&gt;Mix-in&lt;/code&gt;，常被译为“混入”，是一种编程模式，这些类采用统一的命名规范（例如Mixin后缀），以此标识这些类只是用来混合功能的。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Mixin类功能单一（一个Mixin类往往只实现一个功能（函数））&lt;/li&gt;
+&lt;li&gt;如果有多个功能，那就写多个Mixin类&lt;/li&gt;
+&lt;li&gt;不要和基类关联，可以和任意基类组合&lt;/li&gt;
+&lt;li&gt;在Mixin类中，不要使用super()这种用法，Mixin类只用于拓展子类的功能，不能影响子类的主要功能，子类也不能依赖 Mixin类&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;python中上下文管理器&#34;&gt;Python中上下文管理器&lt;/h3&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def exec_try():
+    try:
+        print(&#39;---------codeing  start----------&#39;)
+        raise KeyError
+        return 1
+    except KeyError as e:
+        print(&#39;---------Key Error-----------&#39;)
+        return 2
+    else:
+        print(&#39;---------Others--------------&#39;)
+        return 3
+    finally:
+        print(&#39;-----------final-------------&#39;)
+        return 4
+
+res = exec_try()
+print(res)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;4&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230517105332343.png&#34; alt=&#34;image-20230517105332343&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;blockquote&gt;
+&lt;p&gt;当一个类实现了 &lt;code&gt;__enter__()&lt;/code&gt;和 &lt;code&gt;__exit__()&lt;/code&gt;魔法函数时，那么这个类就实现了上下文管理器协议，&lt;code&gt;with&lt;/code&gt;语句就可以直接使用这个类。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;with context_expression [as target(s)]:
+    with-body
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;一个类在 Python 中，只要实现以下方法，就实现了[上下文管理器协议]：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;__enter__&lt;/code&gt;：在进入 &lt;code&gt;with&lt;/code&gt; 语法块之前调用，返回值会赋值给 &lt;code&gt;with&lt;/code&gt; 的 &lt;code&gt;target&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;__exit__&lt;/code&gt;：在退出 &lt;code&gt;with&lt;/code&gt; 语法块时调用，一般用作异常处理&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;自定义序列&#34;&gt;自定义序列&lt;/h3&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import numbers
+class Question():
+    def __init__(self,name,num,answer):
+        self.name = name
+        self.num = num
+        self.answer = answer
+    
+    def __getitem__(self,item):
+        cls = type(self)
+        
+        if isinstance(item,slice):
+            return cls(self.name,self.num,self.answer[item])
+        elif isinstance(item,numbers.Integral):
+            return cls(self.name,self.num,[self.answer[item],])
+        
+    def __revers__(self):
+        self.answer.reverse()
+        
+q = Question(&#39;test&#39;,4,[&#39;a&#39;,&#39;b&#39;,&#39;c&#39;,&#39;d&#39;])
+print(q[::2])
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;属性描述符和属性查找过程&#34;&gt;属性描述符和属性查找过程&lt;/h3&gt;
+&lt;p&gt;如果&lt;code&gt;user&lt;/code&gt;是某个类的实例，那么&lt;code&gt;user.age&lt;/code&gt;以及等价的&lt;code&gt;getattr(user,&#39;age&#39;))&lt;/code&gt;首先调用 &lt;code&gt;__getattribute__&lt;/code&gt;。如果类定义了 &lt;code&gt;__getattr__&lt;/code&gt;方法，那么在 &lt;code&gt;__getattribute__&lt;/code&gt;抛出 &lt;code&gt;AttributrError&lt;/code&gt;的时候就会调用到 &lt;code&gt;__getattr__&lt;/code&gt;，而对于描述符（&lt;code&gt;__get__&lt;/code&gt;）的调用，则是发生在 &lt;code&gt;__getattribute__&lt;/code&gt;内部的。&lt;/p&gt;
+&lt;p&gt;user = User()，那么user.age查找顺序如下：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;如果age是出现在User或其基类的 &lt;code&gt;__dict__&lt;/code&gt;中，且&lt;code&gt;age&lt;/code&gt;是&lt;code&gt;data descriptor&lt;/code&gt; ,那么调用其 &lt;code&gt;get&lt;/code&gt;方法&lt;/li&gt;
+&lt;li&gt;如果 &lt;code&gt;age&lt;/code&gt;出现在 user的 &lt;code&gt;__dict__&lt;/code&gt;中，那么直接返回 &lt;code&gt;obj.__dict__[&#39;age&#39;]&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;如果age是出现在User或其基类的 &lt;code&gt;__dict__&lt;/code&gt;中，
+&lt;ol&gt;
+&lt;li&gt;如果 &lt;code&gt;age&lt;/code&gt;是 &lt;code&gt;non-data descriptor&lt;/code&gt; ,那么调用其 &lt;code&gt;__get__&lt;/code&gt;方法，否则&lt;/li&gt;
+&lt;li&gt;返回 &lt;code&gt;__dict__[&#39;age&#39;]&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;如果User有 &lt;code&gt;__getattr__&lt;/code&gt;方法，调用 &lt;code&gt;__getattr__&lt;/code&gt;方法&lt;/li&gt;
+&lt;li&gt;抛出 &lt;code&gt;AttributeError&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;__new__-和-__init__的区别&#34;&gt;&lt;code&gt;__new__&lt;/code&gt; 和 &lt;code&gt;__init__&lt;/code&gt;的区别&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;__new__&lt;/code&gt;是用来控制对象的生成过程， &lt;code&gt;__init__&lt;/code&gt;是用来完善对象的&lt;/li&gt;
+&lt;li&gt;如果 &lt;code&gt;__new__&lt;/code&gt;方法不返回对象，则不会调用 &lt;code&gt;__init__&lt;/code&gt;函数&lt;/li&gt;
+&lt;/ul&gt;
+">Python对象深入</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://zxh-w.github.io/post/pythpn-bian-liang-shi-zhi/"" data-c="
+          &lt;h3 id=&#34;python中的变量&#34;&gt;Python中的变量&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Python中的变量实质上是一个指针，可以理解为是一个便利贴&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;Java中的基本类型变量，存放的是值&lt;/li&gt;
+&lt;li&gt;Java中的引用类型变量，一般存放在栈内存中，而值存放在堆内存中（使用new关键字）或者常量池中&lt;/li&gt;
+&lt;li&gt;Python中的变量存放的是值的地址&lt;/li&gt;
+&lt;li&gt;Python中的变量（任何变量）类似于Java中的引用类型（&lt;code&gt;String&lt;/code&gt;、数组、&lt;code&gt;ArrayList&lt;/code&gt;、类等）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;和is的区别&#34;&gt;&lt;code&gt;==&lt;/code&gt;和&lt;code&gt;is&lt;/code&gt;的区别&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;==&lt;/code&gt;是相等性比较，比较的是两个对象中的值是否相等，&lt;code&gt;is&lt;/code&gt; 是一致性比较，比较的是两个对象的内存空间地址是否相同。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;intern机制：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;​	Python 中，其实存在许多内置的性能/效率优化机制。对不可变对象而言，最常见的有 &lt;strong&gt;小整数池&lt;/strong&gt; 和 &lt;strong&gt;字符串驻留 (String Interning)&lt;/strong&gt;，例如：Python解释器中使用了 intern（字符串驻留）的技术来提高字符串效率，什么是intern机制？即值同样的字符串对象仅仅会保存一份，放在一个字符串储蓄池中，是共用的，当然，肯定不能改变，这也决定了字符串必须是不可变对象。&lt;/p&gt;
+&lt;h3 id=&#34;del语句和垃圾回收&#34;&gt;&lt;code&gt;del&lt;/code&gt;语句和垃圾回收&lt;/h3&gt;
+&lt;p&gt;在&lt;code&gt;CPython&lt;/code&gt;中，&lt;strong&gt;垃圾回收使用的主要算法是引用计数&lt;/strong&gt;。但 &lt;strong&gt;&lt;code&gt;del&lt;/code&gt;语句删除的是名称而不是对象&lt;/strong&gt;。&lt;code&gt;del&lt;/code&gt;可能会导致对象被当作垃圾回收，当且仅当删除的变量是保存的对象的最后一个引用。&lt;/p&gt;
+">Python变量实质</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://zxh-w.github.io/post/xu-ni-ji-pei-zhi/"" data-c="
+          &lt;h2 id=&#34;虚拟网络编辑器配置&#34;&gt;虚拟网络编辑器配置&lt;/h2&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230515094624174.png&#34; alt=&#34;image-20230515094624174&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;2&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230515094652766.png&#34; alt=&#34;image-20230515094652766&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h2 id=&#34;本地vmnet8配置&#34;&gt;本地&lt;code&gt;VMnet8&lt;/code&gt;配置&lt;/h2&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;3&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230515094755409.png&#34; alt=&#34;image-20230515094755409&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h2 id=&#34;centos7内部网络配置&#34;&gt;CentOS7内部网络配置&lt;/h2&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;4&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230515091434433.png&#34; alt=&#34;image-20230515091434433&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;blockquote&gt;
+&lt;p&gt;如果配置完成后还是不能上网或者和主机相互ping不通，重启虚拟机试一下。&lt;/p&gt;
+&lt;/blockquote&gt;
+">虚拟机配置</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://zxh-w.github.io/post/pipenv-jian-dan-shi-yong/"" data-c="
+          &lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;pipenv&lt;/code&gt;就是把&lt;code&gt;pip&lt;/code&gt;和&lt;code&gt;virtualenv&lt;/code&gt;包装起来的一个便捷工具，它会自动为您的项目创建和管理&lt;code&gt;virtualenv&lt;/code&gt;,以及在安装/卸载软件包时添加/删除&lt;code&gt;Pipfile&lt;/code&gt;中的软件包。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Pipfile&lt;/code&gt;：简明地显示项目环境依赖包&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Pipfile.lock&lt;/code&gt;：详细记录环境依赖，并且使用Hash算法保证了它完整的对应关系&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;使用方法&#34;&gt;使用方法&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;正确安装&lt;code&gt;pipenv&lt;/code&gt;：&lt;code&gt;pip3 install pipenv&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;创建项目所在的文件夹：&lt;code&gt;mkdir myproject&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;进入文件夹：&lt;code&gt;cd myproject&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;初始化虚拟环境：&lt;code&gt;pipenv  --python 3.7&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;安装某一个包：&lt;code&gt;pipenv install django==2.2&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;常用命令&#34;&gt;常用命令&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;命令&lt;/th&gt;
+&lt;th&gt;说明&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;pipenv --where&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;列出本地工程路径&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;pipenv --venv&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;列出虚拟环境路径&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;pipenv --py&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;列出虚拟环境的Python可执行文件&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;pipenv install&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;（创建虚拟环境）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;pipenv install moduel --dev&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;在开发环境安装包&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;pipenv graph&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;查看包依赖&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;pipenv lock&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;生成lockfile&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;pipenv install --dev&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;安装所有开发环境包&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;pipenv uninstall --all&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;卸载所有包&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;pipenv --rm&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;删除虚拟环境&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;pipenv run python xxx.py&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;虚拟环境运行python&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;pipenv --rm&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;删除虚拟环境&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;pipenv uninstall 包名&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;删除部分包&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;参考链接：https://zhuanlan.zhihu.com/p/104935266&lt;/p&gt;
+">pipenv简单使用</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://zxh-w.github.io/post/web-yu-dajngo/"" data-c="
+          &lt;h2 id=&#34;web的结构&#34;&gt;Web的结构&lt;/h2&gt;
+&lt;h3 id=&#34;网站的前端&#34;&gt;网站的前端&lt;/h3&gt;
+&lt;p&gt;通过用户肉眼看到的布局、内容、对网站的操作的功能，一切可以让用户直接接触与操作的部分。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;静态功能：静态功能不会和后端服务器进行交互，仅在前端处理并响应用户。&lt;/li&gt;
+&lt;li&gt;动态功能：动态功能则通过与后端的交互，通过前端发送给后端的指令，在后端接到指令并作出相应逻辑处理后响应给前端，前端在收到后端响应后，将结果直接或二次加工后呈现给用户。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;网站的后端&#34;&gt;网站的后端&lt;/h3&gt;
+&lt;p&gt;大量的业务逻辑、数据库IO，属于用户不可见、不可直接接触的部分。&lt;/p&gt;
+&lt;h3 id=&#34;web结构图&#34;&gt;Web结构图&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;前后端不分离&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230511224659675.png&#34; alt=&#34;&#34; loading=&#34;lazy&#34;&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;前后端分离&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230511224713733.png&#34; alt=&#34;&#34; loading=&#34;lazy&#34;&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;django中的模块&#34;&gt;Django中的模块&lt;/h2&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-django-MVT.png&#34; alt=&#34;image-20230511225144823&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;模型Model&lt;/strong&gt;：数据层，处理与数据相关的所有事情&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;视图View&lt;/strong&gt;：视图层，用来处理用户发出的请求&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;模板Template&lt;/strong&gt;：模板层，通过视图函数渲染html模板，得到动态的前端页面&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;路由Url&lt;/strong&gt;：网站的入口，关联到对应的视图函数，访问网址就对应一个函数&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;表单Forms&lt;/strong&gt;：表单，用在浏览器中输入数据提交，并对这些数据进行验证&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;后台Admin&lt;/strong&gt;：Django自带的一个管理后台，对你提交的数据进行管理&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;配置Settings&lt;/strong&gt;：Django的设置，配置文件&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;django基础命令&#34;&gt;Django基础命令&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;命令&lt;/th&gt;
+&lt;th&gt;说明&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;django-admin startproject 项目名&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;创建一个Django项目&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;python manage.py startapp 应用名&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;项目中创建一个应用&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;Python manage.py shell&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;进入调试代码的模式&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;python manage.py makemigrations&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;数据库创建更改文件&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;python manage.py migrate&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;同步到数据库进行更新&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;python manage.py flush&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;清空数据库&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;python manage.py runserver 0.0.0.0:8000&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;启动开发服务器&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;python manage.py + Enter&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;查看更多命令&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+">Web与Dajngo</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://zxh-w.github.io/post/redis-shu-ju-lei-xing/"" data-c="
+          &lt;h2 id=&#34;通用命令&#34;&gt;通用命令&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;命令&lt;/th&gt;
+&lt;th&gt;说明&lt;/th&gt;
+&lt;th&gt;时间复杂度&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;keys [pattern]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;遍历出所有符合通配符的key&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;O(n)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;dbsize&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;计算出key的总数&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;O(1)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;exists key&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;检查key是否存在&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;O(1)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;del key [key...]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;删除指定的key-value&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;O(1)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;expire key seconds&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;key在seconds秒后过期&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;O(1)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;ttl key&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;查看key剩余的时间&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;O(1)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;persist key&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;去掉key的过期时间&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;O(1)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;type key&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;返回key的类型&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;O(1)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;数据结构和内部编码&#34;&gt;数据结构和内部编码&lt;/h2&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230506162651804.png&#34; alt=&#34;image-20230506162651804&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;strong&gt;Redis Object&lt;/strong&gt;&lt;/p&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;2&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230506162846389.png&#34; alt=&#34;image-20230506162846389&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h2 id=&#34;单线程&#34;&gt;单线程&lt;/h2&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;3&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230506213636451.png&#34; alt=&#34;image-20230506213636451&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;纯内存&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;非阻塞IO&lt;/p&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;4&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230506213815610.png&#34; alt=&#34;image-20230506213815610&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;注意：&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;一次只执行一条命令&lt;/li&gt;
+&lt;li&gt;拒绝长(慢)命令&lt;/li&gt;
+&lt;li&gt;其实不是单线程（&lt;code&gt;fysnc file descriptor&lt;/code&gt; &lt;code&gt;close file descriptor&lt;/code&gt;）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;字符串&#34;&gt;字符串&lt;/h2&gt;
+&lt;h3 id=&#34;键值结构&#34;&gt;键值结构&lt;/h3&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;5&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230506221446097.png&#34; alt=&#34;image-20230506221446097&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h3 id=&#34;api&#34;&gt;API&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;API&lt;/th&gt;
+&lt;th&gt;说明&lt;/th&gt;
+&lt;th&gt;复杂度&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;get key&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;获取key对应的value&lt;/td&gt;
+&lt;td&gt;O(1)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;set key value&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;设置key-value&lt;/td&gt;
+&lt;td&gt;O(1)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;del key&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;删除key-value&lt;/td&gt;
+&lt;td&gt;O(1)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;incr key&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;key自增1，如果key不存在，自增后get(key)=1&lt;/td&gt;
+&lt;td&gt;O(1)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;decr key&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;key自减1，如果key不存在，自减后get(key)=-1&lt;/td&gt;
+&lt;td&gt;O(1)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;incrby key k&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;key自增k，如果key不存在，自增后get(key)=k&lt;/td&gt;
+&lt;td&gt;O(1)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;decrby key k&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;key自减k，如果key不存在，自减后get(key)=-k&lt;/td&gt;
+&lt;td&gt;O(1)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;set key value&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;不管key是否存在，都设置&lt;/td&gt;
+&lt;td&gt;O(1)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;setnx key value&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;key不存在，才设置（插入操作）&lt;/td&gt;
+&lt;td&gt;O(1)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;set key value xx&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;key存在，才设置(更新操作)&lt;/td&gt;
+&lt;td&gt;O(1)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;mget key1 key2 key3 ...&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;批量获取key，原子操作&lt;/td&gt;
+&lt;td&gt;O(n)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;mset key1 value1 key2 value2...&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;批量设置key-value&lt;/td&gt;
+&lt;td&gt;O(n)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;getset key newvalue&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;set key new value并返回旧的value&lt;/td&gt;
+&lt;td&gt;O(1)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;append key value&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;将value追加到旧的value&lt;/td&gt;
+&lt;td&gt;O(1)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;strlen key&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;返回字符串长度（注意中文）&lt;/td&gt;
+&lt;td&gt;O(1)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;incrbyfloat key 3.5&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;增加key对应的值3.5&lt;/td&gt;
+&lt;td&gt;O(1)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;getrange key start end&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;获取字符串指定下标所有的值&lt;/td&gt;
+&lt;td&gt;O(1)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;setrange key index value&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;设置指定下标所有对应的值&lt;/td&gt;
+&lt;td&gt;O(1)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;hash&#34;&gt;HASH&lt;/h2&gt;
+&lt;h3 id=&#34;键值结构-2&#34;&gt;键值结构&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;key : filed value&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;filed不能相同&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;6&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230507124345404.png&#34; alt=&#34;image-20230507124345404&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h3 id=&#34;api-2&#34;&gt;API&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;API&lt;/th&gt;
+&lt;th&gt;说明&lt;/th&gt;
+&lt;th&gt;复杂度&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;hget key field&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;获取hash key对应的field的value&lt;/td&gt;
+&lt;td&gt;O(1)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;hset key filed value&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;设置hash key对应field的value&lt;/td&gt;
+&lt;td&gt;O(1)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;hdel key field&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;删除hash key对应的field&lt;/td&gt;
+&lt;td&gt;O(1)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;hexists key field&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;判断hash key是否有field&lt;/td&gt;
+&lt;td&gt;O(1)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;hlen key&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;获取hash key field的数量&lt;/td&gt;
+&lt;td&gt;O(1)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;hmget key field1 field2 ...fieldN&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;获取hash key的一批field对应的值&lt;/td&gt;
+&lt;td&gt;O(n)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;hmset key field1 value1 field2 value2...fieldN valueN&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;批量设置hash key的一批field value&lt;/td&gt;
+&lt;td&gt;O(n)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;hgetall key&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;返回hash key对应所有field和value&lt;/td&gt;
+&lt;td&gt;O(n)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;hvals key&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;返回hashkey对应所有field的value&lt;/td&gt;
+&lt;td&gt;O(n)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;hkeys key&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;返回hash key对应所有的field&lt;/td&gt;
+&lt;td&gt;O(n)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;列表&#34;&gt;列表&lt;/h2&gt;
+&lt;h3 id=&#34;列表结构&#34;&gt;列表结构&lt;/h3&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;7&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230511163526518.png&#34; alt=&#34;image-20230511163526518&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h3 id=&#34;列表特点&#34;&gt;列表特点&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;有序&lt;/li&gt;
+&lt;li&gt;可以重复&lt;/li&gt;
+&lt;li&gt;左右两边都可以弹出&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;api-3&#34;&gt;API&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;API&lt;/th&gt;
+&lt;th&gt;说明&lt;/th&gt;
+&lt;th&gt;复杂度&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;rpush key value1 value2 ... valueN&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;列表右端插入N个值&lt;/td&gt;
+&lt;td&gt;O(N)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;lpush key value1 value2 ... valueN&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;列表左端插入N个值&lt;/td&gt;
+&lt;td&gt;O(N)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;`linsert key before&lt;/td&gt;
+&lt;td&gt;after value newValue`&lt;/td&gt;
+&lt;td&gt;在list指定的值前|后插入newValue&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;lpop key&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;O(1)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;rpop kkey&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;O(1)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;lrem key count value&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;根据count,从列表中删除所有value相等的项&lt;/td&gt;
+&lt;td&gt;O(N)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;ltrim key start end&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;按照索引范围修剪列表&lt;/td&gt;
+&lt;td&gt;O(N)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;lrange key start end&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;获取列表指定索引范围欸内所有item&lt;/td&gt;
+&lt;td&gt;O(N)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;llen key&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;获取key所对应的长度&lt;/td&gt;
+&lt;td&gt;O(1)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;lset key index newValue&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;设置列表指定索引值为newValue&lt;/td&gt;
+&lt;td&gt;O(N)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;`blpop&lt;/td&gt;
+&lt;td&gt;brpop key timeout`&lt;/td&gt;
+&lt;td&gt;`lpop&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;集合&#34;&gt;集合&lt;/h2&gt;
+&lt;h3 id=&#34;集合结构&#34;&gt;集合结构&lt;/h3&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;8&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230511165603288.png&#34; alt=&#34;image-20230511165603288&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h3 id=&#34;集合特点&#34;&gt;集合特点&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;无需&lt;/li&gt;
+&lt;li&gt;无重复&lt;/li&gt;
+&lt;li&gt;支持集合间操作&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;api-4&#34;&gt;API&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;API&lt;/th&gt;
+&lt;th&gt;说明&lt;/th&gt;
+&lt;th&gt;复杂度&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;sadd key element&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;向集合key中添加element&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;srem key element&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;将集合key中的element移出掉&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;scard key&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;计算集合大小&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;sismember key val&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;判断val是否存在集合之中&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;srandmember key count=num&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;从集合中随机选出num个元素,不会破环集合&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;smembers key&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;获取集合所有元素&lt;/td&gt;
+&lt;td&gt;O(N)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;spop key&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;从集合中弹出一个元素&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;sdiff key1 key2&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;差集&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;sinter key1 key2&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;交集&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;sunion key1 key2&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;并集&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;有序集合&#34;&gt;有序集合&lt;/h2&gt;
+&lt;h3 id=&#34;有序集合结构&#34;&gt;有序集合结构&lt;/h3&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;9&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230511171201803.png&#34; alt=&#34;image-20230511171201803&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h3 id=&#34;有序集合特点&#34;&gt;有序集合特点&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;无重复元素&lt;/li&gt;
+&lt;li&gt;有序&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;element + score&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;api-5&#34;&gt;API&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;API&lt;/th&gt;
+&lt;th&gt;说明&lt;/th&gt;
+&lt;th&gt;复杂度&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;zadd key score element&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;向集合key中添加element和score&lt;/td&gt;
+&lt;td&gt;O(logN)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;zrem key element&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;将集合key中的element移出掉&lt;/td&gt;
+&lt;td&gt;O(1)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;zscore key element&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;返回元素的分数&lt;/td&gt;
+&lt;td&gt;O(1)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;zincrby key increScore element&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;增加或者减少元素的分数&lt;/td&gt;
+&lt;td&gt;O(1)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;zcard key&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;计算有序集合元素个数&lt;/td&gt;
+&lt;td&gt;O(1)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;zrange key start end [WITHSCORES]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;返回指定索引范围内的升序元素[分值]&lt;/td&gt;
+&lt;td&gt;O(logN + m)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;zrangebyscore key minScore maxScore [WITHSCORES]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;返回指定分数范围内的升序元素[分值]&lt;/td&gt;
+&lt;td&gt;O(logN + m)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;zcount key minScore maxScore&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;返回有序集合内在指定分数范围的个数&lt;/td&gt;
+&lt;td&gt;O(logN + m)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;zremrangebyrank key start end&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;删除指定排名内的升序元素&lt;/td&gt;
+&lt;td&gt;O(logN + m)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;zremrangebyscore key minScore maxScore&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;删除指定分数内的升序元素&lt;/td&gt;
+&lt;td&gt;O(logN + m)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+">Redis数据结构</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://zxh-w.github.io/post/redis-chu-shi/"" data-c="
+          &lt;blockquote&gt;
+&lt;p&gt;Redis是一个开源的，&lt;strong&gt;基于内存的数据结构存储&lt;/strong&gt;，可用作于数据库、&lt;strong&gt;缓存&lt;/strong&gt;、消息中间件。&lt;br&gt;
+Redis的全称是：Remote Dictionary Server，本质上是一个 Key-Value 类型的内存数据库。&lt;br&gt;
+整个数据库加载在内存当中进行操作，定期通过异步操作把数据库数据保存在硬盘。因为是纯内存操作，Redis 的性能非常出色。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;redis特性&#34;&gt;Redis特性&lt;/h2&gt;
+&lt;h3 id=&#34;速度快&#34;&gt;速度快&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;数据存在内存&lt;/li&gt;
+&lt;li&gt;由C语言编写(50000 line)&lt;/li&gt;
+&lt;li&gt;使用单线程模型&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230506144855242.png&#34; alt=&#34;image-20230506144855242&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h3 id=&#34;持久化&#34;&gt;持久化&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Redis将所有数据保持在内存中 ，对数据的更新将异步地保存到磁盘上。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;多种数据结构&#34;&gt;多种数据结构&lt;/h3&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;2&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230506145108624.png&#34; alt=&#34;image-20230506145108624&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;p&gt;除了以上的数据结构，还提供了：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;BitMaps&lt;/code&gt;：位图&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;HyperLogLog&lt;/code&gt;：超小内存唯一值计数&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;GEO&lt;/code&gt;：地理信息定位&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;支持多种语言&#34;&gt;支持多种语言&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Java、php、Python、nodejs、lua、Rudy&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;简单&#34;&gt;简单&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;不依赖外部库&lt;/li&gt;
+&lt;li&gt;单线程模型&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;主从复制&#34;&gt;主从复制&lt;/h3&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;3&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230506145808291.png&#34; alt=&#34;image-20230506145808291&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h3 id=&#34;高可用-分布式&#34;&gt;高可用、分布式&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;高可用 &lt;code&gt;Redis-Sentinel(v2.8)&lt;/code&gt;支持&lt;/li&gt;
+&lt;li&gt;分布式 &lt;code&gt;Redis-Cluster(v3.0)&lt;/code&gt;支持&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;典型应用场景&#34;&gt;典型应用场景&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;缓存系统&lt;/li&gt;
+&lt;li&gt;计数器&lt;/li&gt;
+&lt;li&gt;排行榜&lt;/li&gt;
+&lt;li&gt;消息队列系统&lt;/li&gt;
+&lt;li&gt;社交网络&lt;/li&gt;
+&lt;li&gt;实时系统&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;redis安装&#34;&gt;Redis安装&lt;/h2&gt;
+&lt;h3 id=&#34;linux编译安装&#34;&gt;Linux编译安装&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;wget http://download.redis.io/releases/redis-3.0.7.tar.gz&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;tar -xzvf redis-3.0.7.tar.gz&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ln -s redis-3.0.7.tar.gz reids&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;make &amp;amp;&amp;amp; make install&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;可执行文件说明&#34;&gt;可执行文件说明&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:center&#34;&gt;执行文件&lt;/th&gt;
+&lt;th style=&#34;text-align:center&#34;&gt;说明&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;&lt;code&gt;redis-server&lt;/code&gt;&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Redis服务器&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;&lt;code&gt;redis-cli&lt;/code&gt;&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Redis命令行客户端&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;&lt;code&gt;redis-benchmark&lt;/code&gt;&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Redis性能测试工具&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;&lt;code&gt;redis-check-aof&lt;/code&gt;&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;AOF文件修复工具&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;&lt;code&gt;redis-check-dump&lt;/code&gt;&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;RDB文件检查工具&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;&lt;code&gt;redis-sentinel&lt;/code&gt;&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Sentinel服务器&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;三种启动方式&#34;&gt;三种启动方式&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;生产环境最好选择配置启动&lt;/li&gt;
+&lt;li&gt;单机多实例配置文件可以用端口区分开&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;启动方式&lt;/th&gt;
+&lt;th&gt;命令&lt;/th&gt;
+&lt;th&gt;验证&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;最简启动&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;redis-server&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;`ps -ef&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;配置文件启动&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;redis-serve --port 6380&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;`netstat -antpl&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;动态参数启动&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;redis-server configPath&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;redis-cli -h ip -p port ping&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;redis常用配置&#34;&gt;Redis常用配置&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;daemonize&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;是否是守护进程&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;port&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Redis对外端口号（默认端口6379）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;logfile&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Redis系统日志名&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;dir&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Redis工作目录&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+">Redis初识</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://zxh-w.github.io/post/conda-an-zhuang-bao-cuo-packagesnotfounderror/"" data-c="
+          &lt;blockquote&gt;
+&lt;p&gt;PackagesNotFoundError: The following packages are not available from current channels:&lt;/p&gt;
+&lt;p&gt;otxv2==1.5.12&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;当出现&lt;code&gt;PackagesNotFoundError&lt;/code&gt;时，它不一定就是你的&lt;code&gt;conda&lt;/code&gt;源出问题了，你可以先在&lt;a href=&#34;https://anaconda.org/search&#34;&gt;Anaconda&lt;/a&gt;的官网搜一下到底&lt;code&gt;conda&lt;/code&gt;中有没有这个包，&lt;code&gt;otxv2&lt;/code&gt;没有在 &lt;code&gt;conda&lt;/code&gt;提供的包里。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;这时候就要使用 &lt;code&gt;pip&lt;/code&gt;工具来下载这个包了，&lt;code&gt;pip install otvx2==1.5.2&lt;/code&gt;，虽然找到了包，但是又有了报错：&lt;/p&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230425093856141.png&#34; alt=&#34;image-20230425093856141&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;这个时候在网上查了一下，输入 &lt;code&gt;pip install OTXv2==1.5.12  -i http://pypi.douban.com/simple --trusted-host pypi.douban.com&lt;/code&gt;，安装成功&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230425094131694.png&#34; alt=&#34;image-20230425094131694&#34; loading=&#34;lazy&#34;&gt;&lt;br&gt;
+参考来源：http://www.cnblogs.com/zengming/&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+">Conda安装报错：PackagesNotFoundError</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://zxh-w.github.io/post/wang-luo-pa-chong-jie-shao/"" data-c="
+          &lt;h2 id=&#34;网络爬虫概念&#34;&gt;网络爬虫概念&lt;/h2&gt;
+&lt;p&gt;​	网络爬虫是一种互联网信息的自动化采集程序，主要作用是代替人工对互联网中的数据进行自动采集与整理，以快速地、批量地获取目标数据。&lt;/p&gt;
+&lt;p&gt;​	从技术手段来说，网络爬虫有很多实现方案，如PHP、Python(Urllib、request、scrapy、selenium……)等。&lt;/p&gt;
+&lt;p&gt;​	网络爬虫的难点并不在于网络爬虫本身，而在于&lt;strong&gt;网页的分析与爬虫的反爬&lt;/strong&gt;的攻克问题。&lt;/p&gt;
+&lt;h2 id=&#34;网络爬虫工作原理详解&#34;&gt;网络爬虫工作原理详解&lt;/h2&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/python-3269952982323.jpg&#34; alt=&#34;未命名文件&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h2 id=&#34;网络爬虫常见类型与应用领域&#34;&gt;网络爬虫常见类型与应用领域&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;聚焦网络爬虫&lt;/p&gt;
+&lt;p&gt;一般是目标明确、有目的的爬虫，比如采集目标客户数据，以进行后续营销&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;通用网络爬虫&lt;/p&gt;
+&lt;p&gt;比如搜索引擎&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;深层网络爬虫&lt;/p&gt;
+&lt;p&gt;例如开发一款火车篇抢票程序（爬取深层页面，必须验证）&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;数据提取基础&#34;&gt;数据提取基础&lt;/h2&gt;
+&lt;h3 id=&#34;正则表达式&#34;&gt;正则表达式&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;全局匹配函数的使用格式：&lt;code&gt;re.comppile(regex).find(source string)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;注意：正则表达式默认是&lt;strong&gt;贪婪&lt;/strong&gt;模式&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;字符&lt;/th&gt;
+&lt;th&gt;匹配&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;普通字符&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;正常匹配&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;\n&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;匹配换行符&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;\t&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;匹配制表符&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;\w&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;匹配字母、数字、下划线 ,等价于 &lt;code&gt;[0-9a-zA-Z_]&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;\W&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;匹配除字母、数字、下划线&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;\d&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;匹配十进制数字&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;\D&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;匹配除十进制数字&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;\s&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;匹配空白字符&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;\S&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;匹配除空白字符&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;[ab89x]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;原子表，匹配&lt;code&gt;ab89x&lt;/code&gt;中的任意一个字符&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;[^ab89x]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;原子表，匹配除&lt;code&gt;ab89x&lt;/code&gt;以外的任意一个字符&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;字符&lt;/th&gt;
+&lt;th&gt;匹配&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;.&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;匹配除换行外的任意一个字符，要匹配  &lt;code&gt; \n&lt;/code&gt; 在内的任意字符，使用 &lt;code&gt;[.\n]&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;^&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;匹配开始位置&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;$&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;匹配结束位置&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;*&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;前一个字符出现 &lt;code&gt;0\1\多&lt;/code&gt;次&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;?&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;前一个字符出现 &lt;code&gt;0\1&lt;/code&gt;次&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;+&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;前一个字符出现 &lt;code&gt;1\多&lt;/code&gt;次&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;{n}&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;前一个字符恰好出现n次&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;{n,}&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;前一个字符至少出现n次&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;{n,m}&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;前一个字符至少n，至多m次&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;`&lt;/td&gt;
+&lt;td&gt;`&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;()&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;模式单元，通俗来说就是，想取出什么内容，就在正则中用小括号将其括起来&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;源字符串&lt;/th&gt;
+&lt;th&gt;正则表达式&lt;/th&gt;
+&lt;th&gt;匹配结果&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&amp;quot;aliyuncom&amp;quot;&lt;/td&gt;
+&lt;td&gt;&amp;quot;yu&amp;quot;&lt;/td&gt;
+&lt;td&gt;yu&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&amp;quot;aliyun\ncom&amp;quot;&lt;/td&gt;
+&lt;td&gt;&amp;quot;yun\n&amp;quot;&lt;/td&gt;
+&lt;td&gt;yun\n&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&amp;quot;aliyu32094ncom&amp;quot;&lt;/td&gt;
+&lt;td&gt;&amp;quot;\w\d\w\d\d\w&amp;quot;&lt;/td&gt;
+&lt;td&gt;u32094&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&amp;quot;aliyu32094ncom&amp;quot;&lt;/td&gt;
+&lt;td&gt;&amp;quot;\w\d[ncom]\w&amp;quot;&lt;/td&gt;
+&lt;td&gt;94nc&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&amp;quot;aliyuncnetostencenosji233489204aoyubaidu&amp;quot;&lt;/td&gt;
+&lt;td&gt;&amp;quot;ali...&amp;quot;&lt;/td&gt;
+&lt;td&gt;aliyun&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&amp;quot;aliyuncnetostencenosji233489204aoyubaidu&amp;quot;&lt;/td&gt;
+&lt;td&gt;&amp;quot;^li&amp;quot;&lt;/td&gt;
+&lt;td&gt;None&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&amp;quot;aliyuncnetostencenosji233489204aoyubaidu&amp;quot;&lt;/td&gt;
+&lt;td&gt;&amp;quot;^ali...&amp;quot;&lt;/td&gt;
+&lt;td&gt;aliyun&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&amp;quot;aliyuncnetostencenosji233489204aoyubaidu&amp;quot;&lt;/td&gt;
+&lt;td&gt;&amp;quot;bai..$&amp;quot;&lt;/td&gt;
+&lt;td&gt;baidu&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&amp;quot;aliyuncnetostencenosji233489204aoyubaidu&amp;quot;&lt;/td&gt;
+&lt;td&gt;&amp;quot;ali.*&amp;quot;&lt;/td&gt;
+&lt;td&gt;aliyuncnetostencenosji233489204aoyubaidu&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&amp;quot;aliyunnnnnsji233489204aoyubaidu&amp;quot;&lt;/td&gt;
+&lt;td&gt;&amp;quot;aliyun+&amp;quot;&lt;/td&gt;
+&lt;td&gt;aliyunnnnn&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&amp;quot;aliyunnnnnsji233489204aoyubaidu&amp;quot;&lt;/td&gt;
+&lt;td&gt;&amp;quot;yun{1,2}&amp;quot;&lt;/td&gt;
+&lt;td&gt;yunn&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;贪婪模式&#34;&gt;贪婪模式&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;贪婪模式：尽可能多的匹配&lt;/p&gt;
+&lt;p&gt;懒惰模式：尽可能少的匹配，精准模式&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;如果出现 &lt;code&gt;*?&lt;/code&gt;、 &lt;code&gt;+?&lt;/code&gt;，则代表懒惰模式&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;源字符串&lt;/th&gt;
+&lt;th&gt;正则表达式&lt;/th&gt;
+&lt;th&gt;匹配结果&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&amp;quot;poytphosojvcy823zxh&amp;quot;&lt;/td&gt;
+&lt;td&gt;&amp;quot;p.*y&amp;quot;&lt;/td&gt;
+&lt;td&gt;poytphosojvcy&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&amp;quot;poytphosojvcy823zxh&amp;quot;&lt;/td&gt;
+&lt;td&gt;&amp;quot;p.*?y&amp;quot;&lt;/td&gt;
+&lt;td&gt;poy&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;模式修正符&#34;&gt;模式修正符&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;在不改变正则表达式的情况下通过模式修正符使匹配结果发生更改&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;re.S&lt;/code&gt; ：让 &lt;code&gt;.&lt;/code&gt;也可以匹配多行&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;re.I&lt;/code&gt;：匹配时忽略大小写&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;源字符串&lt;/th&gt;
+&lt;th&gt;正则表达式&lt;/th&gt;
+&lt;th&gt;匹配方式&lt;/th&gt;
+&lt;th&gt;匹配结果&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&amp;quot;Python&amp;quot;&lt;/td&gt;
+&lt;td&gt;&amp;quot;pyt&amp;quot;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;re.compile(&amp;quot;pyt&amp;quot;).findall(&amp;quot;Python&amp;quot;)&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;None&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&amp;quot;Python&amp;quot;&lt;/td&gt;
+&lt;td&gt;&amp;quot;pyt&amp;quot;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;re.compile(&amp;quot;pyt&amp;quot;,re.I).findall(&amp;quot;Python&amp;quot;)&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Pyt&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+">网络爬虫介绍</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://zxh-w.github.io/post/xi-tong-she-ji/"" data-c="
+          &lt;h2 id=&#34;什么是系统设计&#34;&gt;什么是系统设计&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;系统设计面试的形式 及 常见的系统设计面试题&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;设计&lt;code&gt;XXX&lt;/code&gt;系统&lt;code&gt;Design XXX System&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;设计微博 Design Twitter&lt;/li&gt;
+&lt;li&gt;设计人人 Design Facebook&lt;/li&gt;
+&lt;li&gt;设计滴滴 Design Uber&lt;/li&gt;
+&lt;li&gt;设计微信 Design Whatsapp&lt;/li&gt;
+&lt;li&gt;设计点评 Design Yelp&lt;/li&gt;
+&lt;li&gt;设计短网址系统 Design Tiny URL&lt;/li&gt;
+&lt;li&gt;设计NoSQL 数据库 Design NoSQL&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;设计某某系统中的某某功能
+&lt;ul&gt;
+&lt;li&gt;设计一个功能实现对用户访问频率的限制&lt;/li&gt;
+&lt;li&gt;设计一个功能实现统计某个具体事件的历史发生次数&lt;/li&gt;
+&lt;li&gt;设计删除一个Tweet的功能&lt;/li&gt;
+&lt;li&gt;设计邮件系统中将所有邮件标记为可读的功能&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;系统设计-vs-面向对象设计&#34;&gt;系统设计 vs 面向对象设计&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;形式上：
+&lt;ul&gt;
+&lt;li&gt;面向对象设计手把手的Coding&lt;/li&gt;
+&lt;li&gt;系统设计高屋建瓴的&amp;quot;扯淡&amp;quot;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;考察的知识：
+&lt;ul&gt;
+&lt;li&gt;面向对象设计：Class，Objec，Method,Inheritance,Interface&lt;/li&gt;
+&lt;li&gt;‘系统设计：Database, Schema, SQL,NoSQL,File System,Latency,Scalbility,Master Slave,Load Balance,Web Server,Message Queue,Sharding,QPS,……&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;典型题
+&lt;ul&gt;
+&lt;li&gt;面型对象设计：电梯设计，游戏设计&lt;/li&gt;
+&lt;li&gt;系统设计：短网址系统设计，新鲜事系统设计&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;系统设计评分标准&#34;&gt;系统设计评分标准&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;可行解  Work Solution 25%&lt;/li&gt;
+&lt;li&gt;特定问题 Special Case 20%&lt;/li&gt;
+&lt;li&gt;分析能力 Analysis 25%&lt;/li&gt;
+&lt;li&gt;权衡 Tradeoff 15 %&lt;/li&gt;
+&lt;li&gt;知识储备 Knowledge Base 15 %&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;系统设计问题的4s分析法&#34;&gt;系统设计问题的&lt;code&gt;4S&lt;/code&gt;分析法&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Scenario，Service，Storage，Scale&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;Scenario  场景
+&lt;ul&gt;
+&lt;li&gt;需要设计哪些功能，设计得多牛&lt;/li&gt;
+&lt;li&gt;Ask &lt;code&gt;Features/QPS/DAU/Interfaces&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Service 服务
+&lt;ul&gt;
+&lt;li&gt;将大系统拆分为小服务&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Split/Application/Module&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Storage 存储
+&lt;ul&gt;
+&lt;li&gt;数据如何存储与访问&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Schema/Data/SQL/NoSQL/Fill System&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Scale 升级
+&lt;ul&gt;
+&lt;li&gt;解决缺陷，处理可能遇到得问题&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Sharding/Optimize/Special Case&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;scenario-场景&#34;&gt;Scenario 场景&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;Ask 问面试官
+&lt;ul&gt;
+&lt;li&gt;需要设计哪些功能？&lt;/li&gt;
+&lt;li&gt;需要承受多大得访问量？&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Analysis 分析&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;日活跃用户(DAU)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;月活跃用户(MAU) : 一般不是注册用户，而是用月活跃用户来代表一个网站的用户数&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;并发用户（Concurrent User）&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;日活跃 * 每个用户平均请求次数/一天多少秒 = &lt;code&gt;150M * 60 / 86400 ~ 100k&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;峰值 &lt;code&gt;Peak = Average Concurrent User * 3 ~ 300k&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;读频率 Read QPS(Queries Per Second)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;300k&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;写频率 Write QPS&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;qps的作用&#34;&gt;QPS的作用&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;QPS = 100&lt;/p&gt;
+&lt;p&gt;用笔记本做Web服务器就好了&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;QPS = 1k&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;需要用一台好一点的Web服务器&lt;/li&gt;
+&lt;li&gt;需要考虑Single Point Failure&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;QPS = 1m&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;需要建设一个1000台Web服务器的集群&lt;/li&gt;
+&lt;li&gt;需要考虑Maintainance(某一台服务器挂了怎么办)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;QPS和Web Server(服务器)/Database(数据库之间的关系)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;一台Web Server约承受量是1k的QPS（考虑到逻辑处理事件以及数据库查询的瓶颈）&lt;/li&gt;
+&lt;li&gt;一台SQL Database 约承受量是1k的QPS（如果JOIN和INDEX query比较多的话，这个值会更小）&lt;/li&gt;
+&lt;li&gt;一台NoSQL Database(Cassandra)约承受量是10k的QPS&lt;/li&gt;
+&lt;li&gt;一台NoSQL Database(Memcached)约承受量是1M的QPS&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;service-服务&#34;&gt;Service 服务&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;将大系统拆分为为小服务&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Replay 重放需求&lt;/li&gt;
+&lt;li&gt;Merge 归并需求&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+">系统设计</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://zxh-w.github.io/post/centos-fu-wu-qi-hou-tai-yun-xing-jupyter/"" data-c="
+          &lt;blockquote&gt;
+&lt;p&gt;需要将jupyter notebook 在CentOS服务器后台挂起，保证随时可以远程访问，同时也不能受到连接终端断开的影响&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;使用&lt;code&gt;tmux new -s jupyter&lt;/code&gt;命令，建立名为jupyter的会话窗口，这会跳转到这个session中&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;在这个session内执行后台运行jupyter notebook的指令：具体指令为：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;nohup jupyter notebook --allow-root &amp;gt; jupyter.log2 &amp;gt;&amp;amp;1 &amp;amp;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230422122419905.png&#34; alt=&#34;image-20230422122419905&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;使用快捷键 Ctrl+b+d，就能退出当前窗口回到正常页面了（不影响session，可以使用&lt;code&gt;tmux a -t jupyter&lt;/code&gt;可以再次进入该会话查看）&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;参考来源&#34;&gt;参考来源&lt;/h2&gt;
+&lt;p&gt;https://zhuanlan.zhihu.com/p/365985728&lt;/p&gt;
+">CentOS服务器后台运行Jupyter</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://zxh-w.github.io/post/opencti-an-zhuang-ji-lu/"" data-c="
+          &lt;blockquote&gt;
+&lt;p&gt;OpenCTI的安装整整花费了我两天时间,得到了一个非常重要的教训,一定要先看安装文档,有不懂的再查找博客&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;docker命令&#34;&gt;Docker命令&lt;/h2&gt;
+&lt;h3 id=&#34;查看运行容器&#34;&gt;查看运行容器&lt;/h3&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;docker ps
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;查看所有容器&#34;&gt;查看所有容器&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;docker ps -a
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;进入容器&#34;&gt;进入容器&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;docker exec -it 容器ID /bin/bash
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;停用全部运行中的容器&#34;&gt;停用全部运行中的容器&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;docker stop $(docker ps -q)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;删除全部容器&#34;&gt;删除全部容器&lt;/h3&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;docker rm $(docker ps -aq)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;一条命令实现停用并删除容器&#34;&gt;一条命令实现停用并删除容器&lt;/h3&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;docker stop $(docker ps -q) &amp;amp; docker rm $(docker ps -aq)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;查看镜像&#34;&gt;查看镜像&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;docker images -a
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;删除所有镜像&#34;&gt;删除所有镜像&lt;/h3&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;docker rmi $(docker images -a)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;查看容器日志&#34;&gt;查看容器日志&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;docker logs -f 容器ID
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;opencti的安装&#34;&gt;OpenCTI的安装&lt;/h2&gt;
+&lt;h3 id=&#34;安装docker&#34;&gt;安装docker&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;卸载旧版本&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;yum remove docker \
+                  docker-client \
+                  docker-client-latest \
+                  docker-common \
+                  docker-latest \
+                  docker-latest-logrotate \
+                  docker-logrotate \
+                  docker-selinux \
+                  docker-engine-selinux \
+                  docker-engine
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;安装依赖包&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;yum install -y yum-utils device-mapper-persistent-data lvm2
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;添加yum软件源&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;如果不添加这个软件源，在下面的操作中会出现elasticsearch的docker镜像pull失败。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;yum-config-manager \
+    	--add-repo \
+        https://mirrors.ustc.edu.cn/docker-ce/linux/centos/docker-ce.repo
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;安装docker-ce&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;yum install -y docker-ce
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;启动Docker服务并设置开机启动&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;systemctl start docker
+systemctl enable docker
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;测试docker安装&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;dokcer -v
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;安装docker-compose&#34;&gt;安装docker-compose&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;下载docker-compose&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;curl -L https://get.daocloud.io/docker/compose/releases/download/v2.1.1/docker-compose-`uname -s`-`uname -m` &amp;gt; /usr/local/bin/docker-compose
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;修改docker-compose的权限&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;chmod +x /usr/local/bin/docker-compose
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;验证安装是否成功&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;docker-compose -v
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;安装opencti&#34;&gt;安装OpenCTI&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;下载OpenCTI&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;mkdir /root/opencti #创建一个文件夹
+cd /root/opencti    #进入该文件夹
+git clone https://github.com/OpenCTI-Platform/docker.git
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;配置环境变量&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;这一步非常重要，如果这一步出错，后续会出现非常多的错误，后面我卡了一天，最后才找到是这里出错。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;拷贝出&lt;code&gt;.env.sample&lt;/code&gt;里的内容（不要直接把一些博客里改好的内容拷贝，因为版本不同参数也会有不同，我就是在这里偷懒了）&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;OPENCTI_ADMIN_EMAIL=admin@opencti.io
+OPENCTI_ADMIN_PASSWORD=changeme
+OPENCTI_ADMIN_TOKEN=ChangeMe_UUIDv4
+OPENCTI_BASE_URL=http://localhost:8080
+MINIO_ROOT_USER=opencti
+MINIO_ROOT_PASSWORD=changeme
+RABBITMQ_DEFAULT_USER=opencti
+RABBITMQ_DEFAULT_PASS=changeme
+CONNECTOR_EXPORT_FILE_STIX_ID=dd817c8b-abae-460a-9ebc-97b1551e70e6
+CONNECTOR_EXPORT_FILE_CSV_ID=7ba187fb-fde8-4063-92b5-c3da34060dd7
+CONNECTOR_EXPORT_FILE_TXT_ID=ca715d9c-bd64-4351-91db-33a8d728a58b
+CONNECTOR_IMPORT_FILE_STIX_ID=72327164-0b35-482b-b5d6-a5a3f76b845f
+CONNECTOR_IMPORT_DOCUMENT_ID=c3970f8a-ce4b-4497-a381-20b7256f56f0
+SMTP_HOSTNAME=localhost
+ELASTIC_MEMORY_SIZE=4G
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;按照如下方式修改&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;OPENCTI_ADMIN_EMAIL=admin@opencti.io #这里随便写一个邮箱就可以，当作登录账号
+OPENCTI_ADMIN_PASSWORD=changeme #这里写账号的密码
+OPENCTI_ADMIN_TOKEN=ChangeMe_UUIDv4 #这里填写一个UUID（网上可以在线生成）
+OPENCTI_BASE_URL=http://localhost:8080
+MINIO_ROOT_USER=opencti
+MINIO_ROOT_PASSWORD=changeme #这里需要写一个密码
+RABBITMQ_DEFAULT_USER=opencti
+RABBITMQ_DEFAULT_PASS=changeme #这里需要写一个密码
+CONNECTOR_EXPORT_FILE_STIX_ID=dd817c8b-abae-460a-9ebc-97b1551e70e6
+CONNECTOR_EXPORT_FILE_CSV_ID=7ba187fb-fde8-4063-92b5-c3da34060dd7
+CONNECTOR_EXPORT_FILE_TXT_ID=ca715d9c-bd64-4351-91db-33a8d728a58b
+CONNECTOR_IMPORT_FILE_STIX_ID=72327164-0b35-482b-b5d6-a5a3f76b845f
+CONNECTOR_IMPORT_DOCUMENT_ID=c3970f8a-ce4b-4497-a381-20b7256f56f0
+SMTP_HOSTNAME=localhost
+ELASTIC_MEMORY_SIZE=4G #这里写你可以给与elasticsearch的内存
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;在该文件夹中创建&lt;code&gt;.env&lt;/code&gt;文件，将上一步的内容写到文件&lt;code&gt;.env&lt;/code&gt;中，并使其生效&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;source .env
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;调整机器内存参数&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;echo &amp;quot;vm.max_map_count=65360&amp;quot; &amp;gt;&amp;gt; /etc/sysctl.conf
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;拉动镜像&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;docker-compose pull
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;重启docker&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;docker-compose up -d
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;创造并启动容器&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;注意：一定要指定docker-compose的配置文件，不然会出现非常多意想不到的错误，不要问我是怎么知道的😂&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;docker-compose -f docker-compose.yml up -d
+&lt;/code&gt;&lt;/pre&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230421224939624.png&#34; alt=&#34;image-20230421224939624&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;blockquote&gt;
+&lt;p&gt;如果没有出现错误，访问 &lt;code&gt;http://ip:8080&lt;/code&gt;应该如下图所示：&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;2&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230421224726415.png&#34; alt=&#34;image-20230421224726415&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;配置alienvault连接器&#34;&gt;配置AlienVault连接器&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;注册&lt;a href=&#34;https://otx.alienvault.com/&#34;&gt;AlienVault&lt;/a&gt;，这一步我是用的Google邮箱，需要用到梯子&lt;/p&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;3&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230421224219266.png&#34; alt=&#34;image-20230421224219266&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;打开&lt;a href=&#34;https://github.com/OpenCTI-Platform/connectors/blob/5.7.1/external-import/alienvault/docker-compose.yml&#34;&gt;alienvaultconnector&lt;/a&gt;，这是 &lt;code&gt;5.7.1&lt;/code&gt;版本的AlienVault的连接器，修改后添加进docker目录下的 &lt;code&gt;docker-compose.yml&lt;/code&gt;&lt;/p&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;4&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230421224257777.png&#34; alt=&#34;image-20230421224257777&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;修改后的内容如下&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;connector-alienvault:
+    image: opencti/connector-alienvault:5.7.1
+    environment:
+      - OPENCTI_URL=http://opencti:8080
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
+      - CONNECTOR_ID=ChangeMe #网上生成一个UUID
+      - CONNECTOR_TYPE=EXTERNAL_IMPORT
+      - CONNECTOR_NAME=AlienVault
+      - CONNECTOR_SCOPE=alienvault
+      - CONNECTOR_CONFIDENCE_LEVEL=15 # From 0 (Unknown) to 100 (Fully trusted)
+      - CONNECTOR_UPDATE_EXISTING_DATA=false
+      - CONNECTOR_LOG_LEVEL=info
+      - ALIENVAULT_BASE_URL=https://otx.alienvault.com
+      - ALIENVAULT_API_KEY=ChangeMe#你在AlienVault网站中的OTX Key
+      - ALIENVAULT_TLP=White
+      - ALIENVAULT_CREATE_OBSERVABLES=true
+      - ALIENVAULT_CREATE_INDICATORS=true
+      - ALIENVAULT_PULSE_START_TIMESTAMP=2020-05-01T00:00:00                  # BEWARE! Could be a lot of pulses!
+      - ALIENVAULT_REPORT_TYPE=threat-report
+      - ALIENVAULT_REPORT_STATUS=New
+      - ALIENVAULT_GUESS_MALWARE=false                                        # Use tags to guess malware.
+      - ALIENVAULT_GUESS_CVE=false                                            # Use tags to guess CVE.
+      - ALIENVAULT_EXCLUDED_PULSE_INDICATOR_TYPES=FileHash-MD5,FileHash-SHA1  # Excluded Pulse indicator types.
+      - ALIENVAULT_ENABLE_RELATIONSHIPS=true                                  # Enable/Disable relationship creation between SDOs.
+      - ALIENVAULT_ENABLE_ATTACK_PATTERNS_INDICATES=true                      # Enable/Disable &amp;quot;indicates&amp;quot; relationships between indicators and attack patterns
+      - ALIENVAULT_INTERVAL_SEC=1800 #刷新的时间间隔，按自己所需修改
+    restart: always
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;重新启动容器&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;docker-compose -f docker-compose.yml up -d
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;如果没有错误，访问后如下图所示&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;5&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230421224539357.png&#34; alt=&#34;image-20230421224539357&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;6&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230421224629295.png&#34; alt=&#34;image-20230421224629295&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;​&lt;/p&gt;
+&lt;h3 id=&#34;错误一&#34;&gt;错误一&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;如下图所示,如果elasticsearch的容器出现下面错误,你没有指定docker-compose.yml文件&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;7&#34;&gt;&lt;img src=&#34;https://zxh-w.oss-cn-beijing.aliyuncs.com/img/image-20230420184222926.png&#34; alt=&#34;image-20230420184222926&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h3 id=&#34;错误二&#34;&gt;错误二&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;如果你的AlienVault容器出现下列错误,那么是网络问题(可能需要梯子),我这里是一直开着它,后来它自己好了,不报错了&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code&gt;Traceback (most recent call last):
+  File &amp;quot;/usr/local/lib/python3.10/site-packages/requests/adapters.py&amp;quot;, line 489, in send
+    resp = conn.urlopen(
+  File &amp;quot;/usr/local/lib/python3.10/site-packages/urllib3/connectionpool.py&amp;quot;, line 878, in urlopen
+    return self.urlopen(
+  File &amp;quot;/usr/local/lib/python3.10/site-packages/urllib3/connectionpool.py&amp;quot;, line 878, in urlopen
+    return self.urlopen(
+  File &amp;quot;/usr/local/lib/python3.10/site-packages/urllib3/connectionpool.py&amp;quot;, line 878, in urlopen
+    return self.urlopen(
+  [Previous line repeated 2 more times]
+  File &amp;quot;/usr/local/lib/python3.10/site-packages/urllib3/connectionpool.py&amp;quot;, line 868, in urlopen
+    retries = retries.increment(method, url, response=response, _pool=self)
+  File &amp;quot;/usr/local/lib/python3.10/site-packages/urllib3/util/retry.py&amp;quot;, line 592, in increment
+    raise MaxRetryError(_pool, url, error or ResponseError(cause))
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host=&#39;otx.alienvault.com&#39;, port=443): Max retries exceeded with url: /api/v1/pulses/subscribed?limit=20&amp;amp;modified_s
+ince=2020-05-01T00:00:00&amp;amp;page=2 (Caused by ResponseError(&#39;too many 500 error responses&#39;))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;参考来源&#34;&gt;参考来源：&lt;/h2&gt;
+&lt;p&gt;https://blog.csdn.net/jeikerxiao/article/details/78476925&lt;/p&gt;
+&lt;p&gt;https://blog.csdn.net/weixin_40263219/article/details/123866396&lt;/p&gt;
+&lt;p&gt;https://blog.csdn.net/WEARE001/article/details/123897058&lt;/p&gt;
+&lt;p&gt;https://www.cnblogs.com/J-xiaowei/p/12932567.html&lt;/p&gt;
+&lt;p&gt;https://na1r.com/post/60&lt;/p&gt;
+">OpenCTI安装记录</a>
+      </div>
+      
+    </div>
+    <div class="page">
+      <div id="page_ul"></div>
+    </div>
+  </div>
+</div>
+<script>
+  !function () {
+    let searchMask = document.querySelector('#search_mask');
+    let result = document.querySelector('#result');
+    let items = document.querySelectorAll('.item');
+    let searchBox = document.querySelector('#search');
+    let statCount = document.querySelector('#stat_count');
+    let statTimes = document.querySelector('#stat_times');
+    let pageUl = document.querySelector('#page_ul');
+    let close = document.querySelector('#close');
+    
+    close.addEventListener('click', function() {
+      searchMask.style = 'display: none;'
+    })
+
+    let finds = [];
+    let contents = [];
+    let pageSize = 10;
+    items.forEach(item => {
+      let a = item.querySelector('a');
+      contents.push({
+        title: a.innerText,
+        details: a.dataset.c,
+        link: a.href
+      })
+      item.remove();
+    })
+
+    function insertStr(soure, start, count) {
+      let newStr = soure.substr(start, count);
+      return soure.slice(0, start) + '<em>' + newStr + '</em>' + soure.slice(start + count);
+    }
+
+    pageUl.addEventListener('click', function(event) {
+      let target = event.target;
+      if (target.__proto__ === HTMLSpanElement.prototype) {
+        appendResults(parseInt(target.dataset.i));
+      }
+    })
+
+    function appendResults(index) {
+      let htmlResult = '';
+      let start = index || 0;
+      let end = Math.min(start + pageSize, finds.length);
+      for (let i = start; i < end; i++) {
+        const current = finds[i];
+        let html = current.title;
+        let sum = 0;
+        let positions = current.positions;
+        positions.forEach(position => {
+          html = insertStr(html, position.start + sum, position.count);
+          sum += 9;
+        })
+        htmlResult += `<div class="item"><a class="result-title" href="${current.link}">${html}</a></div>`;
+      }
+      result.innerHTML = htmlResult;
+      pageUl.innerHTML = '';
+      let count = finds.length / pageSize;
+      let lis = '';
+      if (start !== 0) {
+        lis += `<span class="fa fa-angle-left" data-i='${start - 1}'></span>`;
+      }
+      for (let i = 0; i < count; i++) {
+        lis += `<span class='${i === start?'current':''}' data-i='${i}'>${i+1}</span>`;     
+      }
+      if (start+1 < count) {
+        lis += `<span class="fa fa-angle-right" data-i='${start+1}'></span>`;  
+      }
+      pageUl.innerHTML = lis;
+    }
+
+    function search(delay) {
+      let timer = null
+      return function () {
+        clearTimeout(timer)
+        timer = setTimeout(() => {
+          let start = Date.now();
+          let segments = searchBox.value.split(' ').filter(c => c != '');
+          if (segments.length <= 0) {
+            return;
+          }
+          finds = [];
+          let htmlResult = '';
+          contents.forEach(content => {
+            let title = content.title;
+            let positions = [];
+            let find = false;
+            segments.forEach((segment) => {
+              if (content.title.includes(segment)) {
+                find = true;
+                positions.push({
+                  start: content.title.indexOf(segment),
+                  count: segment.length
+                })
+              } else if (content.details.includes(segment)) {
+                find = true;
+              }
+            });
+            if (find) {
+              finds.push({
+                title: content.title,
+                link: content.link,
+                positions
+              });
+            }
+          })
+          appendResults(0);
+          statCount.textContent = finds.length;
+          statTimes.textContent = Date.now() - start;
+        }, delay)
+      }
+    }
+    searchBox.addEventListener('input', search(200));
+  }()
+</script>
+
+<input hidden id="copy" />
+<script>
+  !function () {
+    let times = document.querySelectorAll('.publish-time');
+    for (let i = 0; i < times.length; i++) {
+      let date = times[i].dataset.t;
+      let time = Math.floor((new Date().getTime() - new Date(date).getTime()) / 1000);
+      if (time < 60) {
+        str = time + '秒之前';
+      } else if (time < 3600) {
+        str = Math.floor(time / 60) + '分钟之前';
+      } else if (time >= 3600 && time < 86400) {
+        str = Math.floor(time / 3600) + '小时之前';
+      } else if (time >= 86400 && time < 259200) {
+        str = Math.floor(time / 86400) + '天之前';
+      } else {
+        str = times[i].textContent;
+      }
+      times[i].textContent = str;
+    }
+  }();
+</script>
+
+<script>
+  let language = '';
+  if (language !== '') {
+    let map = new Map();
+    if (language === 'en') {
+      map.set('search', 'Search');
+      map.set('category', 'Categories');
+      map.set('article', 'Articles');
+      map.set('tag', 'Tags');
+      map.set('top', 'Top');
+      map.set('publish', 'published');
+      map.set('minute', ' minutes');
+      map.set('read-more', 'Read More');
+      map.set('view', 'View');
+      map.set('words', ' words');
+      map.set('category-in', 'category in');
+      map.set('preview', 'Meta');
+      map.set('index', 'Toc');
+      map.set('no-archives', "You haven't created yet");
+      map.set('archives', " articles in total");
+      map.set('cloud-tags', " tags in total");
+      map.set('copyright', "Copyright: ");
+      map.set('author', "Author: ");
+      map.set('link', "Link: ");
+      map.set('leave-message', "Leave a message");
+      map.set('format', "Links Format");
+      map.set('site-name', "Name: ");
+      map.set('site-link', "Link: ");
+      map.set('site-desc', "Desc: ");
+      map.set('stat', " related results, taking ");
+      map.set('stat-time', " ms");
+      map.set('site-img', "Image: ");
+    }
+
+    if (map.size > 0) {
+      let lanElems = document.querySelectorAll('.language');
+      lanElems.forEach(elem => {
+        let lan = elem.dataset.lan, text = map.get(lan);
+        if (elem.__proto__ === HTMLInputElement.prototype) {
+          elem.placeholder = text
+        } else {
+          if (elem.dataset.count) {
+            text = elem.dataset.count + text;
+          }
+          elem.textContent = text;
+        }
+      })
+    }
+  }
+
+  window.Clipboard = (function (window, document, navigator) {
+    var textArea,
+      copy;
+
+    // 判断是不是ios端
+    function isOS() {
+      return navigator.userAgent.match(/ipad|iphone/i);
+    }
+    //创建文本元素
+    function createTextArea(text) {
+      textArea = document.createElement('textArea');
+      textArea.value = text;
+      textArea.style.width = 0;
+      textArea.style.height = 0;
+      textArea.clientHeight = 0;
+      textArea.clientWidth = 0;
+      document.body.appendChild(textArea);
+    }
+    //选择内容
+    function selectText() {
+      var range,
+        selection;
+
+      if (isOS()) {
+        range = document.createRange();
+        range.selectNodeContents(textArea);
+        selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+        textArea.setSelectionRange(0, 999999);
+      } else {
+        textArea.select();
+      }
+    }
+
+    //复制到剪贴板
+    function copyToClipboard() {
+      try {
+        document.execCommand("Copy")
+      } catch (err) {
+        alert("复制错误！请手动复制！")
+      }
+      document.body.removeChild(textArea);
+    }
+
+    copy = function (text) {
+      createTextArea(text);
+      selectText();
+      copyToClipboard();
+    };
+
+    return {
+      copy: copy
+    };
+  })(window, document, navigator);
+
+  function copyCode(e) {
+    if (e.srcElement.tagName === 'SPAN' && e.srcElement.classList.contains('copy-code')) {
+      let code = e.currentTarget.querySelector('code');
+      var text = code.innerText;
+      if (e.srcElement.textContent === '复制成功') {
+        return;
+      }
+      e.srcElement.textContent = '复制成功';
+      (function (elem) {
+        setTimeout(() => {
+          if (elem.textContent === '复制成功') {
+            elem.textContent = '复制代码'
+          }
+        }, 1000);
+      })(e.srcElement)
+      Clipboard.copy(text);
+    }
+  }
+
+  let pres = document.querySelectorAll('pre');
+  pres.forEach(pre => {
+    let code = pre.querySelector('code');
+    let copyElem = document.createElement('span');
+    copyElem.classList.add('copy-code');
+    copyElem.textContent = '复制代码';
+    pre.appendChild(copyElem);
+    pre.onclick = copyCode
+  })
+
+</script>
+<script src="/media/js/motion.js"></script>
+
+
+  <script
+    src="https://cdn.jsdelivr.net/gh/cferdinandi/smooth-scroll/dist/smooth-scroll.polyfills.min.js"></script>
+  <script>
+    var scroll = new SmoothScroll('a[href*="#"]', {
+      speed: 200
+    });
+  </script>
+
+
+
+
+
+
+</html>
